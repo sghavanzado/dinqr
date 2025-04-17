@@ -1,0 +1,79 @@
+2025-04-14 14:59:55,534 ERROR: Exception on /settings/server-control [POST] [in /Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/flask/app.py:875]
+Traceback (most recent call last):
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/Documents/Develop/backup/dinqr/backend/routes/settings_routes.py", line 41, in server_control
+    if server_process is None or not server_process.is_alive():
+                                     ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Popen' object has no attribute 'is_alive'
+2025-04-14 15:03:31,201 INFO: Inicio de la aplicación [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:34]
+2025-04-14 15:03:31,311 INFO: Permissions and roles initialized successfully. [in /Users/mcc/Documents/Develop/backup/dinqr/backend/models/user.py:139]
+2025-04-14 15:03:31,311 INFO: Permisos y roles inicializados correctamente [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:49]
+2025-04-14 15:03:36,065 WARNING: Intento de acceso con token inválido: Signature verification failed [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:57]
+2025-04-14 15:03:36,073 WARNING: Intento de acceso con token inválido: Signature verification failed [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:57]
+2025-04-14 15:07:38,623 INFO: Inicio de la aplicación [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:34]
+2025-04-14 15:07:38,738 INFO: Permissions and roles initialized successfully. [in /Users/mcc/Documents/Develop/backup/dinqr/backend/models/user.py:139]
+2025-04-14 15:07:38,738 INFO: Permisos y roles inicializados correctamente [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:49]
+2025-04-14 15:07:51,467 WARNING: Intento de acceso con token inválido: Signature verification failed [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:57]
+2025-04-14 15:07:51,472 WARNING: Intento de acceso con token inválido: Signature verification failed [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:57]
+2025-04-14 15:13:50,571 INFO: Inicio de la aplicación [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:34]
+2025-04-14 15:13:50,672 INFO: Permissions and roles initialized successfully. [in /Users/mcc/Documents/Develop/backup/dinqr/backend/models/user.py:139]
+2025-04-14 15:13:50,672 INFO: Permisos y roles inicializados correctamente [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:49]
+2025-04-14 15:26:43,763 INFO: Inicio de la aplicación [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:34]
+2025-04-14 15:26:43,871 INFO: Permissions and roles initialized successfully. [in /Users/mcc/Documents/Develop/backup/dinqr/backend/models/user.py:139]
+2025-04-14 15:26:43,871 INFO: Permisos y roles inicializados correctamente [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:49]
+2025-04-14 15:26:53,882 WARNING: Intento de acceso con token inválido: Signature verification failed [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:57]
+2025-04-14 15:26:53,887 WARNING: Intento de acceso con token inválido: Signature verification failed [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:57]
+2025-04-14 15:29:59,768 INFO: Inicio de la aplicación [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:34]
+2025-04-14 15:29:59,876 INFO: Permissions and roles initialized successfully. [in /Users/mcc/Documents/Develop/backup/dinqr/backend/models/user.py:139]
+2025-04-14 15:29:59,877 INFO: Permisos y roles inicializados correctamente [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:49]
+2025-04-14 15:30:09,847 WARNING: Intento de acceso con token inválido: Signature verification failed [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:57]
+2025-04-14 15:30:09,856 WARNING: Intento de acceso con token inválido: Signature verification failed [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:57]
+2025-04-14 15:32:04,483 INFO: Inicio de la aplicación [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:34]
+2025-04-14 15:32:04,582 INFO: Permissions and roles initialized successfully. [in /Users/mcc/Documents/Develop/backup/dinqr/backend/models/user.py:139]
+2025-04-14 15:32:04,582 INFO: Permisos y roles inicializados correctamente [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:49]
+2025-04-14 15:32:18,831 WARNING: Intento de acceso con token inválido: Signature verification failed [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:57]
+2025-04-14 15:32:18,836 WARNING: Intento de acceso con token inválido: Signature verification failed [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:57]
+2025-04-14 15:46:04,069 INFO: Inicio de la aplicación [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:34]
+2025-04-14 15:46:04,186 INFO: Permissions and roles initialized successfully. [in /Users/mcc/Documents/Develop/backup/dinqr/backend/models/user.py:139]
+2025-04-14 15:46:04,186 INFO: Permisos y roles inicializados correctamente [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:49]
+2025-04-14 15:46:24,868 WARNING: Intento de acceso con token inválido: Signature verification failed [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:57]
+2025-04-14 15:46:24,873 WARNING: Intento de acceso con token inválido: Signature verification failed [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:57]
+2025-04-14 16:07:28,108 INFO: Inicio de la aplicación [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:34]
+2025-04-14 16:07:28,201 INFO: Permissions and roles initialized successfully. [in /Users/mcc/Documents/Develop/backup/dinqr/backend/models/user.py:139]
+2025-04-14 16:07:28,201 INFO: Permisos y roles inicializados correctamente [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:49]
+2025-04-14 16:07:37,493 WARNING: Intento de acceso con token inválido: Signature verification failed [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:57]
+2025-04-14 16:07:37,498 WARNING: Intento de acceso con token inválido: Signature verification failed [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:57]
+2025-04-14 16:14:04,713 INFO: Inicio de la aplicación [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:34]
+2025-04-14 16:14:04,824 INFO: Permissions and roles initialized successfully. [in /Users/mcc/Documents/Develop/backup/dinqr/backend/models/user.py:139]
+2025-04-14 16:14:04,825 INFO: Permisos y roles inicializados correctamente [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:49]
+2025-04-14 16:14:10,105 WARNING: Intento de acceso con token inválido: Signature verification failed [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:57]
+2025-04-14 16:14:10,110 WARNING: Intento de acceso con token inválido: Signature verification failed [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:57]
+2025-04-14 16:26:53,476 INFO: Inicio de la aplicación [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:34]
+2025-04-14 16:26:53,574 INFO: Permissions and roles initialized successfully. [in /Users/mcc/Documents/Develop/backup/dinqr/backend/models/user.py:139]
+2025-04-14 16:26:53,574 INFO: Permisos y roles inicializados correctamente [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:49]
+2025-04-14 16:27:04,548 WARNING: Intento de acceso con token inválido: Signature verification failed [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:57]
+2025-04-14 16:27:04,552 WARNING: Intento de acceso con token inválido: Signature verification failed [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:57]
+2025-04-14 16:32:29,437 INFO: Inicio de la aplicación [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:34]
+2025-04-14 16:32:29,483 INFO: Permissions and roles initialized successfully. [in /Users/mcc/Documents/Develop/backup/dinqr/backend/models/user.py:139]
+2025-04-14 16:32:29,484 INFO: Permisos y roles inicializados correctamente [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:49]
+2025-04-14 16:32:34,927 WARNING: Intento de acceso con token inválido: Signature verification failed [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:57]
+2025-04-14 16:32:34,932 WARNING: Intento de acceso con token inválido: Signature verification failed [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:57]
+2025-04-14 16:33:50,571 INFO: Inicio de la aplicación [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:34]
+2025-04-14 16:33:50,678 INFO: Permissions and roles initialized successfully. [in /Users/mcc/Documents/Develop/backup/dinqr/backend/models/user.py:139]
+2025-04-14 16:33:50,678 INFO: Permisos y roles inicializados correctamente [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:49]
+2025-04-14 16:34:00,026 WARNING: Intento de acceso con token inválido: Signature verification failed [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:57]
+2025-04-14 16:34:00,031 WARNING: Intento de acceso con token inválido: Signature verification failed [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:57]

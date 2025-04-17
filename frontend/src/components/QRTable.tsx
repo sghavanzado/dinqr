@@ -1,0 +1,417 @@
+// QRTable.tsx
+import * as React from 'react';
+import { useState, useEffect } from 'react';
+import { DataGrid, GridRowParams, GridColDef } from '@mui/x-data-grid';
+import { TextField, Button, Box, CircularProgress, Typography, IconButton, Modal } from '@mui/material';
+import QrCodeIcon from '@mui/icons-material/QrCode';
+import DeleteIcon from '@mui/icons-material/Delete';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
+import DownloadIcon from '@mui/icons-material/Download';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import axiosInstance from '../api/axiosInstance';
+import Checkbox from '@mui/material/Checkbox';
+
+interface QRTableProps {}
+
+const QRTable: React.FC<QRTableProps> = () => {
+  const [funcionariosConQR, setFuncionariosConQR] = useState([]);
+  const [funcionariosSinQR, setFuncionariosSinQR] = useState([]);
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [filterConQR, setFilterConQR] = useState('');
+  const [filterSinQR, setFilterSinQR] = useState('');
+  const [showSinQRTable, setShowSinQRTable] = useState(false);
+  const [qrModalOpen, setQrModalOpen] = useState(false);
+  const [qrImage, setQrImage] = useState('');
+  const [contactCardOpen, setContactCardOpen] = useState(false);
+  const [contactCardHtml, setContactCardHtml] = useState('');
+
+  useEffect(() => {
+    fetchFuncionariosConQR();
+  }, []);
+
+  const fetchFuncionariosConQR = async () => {
+    setLoading(true);
+    try {
+      const response = await axiosInstance.get('/qr/funcionarios');
+      setFuncionariosConQR(response.data);
+    } catch (error) {
+      console.error('Error fetching funcionarios con QR:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchFuncionariosSinQR = async () => {
+    setLoading(true);
+    try {
+      const response = await axiosInstance.get('/qr/funcionarios-sin-qr');
+      setFuncionariosSinQR(response.data);
+    } catch (error) {
+      console.error('Error fetching funcionarios sin QR:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleToggleSinQRTable = () => {
+    setShowSinQRTable((prev) => !prev);
+    if (!showSinQRTable) {
+      fetchFuncionariosSinQR();
+    }
+  };
+
+  const handleGenerateQR = async (ids: number[]) => {
+    if (!ids || ids.length === 0) {
+      alert('Por favor, seleccione al menos un funcionario para generar los códigos QR.');
+      return;
+    }
+
+    console.log('Generando QR para los siguientes IDs:', ids);
+
+    setLoading(true);
+    try {
+      await axiosInstance.post('/qr/generar', { ids });
+      alert('Códigos QR generados exitosamente.');
+      fetchFuncionariosConQR();
+      fetchFuncionariosSinQR();
+    } catch (error) {
+      console.error('Error generating QR codes:', error);
+      alert('Error al generar los códigos QR.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteQR = async (id: number) => {
+    setLoading(true);
+    try {
+      await axiosInstance.delete(`/qr/eliminar/${id}`);
+      alert('Código QR eliminado exitosamente.');
+      fetchFuncionariosConQR();
+      fetchFuncionariosSinQR();
+    } catch (error) {
+      console.error('Error deleting QR code:', error);
+      alert('Error al eliminar el código QR.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleViewQR = async (id: number) => {
+    try {
+      const response = await axiosInstance.get(`/qr/descargar/${id}`, { responseType: 'blob' });
+      const qrBlob = new Blob([response.data], { type: 'image/png' });
+      const qrUrl = URL.createObjectURL(qrBlob);
+      setQrImage(qrUrl);
+      setQrModalOpen(true);
+    } catch (error) {
+      console.error('Error viewing QR code:', error);
+      alert('Error al mostrar el código QR.');
+    }
+  };
+
+  const handleDownloadQR = async (id: number) => {
+    try {
+      const response = await axiosInstance.get(`/qr/descargar/${id}`, {
+        responseType: 'blob',
+      });
+      const qrBlob = new Blob([response.data], { type: 'image/png' });
+      const qrUrl = URL.createObjectURL(qrBlob);
+
+      const link = document.createElement('a');
+      link.href = qrUrl;
+      link.download = `qr_${id}.png`;
+      link.click();
+
+      URL.revokeObjectURL(qrUrl);
+    } catch (error) {
+      console.error('Error downloading QR code:', error);
+      alert('Error al descargar el código QR.');
+    }
+  };
+
+  const handleViewContactCard = (funcionario) => {
+    const logoUrl = '/static/images/sonangol-logo.png'; // Ruta estática para el logo proporcionado
+    const headerBackgroundColor = '#F4CF0A'; // Amarillo del logo proporcionado
+    const htmlContent = `
+      <div style="font-family: Arial, sans-serif; max-width: 400px; margin: auto; border: 1px solid #ccc; border-radius: 10px; overflow: hidden;">
+        <div style="background-color: ${headerBackgroundColor}; padding: 10px; display: flex; align-items: center; justify-content: center;">
+          <img src="${logoUrl}" alt="Sonangol Logo" style="height: 50px; max-width: 50px; object-fit: contain; margin-right: 10px;">
+          <span style="font-size: 2rem; font-weight: bold; color: #000; font-family: 'Arial', sans-serif;">Sonangol</span>
+        </div>
+        <div style="background-color: #e6e6e6; padding: 5px; text-align: center; font-size: 0.9rem;">
+          Sociedade Nacional de Combustíveis de Angola
+        </div>
+        <div style="padding: 20px; text-align: left;">
+          <p><strong>Nombre:</strong> ${funcionario.nombre}</p>
+          <p><strong>ID:</strong> ${funcionario.id}</p>
+          <p><strong>Empresa:</strong> ${funcionario.empresa || 'No especificada'}</p>
+          <p><strong>Cargo:</strong> ${funcionario.cargo || 'No especificado'}</p>
+          <p><strong>Correo:</strong> <a href="mailto:${funcionario.email}">${funcionario.email}</a></p>
+          <p><strong>Número de Teléfono:</strong> ${funcionario.telefono || 'No especificado'}</p>
+          <p><strong>Ext:</strong> ${funcionario.numero_ext || 'N/A'}</p>
+        </div>
+      </div>
+    `;
+    setContactCardHtml(htmlContent);
+    setContactCardOpen(true);
+  };
+
+  const handleCloseContactCard = () => {
+    setContactCardOpen(false);
+    setContactCardHtml('');
+  };
+
+  const handleCloseModal = () => {
+    setQrModalOpen(false);
+    setQrImage('');
+  };
+
+  const handleRowClickSinQR = (params: GridRowParams) => {
+    const id = params.row.id as number;
+    const isSelected = selectedIds.includes(id);
+
+    if (isSelected) {
+      setSelectedIds(prevIds => prevIds.filter(selectedId => selectedId !== id));
+    } else {
+      setSelectedIds(prevIds => [...prevIds, id]);
+    }
+  };
+
+  const columnsConQR = [
+    { field: 'id', headerName: 'ID', width: 100 },
+    { field: 'nombre', headerName: 'Nombre', width: 200 },
+    { field: 'empresa', headerName: 'Empresa', width: 200 },
+    { field: 'telefono', headerName: 'Teléfono', width: 150 },
+    { field: 'email', headerName: 'Email', width: 200 },
+    { field: 'cargo', headerName: 'Cargo', width: 150 },
+    {
+      field: 'actions',
+      headerName: 'Acciones',
+      width: 300,
+      renderCell: (params) => (
+        <Box sx={{ display: 'flex', gap: 1 }}>
+          <IconButton
+            color="success"
+            onClick={() => handleViewQR(params.row.id)}
+          >
+            <QrCodeIcon />
+          </IconButton>
+          <IconButton
+            color="error"
+            onClick={() => handleDeleteQR(params.row.id)}
+          >
+            <DeleteIcon />
+          </IconButton>
+          <IconButton
+            color="success"
+            onClick={() => handleDownloadQR(params.row.id)}
+          >
+            <DownloadIcon />
+          </IconButton>
+          <IconButton
+            color="info"
+            onClick={() => handleViewContactCard(params.row)}
+          >
+            <OpenInNewIcon />
+          </IconButton>
+        </Box>
+      ),
+    },
+  ];
+
+  const columnsSinQR: GridColDef[] = [
+    {
+      field: 'selection',
+      headerName: '',
+      width: 50,
+      renderCell: (params) => (
+        <Checkbox
+          checked={selectedIds.includes(params.row.id as number)}
+          onClick={(event) => {
+            event.stopPropagation();
+            const id = params.row.id as number;
+            const isSelected = selectedIds.includes(id);
+            if (isSelected) {
+              setSelectedIds(prevIds => prevIds.filter(selectedId => selectedId !== id));
+            } else {
+              setSelectedIds(prevIds => [...prevIds, id]);
+            }
+          }}
+        />
+      ),
+      sortable: false,
+    },
+    { field: 'id', headerName: 'ID', width: 100 },
+    { field: 'nombre', headerName: 'Nombre', width: 200 },
+    { field: 'empresa', headerName: 'Empresa', width: 200 },
+    { field: 'telefono', headerName: 'Teléfono', width: 150 },
+    { field: 'email', headerName: 'Email', width: 200 },
+    { field: 'cargo', headerName: 'Cargo', width: 150 },
+    {
+      field: 'actions',
+      headerName: 'Acciones',
+      width: 150,
+      renderCell: (params) => (
+        <IconButton
+          color="primary"
+          onClick={() => handleGenerateQR([params.row.id])}
+        >
+          <QrCodeIcon />
+        </IconButton>
+      ),
+    },
+  ];
+
+  const filteredFuncionariosConQR = funcionariosConQR.filter((funcionario) =>
+    funcionario.nombre.toLowerCase().includes(filterConQR.toLowerCase())
+  );
+
+  const filteredFuncionariosSinQR = funcionariosSinQR.filter((funcionario) =>
+    funcionario.nombre.toLowerCase().includes(filterSinQR.toLowerCase())
+  );
+
+  console.log('QRTable rendered with selectedIds (with checkbox):', selectedIds);
+
+  return (
+    <Box>
+      <Typography variant="h6" gutterBottom>
+        Funcionarios con QR
+      </Typography>
+      <Box sx={{ mb: 3, position: 'relative' }}>
+        <TextField
+          label="Buscar en funcionarios con QR"
+          variant="outlined"
+          fullWidth
+          value={filterConQR}
+          onChange={(e) => setFilterConQR(e.target.value)}
+        />
+        <DataGrid
+          rows={filteredFuncionariosConQR}
+          columns={columnsConQR}
+          pageSize={10}
+          rowsPerPageOptions={[10, 20, 50]}
+          autoHeight
+          disableSelectionOnClick
+        />
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleToggleSinQRTable}
+          sx={{
+            position: 'absolute',
+            bottom: -70,
+            right: 16,
+            width: 56,
+            height: 56,
+            borderRadius: '50%',
+            minWidth: 0,
+          }}
+        >
+          {showSinQRTable ? <RemoveIcon /> : <AddIcon />}
+        </Button>
+      </Box>
+      {showSinQRTable && (
+        <Box sx={{ mt: 5 }}>
+          <Typography variant="h6" gutterBottom>
+            Funcionarios sin QR
+          </Typography>
+          <TextField
+            label="Buscar en funcionarios sin QR"
+            variant="outlined"
+            fullWidth
+            value={filterSinQR}
+            onChange={(e) => setFilterSinQR(e.target.value)}
+            sx={{ mb: 3 }}
+          />
+          {loading ? (
+            <CircularProgress />
+          ) : (
+            <>
+              <DataGrid
+                rows={filteredFuncionariosSinQR}
+                columns={columnsSinQR}
+                pageSize={10}
+                rowsPerPageOptions={[10, 20, 50]}
+                autoHeight
+                disableSelectionOnClick
+                onRowClick={handleRowClickSinQR}
+                getRowClassName={(params) => (selectedIds.includes(params.row.id as number) ? 'Mui-selected' : '')}
+              />
+              <Box sx={{ mt: 3, textAlign: 'right' }}>
+                <Button
+                  variant="contained"
+                  onClick={() => handleGenerateQR(selectedIds)}
+                  disabled={selectedIds.length === 0}
+                  startIcon={<QrCodeIcon />}
+                  sx={{
+                    fontSize: '0.9rem',
+                    padding: '6px 12px',
+                    borderRadius: '4px',
+                    textTransform: 'none',
+                    backgroundColor: selectedIds.length === 0 ? '#d3d3d3' : '#808080',
+                    color: 'white',
+                    '&:hover': {
+                      backgroundColor: selectedIds.length === 0 ? '#d3d3d3' : '#696969',
+                    },
+                  }}
+                >
+                  Generar
+                </Button>
+              </Box>
+            </>
+          )}
+        </Box>
+      )}
+      <Modal
+        open={qrModalOpen}
+        onClose={handleCloseModal}
+        sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+      >
+        <Box
+          sx={{
+            backgroundColor: 'white',
+            padding: 2,
+            borderRadius: 2,
+            boxShadow: 24,
+            textAlign: 'center',
+            width: 300,
+            maxWidth: '90%',
+          }}
+        >
+          <Typography variant="h6" gutterBottom>
+            Código QR
+          </Typography>
+          <img src={qrImage} alt="QR Code" style={{ maxWidth: '100%', height: 'auto' }} />
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleCloseModal}
+            sx={{ mt: 2 }}
+          >
+            Cerrar
+          </Button>
+        </Box>
+      </Modal>
+      <Dialog 
+        open={contactCardOpen} 
+        onClose={handleCloseContactCard} 
+        maxWidth="xs" 
+        fullWidth
+      >
+        <DialogTitle sx={{ textAlign: 'center' }}>Tarjeta de Contacto</DialogTitle>
+        <DialogContent>
+          <div dangerouslySetInnerHTML={{ __html: contactCardHtml }} />
+        </DialogContent>
+      </Dialog>
+    </Box>
+  );
+};
+
+export default QRTable;

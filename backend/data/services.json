@@ -1,0 +1,42 @@
+[
+  {
+    "name": "Consultoría de Negocios",
+    "description": "Asesoramiento estratégico para empresas.",
+    "price": 150.00,
+    "category": "Consultoría",
+    "duration": "2 horas",
+    "active": true
+  },
+  {
+    "name": "Desarrollo Web",
+    "description": "Creación de sitios web personalizados.",
+    "price": 1200.00,
+    "category": "Desarrollo",
+    "duration": "1 semana",
+    "active": true
+  },
+  {
+    "name": "Mantenimiento de Software",
+    "description": "Actualización y soporte técnico para aplicaciones.",
+    "price": 500.00,
+    "category": "Soporte",
+    "duration": "1 mes",
+    "active": true
+  },
+  {
+    "name": "Capacitación en Marketing Digital",
+    "description": "Curso intensivo sobre estrategias de marketing digital.",
+    "price": 300.00,
+    "category": "Capacitación",
+    "duration": "3 días",
+    "active": true
+  },
+  {
+    "name": "Auditoría de Seguridad",
+    "description": "Evaluación de vulnerabilidades en sistemas informáticos.",
+    "price": 800.00,
+    "category": "Auditoría",
+    "duration": "1 semana",
+    "active": true
+  }
+]

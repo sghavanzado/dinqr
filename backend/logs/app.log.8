@@ -1,0 +1,99 @@
+2025-04-14 02:50:57,190 INFO: Inicio de la aplicación [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:34]
+2025-04-14 02:50:57,300 INFO: Permissions and roles initialized successfully. [in /Users/mcc/Documents/Develop/backup/dinqr/backend/models/user.py:139]
+2025-04-14 02:50:57,300 INFO: Permisos y roles inicializados correctamente [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:49]
+2025-04-14 02:51:13,685 WARNING: Intento de acceso con token inválido: Signature verification failed [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:57]
+2025-04-14 02:51:13,692 WARNING: Intento de acceso con token inválido: Signature verification failed [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:57]
+2025-04-14 02:53:11,361 INFO: Inicio de la aplicación [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:34]
+2025-04-14 02:53:11,458 INFO: Permissions and roles initialized successfully. [in /Users/mcc/Documents/Develop/backup/dinqr/backend/models/user.py:139]
+2025-04-14 02:53:11,458 INFO: Permisos y roles inicializados correctamente [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:49]
+2025-04-14 02:53:58,372 INFO: Inicio de la aplicación [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:34]
+2025-04-14 02:53:58,475 INFO: Permissions and roles initialized successfully. [in /Users/mcc/Documents/Develop/backup/dinqr/backend/models/user.py:139]
+2025-04-14 02:53:58,475 INFO: Permisos y roles inicializados correctamente [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:49]
+2025-04-14 03:07:24,116 WARNING: Intento de acceso con token inválido: Signature verification failed [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:57]
+2025-04-14 03:07:24,119 WARNING: Intento de acceso con token inválido: Signature verification failed [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:57]
+2025-04-14 03:14:29,689 INFO: Inicio de la aplicación [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:34]
+2025-04-14 03:14:29,915 INFO: Permissions and roles initialized successfully. [in /Users/mcc/Documents/Develop/backup/dinqr/backend/models/user.py:139]
+2025-04-14 03:14:29,915 INFO: Permisos y roles inicializados correctamente [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:49]
+2025-04-14 03:14:38,580 WARNING: Intento de acceso con token inválido: Signature verification failed [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:57]
+2025-04-14 03:14:38,585 WARNING: Intento de acceso con token inválido: Signature verification failed [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:57]
+2025-04-14 03:16:43,666 ERROR: Exception on /settings/server-control [POST] [in /Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/flask/app.py:875]
+Traceback (most recent call last):
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/Documents/Develop/backup/dinqr/backend/routes/settings_routes.py", line 41, in server_control
+    if server_process is None or not server_process.is_alive():
+                                     ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Popen' object has no attribute 'is_alive'
+2025-04-14 03:17:00,455 ERROR: Exception on /settings/server-control [POST] [in /Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/flask/app.py:875]
+Traceback (most recent call last):
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/Documents/Develop/backup/dinqr/backend/routes/settings_routes.py", line 41, in server_control
+    if server_process is None or not server_process.is_alive():
+                                     ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Popen' object has no attribute 'is_alive'
+2025-04-14 03:17:16,768 INFO: Inicio de la aplicación [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:34]
+2025-04-14 03:17:16,862 INFO: Permissions and roles initialized successfully. [in /Users/mcc/Documents/Develop/backup/dinqr/backend/models/user.py:139]
+2025-04-14 03:17:16,862 INFO: Permisos y roles inicializados correctamente [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:49]
+2025-04-14 03:17:19,963 WARNING: Intento de acceso con token inválido: Signature verification failed [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:57]
+2025-04-14 03:17:19,970 WARNING: Intento de acceso con token inválido: Signature verification failed [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:57]
+2025-04-14 03:22:14,349 INFO: Inicio de la aplicación [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:34]
+2025-04-14 03:22:14,462 INFO: Permissions and roles initialized successfully. [in /Users/mcc/Documents/Develop/backup/dinqr/backend/models/user.py:139]
+2025-04-14 03:22:14,463 INFO: Permisos y roles inicializados correctamente [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:49]
+2025-04-14 03:22:18,927 WARNING: Intento de acceso con token inválido: Signature verification failed [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:57]
+2025-04-14 03:22:18,937 WARNING: Intento de acceso con token inválido: Signature verification failed [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:57]
+2025-04-14 03:25:20,855 ERROR: Exception on /settings/server-control [POST] [in /Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/flask/app.py:875]
+Traceback (most recent call last):
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/Documents/Develop/backup/dinqr/backend/routes/settings_routes.py", line 41, in server_control
+    if server_process is None or not server_process.is_alive():
+                                     ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Popen' object has no attribute 'is_alive'
+2025-04-14 03:25:28,170 INFO: Inicio de la aplicación [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:34]
+2025-04-14 03:25:28,278 INFO: Permissions and roles initialized successfully. [in /Users/mcc/Documents/Develop/backup/dinqr/backend/models/user.py:139]
+2025-04-14 03:25:28,278 INFO: Permisos y roles inicializados correctamente [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:49]
+2025-04-14 03:25:42,910 WARNING: Intento de acceso con token inválido: Signature verification failed [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:57]
+2025-04-14 03:25:42,916 WARNING: Intento de acceso con token inválido: Signature verification failed [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:57]
+2025-04-14 07:40:01,367 WARNING: Token expirado para el usuario: 1 [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:65]
+2025-04-14 07:40:01,374 WARNING: Token expirado para el usuario: 1 [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:65]
+2025-04-14 11:47:01,620 INFO: Inicio de la aplicación [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:34]

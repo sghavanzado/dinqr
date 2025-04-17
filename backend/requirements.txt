@@ -1,0 +1,11 @@
+Flask
+Flask-SQLAlchemy
+Flask-JWT-Extended
+Flask-Migrate
+Flask-Login
+Werkzeug
+psycopg2-binary
+Flask-Limiter
+Flask-Talisman
+redis
+

@@ -46,27 +46,8 @@ function AreaGradient({ color, id }: { color: string; id: string }) {
 export default function StatCard({
   title,
   value,
-  interval,
   trend,
-  data,
 }: StatCardProps) {
-  const theme = useTheme();
-  const daysInWeek = getDaysInMonth(4, 2024);
-
-  const trendColors = {
-    up:
-      theme.palette.mode === 'light'
-        ? theme.palette.success.main
-        : theme.palette.success.dark,
-    down:
-      theme.palette.mode === 'light'
-        ? theme.palette.error.main
-        : theme.palette.error.dark,
-    neutral:
-      theme.palette.mode === 'light'
-        ? theme.palette.grey[400]
-        : theme.palette.grey[700],
-  };
 
   const labelColors = {
     up: 'success' as const,
@@ -75,8 +56,6 @@ export default function StatCard({
   };
 
   const color = labelColors[trend];
-  const chartColor = trendColors[trend];
-  const trendValues = { up: '+25%', down: '-25%', neutral: '+5%' };
 
   return (
     <Card variant="outlined" sx={{ height: '100%', flexGrow: 1 }}>
@@ -93,35 +72,12 @@ export default function StatCard({
               direction="row"
               sx={{ justifyContent: 'space-between', alignItems: 'center' }}
             >
-              <Typography variant="h4" component="p">
+              <Typography variant="h4" component="p" color={color} >
                 {value}
               </Typography>
-              <Chip size="small" color={color} label={trendValues[trend]} />
             </Stack>
-            <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-              {interval}
-            </Typography>
           </Stack>
-          <Box sx={{ width: '100%', height: 50 }}>
-            <SparkLineChart
-              colors={[chartColor]}
-              data={data}
-              area
-              showHighlight
-              showTooltip
-              xAxis={{
-                scaleType: 'band',
-                data: daysInWeek, // Use the correct property 'data' for xAxis
-              }}
-              sx={{
-                [`& .${areaElementClasses.root}`]: {
-                  fill: `url(#area-gradient-${value})`,
-                },
-              }}
-            >
-              <AreaGradient color={chartColor} id={`area-gradient-${value}`} />
-            </SparkLineChart>
-          </Box>
+          
         </Stack>
       </CardContent>
     </Card>

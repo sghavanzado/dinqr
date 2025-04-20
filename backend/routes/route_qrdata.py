@@ -54,35 +54,30 @@ def generar_firma_hmac(nombre_contacto):
 contactos = {}
 with obtener_conexion() as conn:
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM contactos")
+    cursor.execute("SELECT * FROM sonacard")
     for row in cursor.fetchall():
-        id_normalizado = str(row.id).strip()  # Normalizar el ID eliminando espacios
+        id_normalizado = str(row.sap).strip()  # Normalizar el ID eliminando espacios
         contactos[id_normalizado] = {
             "firma": None,  # Se calculará al iniciar
             "datos": {
-                "id": id_normalizado,
-                "nombre": row.nombre,
-                "empresa": row.empresa,
-                "telefono": row.telefono,
-                "email": row.email,
-                "web": row.web,
-                "direccion": row.direccion,
-                "categoria": row.categoria,
-                "numero_ext": row.numero_ext,
-                "cargo": row.cargo,
-                "unidad_negocio": row.unidad_negocio
+                "sap": id_normalizado,
+                "nome": row.nome,
+                "funcao": row.funcao,
+                "area": row.area,
+                "nif": row.nif,
+                "telefone": row.telefone
             }
         }
 
 # Precalcular firmas al iniciar el servidor
 for contacto_id, contacto in contactos.items():
     contacto_id_normalizado = contacto_id.strip()  # Normalizar el ID
-    contactos[contacto_id_normalizado]['firma'] = generar_firma_hmac(contacto['datos']['nombre'])
+    contactos[contacto_id_normalizado]['firma'] = generar_firma_hmac(contacto['datos']['nome'])
 
 def validar_hmac(f):
     """Decorador para validar HMAC en las solicitudes"""
     def wrapper(*args, **kwargs):
-        id_contacto = request.args.get('id', '').strip()  # Normalizar el ID recibido
+        id_contacto = request.args.get('sap', '').strip()  # Normalizar el ID recibido
         firma_recibida = request.args.get('firma', '').strip()  # Normalizar la firma recibida
         
         # Validar parámetros básicos
@@ -113,7 +108,7 @@ def validar_hmac(f):
 @validar_hmac
 @limiter.limit("10/minute")  # Límite adicional para este endpoint
 def mostrar_contacto():
-    id_contacto = request.args.get('id')
+    id_contacto = request.args.get('sap')
     contacto = contactos.get(id_contacto)
     
     if not contacto:
@@ -128,60 +123,6 @@ def generar_pagina_contacto(datos):
     html_template = f"""
     <!DOCTYPE html>
     <html lang="es">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Contacto - {datos['nombre']}</title>
-        <style>
-            body {{ 
-                font-family: 'Segoe UI', system-ui;
-                max-width: 800px;
-                margin: 2rem auto;
-                padding: 20px;
-                background-color: #f8f9fa;
-            }}
-            .card {{
-                background: white;
-                border-radius: 10px;
-                box-shadow: 0 2px 15px rgba(0,0,0,0.1);
-                padding: 2rem;
-            }}
-            h1 {{ color: #2c3e50; }}
-            .info-section {{ margin: 1.5rem 0; }}
-            .btn-download {{
-                background: #3498db;
-                color: white;
-                padding: 12px 25px;
-                border-radius: 25px;
-                text-decoration: none;
-                display: inline-block;
-                transition: all 0.3s;
-            }}
-            .btn-download:hover {{
-                transform: translateY(-2px);
-                box-shadow: 0 5px 15px rgba(52,152,219,0.4);
-            }}
-        </style>
-    </head>
-    <body>
-        <div class="card">
-            <h1>{datos['nombre']}</h1>
-            <div class="info-section">
-                <p><strong>Empresa:</strong> {datos['empresa']}</p>
-                <p><strong>Teléfono:</strong> <a href="tel:{datos['telefono']}">{datos['telefono']}</a></p>
-                <p><strong>Email:</strong> <a href="mailto:{datos['email']}">{datos['email']}</a></p>
-                <p><strong>Sitio Web:</strong> <a href="{datos['web']}" target="_blank">{datos['web']}</a></p>
-                <p><strong>Dirección:</strong> {datos['direccion']}</p>
-                <p><strong>Categoría:</strong> {datos['categoria']}</p>
-                <p><strong>Número de Extensión:</strong> {datos['numero_ext']}</p>
-                <p><strong>Cargo:</strong> {datos['cargo']}</p>
-                <p><strong>Unidad de Negocio:</strong> {datos['unidad_negocio']}</p>
-            </div>
-            <a href="{generar_vcard(datos)}" class="btn-download" download="contacto.vcf">
-                Descargar Contacto
-            </a>
-        </div>
-    </body>
     </html>
     """
     return render_template_string(html_template)
@@ -191,16 +132,10 @@ def generar_vcard(datos):
     vcard_content = [
         "BEGIN:VCARD",
         "VERSION:3.0",
-        f"FN:{datos.get('nombre', '')}",
-        f"ORG:{datos.get('empresa', '')}",
-        f"TEL;TYPE=WORK,VOICE:{datos.get('telefono', '')}",
-        f"EMAIL;TYPE=WORK:{datos.get('email', '')}",
-        f"URL:{datos.get('web', '')}",
-        f"ADR;TYPE=WORK:;;{datos.get('direccion', '')}",
-        f"CATEGORY:{datos.get('categoria', '')}",
-        f"EXTENSION:{datos.get('numero_ext', '')}",
-        f"TITLE:{datos.get('cargo', '')}",
-        f"DEPARTMENT:{datos.get('unidad_negocio', '')}",
+        f"FN:{datos.get('nome', '')}",
+        f"TITLE:{datos.get('funcao', '')}",
+        f"DEPARTMENT:{datos.get('area', '')}",
+        f"TEL;TYPE=WORK,VOICE:{datos.get('telefone', '')}",        
         "END:VCARD"
     ]
     return "data:text/vcard;charset=utf-8," + "%0A".join(vcard_content)

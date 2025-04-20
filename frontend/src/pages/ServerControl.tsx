@@ -10,15 +10,15 @@ const ServerControl: React.FC = () => {
     } catch (error: any) {
       console.error(error);
       const errorMessage =
-        error.response?.data?.error || error.response?.data?.message || 'Error al realizar la acción.';
-      alert(`Error: ${errorMessage}`);
+        error.response?.data?.error || error.response?.data?.message || 'Erro ao realizar a ação.';
+      alert(`Erro: ${errorMessage}`);
     }
   };
 
   return (
     <Box sx={{ p: 4 }}>
       <Typography variant="h4" gutterBottom>
-        Control del Servidor
+        Controlo do Servidor
       </Typography>
       <Stack spacing={2} direction="row">
         <Button variant="contained" color="primary" onClick={() => handleAction('start')}>
@@ -28,10 +28,10 @@ const ServerControl: React.FC = () => {
           Pausar Servidor
         </Button>
         <Button variant="contained" color="error" onClick={() => handleAction('stop')}>
-          Detener Servidor
+          Parar Servidor
         </Button>
         <Button variant="contained" color="secondary" onClick={() => handleAction('exit')}>
-          Salir
+          Sair
         </Button>
       </Stack>
     </Box>

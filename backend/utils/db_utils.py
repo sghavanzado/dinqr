@@ -37,7 +37,7 @@ def obtener_conexion_remota():
         return pyodbc.connect(
             f"DRIVER={{ODBC Driver 18 for SQL Server}};"
             f"SERVER={os.environ.get('DB_SERVER', '192.168.253.5')};"
-            f"DATABASE={os.environ.get('DB_NAME', 'externaldb')};"
+            f"DATABASE={os.environ.get('DB_NAME', 'empresadb')};"
             f"UID={os.environ.get('DB_USERNAME', 'sa')};"
             f"PWD={os.environ.get('DB_PASSWORD', 'Global2020')};"
             f"TrustServerCertificate=yes"

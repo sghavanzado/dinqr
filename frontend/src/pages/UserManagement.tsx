@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { TextField, Button, Container, Typography, Grid } from '@mui/material';
-import { userService } from '../api/apiService'; // Correctly import userService
+import { userService } from '../api/apiService';
 
 const UserManagement = () => {
   const [users, setUsers] = useState([]);
@@ -17,7 +17,7 @@ const UserManagement = () => {
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const usersData = await userService.getUsers(); // Use userService to fetch users
+      const usersData = await userService.getUsers();
       setUsers(usersData);
     };
     fetchUsers();
@@ -33,18 +33,18 @@ const UserManagement = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await userService.createUser(formData); // Use userService to create a user
-      const usersData = await userService.getUsers(); // Refresh the user list
+      await userService.createUser(formData);
+      const usersData = await userService.getUsers();
       setUsers(usersData);
     } catch (error) {
-      console.error('User creation failed', error);
+      console.error('Falha ao criar utilizador', error);
     }
   };
 
   return (
     <Container>
       <Typography variant="h4" gutterBottom>
-        User Management
+        Gestão de Utilizadores
       </Typography>
       <form onSubmit={handleSubmit}>
         <Grid container spacing={3}>
@@ -52,7 +52,7 @@ const UserManagement = () => {
             <TextField
               required
               name="username"
-              label="Username"
+              label="Nome de Utilizador"
               fullWidth
               value={formData.username}
               onChange={handleChange}
@@ -62,7 +62,7 @@ const UserManagement = () => {
             <TextField
               required
               name="password"
-              label="Password"
+              label="Palavra-passe"
               type="password"
               fullWidth
               value={formData.password}
@@ -83,7 +83,7 @@ const UserManagement = () => {
             <TextField
               required
               name="role"
-              label="Role"
+              label="Função"
               fullWidth
               value={formData.role}
               onChange={handleChange}
@@ -93,7 +93,7 @@ const UserManagement = () => {
             <TextField
               required
               name="name"
-              label="Name"
+              label="Nome"
               fullWidth
               value={formData.name}
               onChange={handleChange}
@@ -102,7 +102,7 @@ const UserManagement = () => {
           <Grid item xs={12} sm={6}>
             <TextField
               name="second_name"
-              label="Second Name"
+              label="Segundo Nome"
               fullWidth
               value={formData.second_name}
               onChange={handleChange}
@@ -112,7 +112,7 @@ const UserManagement = () => {
             <TextField
               required
               name="last_name"
-              label="Last Name"
+              label="Apelido"
               fullWidth
               value={formData.last_name}
               onChange={handleChange}
@@ -121,7 +121,7 @@ const UserManagement = () => {
           <Grid item xs={12} sm={6}>
             <TextField
               name="phone_number"
-              label="Phone Number"
+              label="Número de Telefone"
               fullWidth
               value={formData.phone_number}
               onChange={handleChange}
@@ -129,19 +129,19 @@ const UserManagement = () => {
           </Grid>
           <Grid item xs={12}>
             <Button type="submit" variant="contained" color="primary" fullWidth>
-              Create User
+              Criar Utilizador
             </Button>
           </Grid>
         </Grid>
       </form>
       <Typography variant="h5" gutterBottom>
-        Existing Users
+        Utilizadores Existentes
       </Typography>
       <ul>
         {users.map((user: any) => (
           <li key={user.id}>
             {user.username} - {user.email}
-            <Button onClick={() => userService.deleteUser(user.id)}>Delete</Button>
+            <Button onClick={() => userService.deleteUser(user.id)}>Eliminar</Button>
           </li>
         ))}
       </ul>

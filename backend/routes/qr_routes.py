@@ -40,11 +40,11 @@ def listar_funcionarios():
         with obtener_conexion_remota() as conn:
             cursor = conn.cursor()
             query = """
-                SELECT id, nombre, empresa, telefono, email, web, categoria, numero_ext, cargo, unidad_negocio
-                FROM contactos
-                WHERE id IN ({})
-                AND nombre LIKE ?
-                ORDER BY id
+                SELECT sap, nome, funcao, area, nif, telefone
+                FROM sonacard
+                WHERE sap IN ({})
+                AND nome LIKE ?
+                ORDER BY sap
                 OFFSET ? ROWS FETCH NEXT ? ROWS ONLY
             """.format(",".join("?" for _ in qr_generated_ids))
             cursor.execute(query, (*qr_generated_ids, f"%{filtro}%", (page - 1) * per_page, per_page))
@@ -53,16 +53,12 @@ def listar_funcionarios():
         # Combinar datos y agregar estado de QR
         result = [
             {
-                "id": funcionario.id,
-                "nombre": funcionario.nombre,
-                "empresa": funcionario.empresa,
-                "telefono": funcionario.telefono,
-                "email": funcionario.email,
-                "web": funcionario.web,
-                "categoria": funcionario.categoria,
-                "numero_ext": funcionario.numero_ext,
-                "cargo": funcionario.cargo,
-                "unidad_negocio": funcionario.unidad_negocio,
+                "id": funcionario.sap,
+                "nome": funcionario.nome,
+                "funcao": funcionario.funcao,
+                "area": funcionario.area,
+                "nif": funcionario.nif,
+                "telefone": funcionario.telefone,
                 "qrGenerated": True  # Todos los funcionarios en esta lista tienen QR
             }
             for funcionario in funcionarios
@@ -93,32 +89,28 @@ def listar_funcionarios_sin_qr():
             cursor = conn.cursor()
             if qr_generated_ids:
                 query = """
-                    SELECT id, nombre, empresa, telefono, email, web, categoria, numero_ext, cargo, unidad_negocio
-                    FROM contactos
-                    WHERE id NOT IN ({})
+                    SELECT sap, nome, funcao, area, nif, telefone
+                    FROM sonacard
+                    WHERE sap NOT IN ({})
                 """.format(",".join("?" for _ in qr_generated_ids))
                 cursor.execute(query, tuple(qr_generated_ids))
             else:
                 # Si no hay IDs en qr_generated_ids, devolver todos los funcionarios
                 query = """
-                    SELECT id, nombre, empresa, telefono, email, web, categoria, numero_ext, cargo, unidad_negocio
-                    FROM contactos
+                    SELECT sap, nome, funcao, area, nif, telefone
+                    FROM sonacard
                 """
                 cursor.execute(query)
             funcionarios = cursor.fetchall()
 
         result = [
             {
-                "id": funcionario.id,
-                "nombre": funcionario.nombre,
-                "empresa": funcionario.empresa,
-                "telefono": funcionario.telefono,
-                "email": funcionario.email,
-                "web": funcionario.web,
-                "categoria": funcionario.categoria,
-                "numero_ext": funcionario.numero_ext,
-                "cargo": funcionario.cargo,
-                "unidad_negocio": funcionario.unidad_negocio,
+                "id": funcionario.sap,
+                "nome": funcionario.nome,
+                "funcao": funcionario.funcao,
+                "area": funcionario.area,
+                "nif": funcionario.nif,
+                "telefone": funcionario.telefone,
             }
             for funcionario in funcionarios
         ]

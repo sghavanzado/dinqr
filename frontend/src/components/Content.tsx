@@ -6,32 +6,31 @@ import AutoFixHighRoundedIcon from '@mui/icons-material/AutoFixHighRounded';
 import ConstructionRoundedIcon from '@mui/icons-material/ConstructionRounded';
 import SettingsSuggestRoundedIcon from '@mui/icons-material/SettingsSuggestRounded';
 import ThumbUpAltRoundedIcon from '@mui/icons-material/ThumbUpAltRounded';
-import { SitemarkIcon } from './CustomIcons';
 
 const items = [
   {
     icon: <SettingsSuggestRoundedIcon sx={{ color: 'text.secondary' }} />,
-    title: 'Lorem Ipsum Title 1',
+    title: 'Configuração Inicial',
     description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+      'Antes de iniciar o serviço, certifique-se de configurar corretamente os campos na seção de Configurações, como o servidor, utilizador, palavra-passe, base de dados, pasta de saída, domínio e IP do servidor.',
   },
   {
     icon: <ConstructionRoundedIcon sx={{ color: 'text.secondary' }} />,
-    title: 'Lorem Ipsum Title 2',
+    title: 'Geração de Códigos QR',
     description:
-      'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+      'Utilize a seção de Gestão de Códigos QR para gerar, visualizar, descarregar ou eliminar códigos QR para os funcionários registados.',
   },
   {
     icon: <ThumbUpAltRoundedIcon sx={{ color: 'text.secondary' }} />,
-    title: 'Lorem Ipsum Title 3',
+    title: 'Gestão de Funcionários',
     description:
-      'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
+      'Administre os funcionários com e sem códigos QR, aplicando filtros e selecionando múltiplos registos para gerar códigos QR em lote.',
   },
   {
     icon: <AutoFixHighRoundedIcon sx={{ color: 'text.secondary' }} />,
-    title: 'Lorem Ipsum Title 4',
+    title: 'Controlo do Servidor',
     description:
-      'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+      'Na seção de Controlo do Servidor, pode iniciar, pausar ou parar o serviço conforme necessário.',
   },
 ];
 
@@ -40,9 +39,7 @@ export default function Content() {
     <Stack
       sx={{ flexDirection: 'column', alignSelf: 'center', gap: 4, maxWidth: 450 }}
     >
-      <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-        <SitemarkIcon />
-      </Box>
+      <Box sx={{ display: { xs: 'none', md: 'flex' } }}></Box>
       {items.map((item, index) => (
         <Stack key={index} direction="row" sx={{ gap: 2 }}>
           {item.icon}

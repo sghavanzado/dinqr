@@ -58,13 +58,13 @@ export default function SignInCard() {
 
     // Validación de email
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Ingrese un correo electrónico válido';
+      newErrors.email = 'Insira um endereço de email válido';
       isValid = false;
     }
 
     // Validación de contraseña
     if (formData.password.length < 6) {
-      newErrors.password = 'La contraseña debe tener al menos 6 caracteres';
+      newErrors.password = 'A palavra-passe deve ter pelo menos 6 caracteres';
       isValid = false;
     }
 
@@ -82,7 +82,7 @@ export default function SignInCard() {
     } catch (error: any) {
       setErrors(prev => ({
         ...prev,
-        general: error.message || 'Error al iniciar sesión. Verifique sus credenciales.'
+        general: error.message || 'Erro ao iniciar sessão. Verifique as suas credenciais.'
       }));
     }
   };
@@ -121,7 +121,7 @@ export default function SignInCard() {
           mb: 3
         }}
       >
-        Iniciar Sesión
+        Iniciar Sessão
       </Typography>
 
       {errors.general && (
@@ -150,12 +150,12 @@ export default function SignInCard() {
         }}
       >
         <FormControl fullWidth>
-          <FormLabel htmlFor="email">Correo Electrónico</FormLabel>
+          <FormLabel htmlFor="email">Email</FormLabel>
           <TextField
             id="email"
             name="email"
             type="email"
-            placeholder="tucorreo@ejemplo.com"
+            placeholder="oseuemail@exemplo.com"
             autoComplete="email"
             value={formData.email}
             onChange={handleInputChange}
@@ -173,14 +173,7 @@ export default function SignInCard() {
             justifyContent: 'space-between',
             mb: 1
           }}>
-            <FormLabel htmlFor="password">Contraseña</FormLabel>
-            <Link 
-              href="/forgot-password" 
-              variant="body2" 
-              sx={{ alignSelf: 'baseline' }}
-            >
-              ¿Olvidaste tu contraseña?
-            </Link>
+            <FormLabel htmlFor="password">Palavra-passe</FormLabel>
           </Box>
           <TextField
             id="password"
@@ -208,7 +201,7 @@ export default function SignInCard() {
               disabled={authLoading}
             />
           }
-          label="Recordar sesión"
+          label="Lembrar sessão"
         />
 
         <Button 
@@ -218,41 +211,7 @@ export default function SignInCard() {
           disabled={authLoading}
           sx={{ py: 1.5, mt: 2 }}
         >
-          {authLoading ? 'Cargando...' : 'Iniciar Sesión'}
-        </Button>
-
-        <Typography sx={{ textAlign: 'center', mt: 2 }}>
-          ¿No tienes cuenta?{' '}
-          <Link
-            href="/registro"
-            variant="body2"
-            sx={{ fontWeight: 600 }}
-          >
-            Regístrate
-          </Link>
-        </Typography>
-      </Box>
-
-      <Divider sx={{ my: 3 }}>o</Divider>
-
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-        <Button
-          fullWidth
-          variant="outlined"
-          onClick={() => window.location.href = '/api/auth/google'} // Usar ruta proxy
-          startIcon={<GoogleIcon />}
-        >
-          Continuar con Google
-        </Button>
-
-        <Button
-          fullWidth
-          variant="outlined"
-          onClick={() => window.location.href = '/api/auth/facebook'}
-          startIcon={<FacebookIcon />}
-          disabled={authLoading}
-        >
-          Continuar con Facebook
+          {authLoading ? 'A carregar...' : 'Iniciar Sessão'}
         </Button>
       </Box>
     </Card>

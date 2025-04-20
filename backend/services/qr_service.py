@@ -39,15 +39,35 @@ def listar_funcionarios(page, per_page, filtro):
     """Listar funcionarios desde la base de datos remota."""
     with obtener_conexion_remota() as conn:
         cursor = conn.cursor()
-        query = "SELECT * FROM contactos WHERE nombre LIKE ? ORDER BY id OFFSET ? ROWS FETCH NEXT ? ROWS ONLY"  # SQL Server usa ?
+        query = "SELECT * FROM sonacard WHERE nome LIKE ? ORDER BY sap OFFSET ? ROWS FETCH NEXT ? ROWS ONLY"  # SQL Server usa ?
         cursor.execute(query, (f"%{filtro}%", (page - 1) * per_page, per_page))
         funcionarios = cursor.fetchall()
-    return [{"id": row.id, "nombre": row.nombre} for row in funcionarios]
+    return [{"sap": row.sap, "nome": row.nome} for row in funcionarios]
 
-def generar_firma(nombre):
+def obtener_total_funcionarios():
+    """Obtener la cantidad total de funcionarios desde la base de datos remota."""
+    with obtener_conexion_remota() as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT COUNT(*) FROM sonacard")  # Contar todos los registros en la tabla sonacard
+        result = cursor.fetchone()
+        if not result:
+            raise ValueError("No se pudo obtener la cantidad total de funcionarios.")
+        return result[0]
+
+def obtener_total_funcionarios_con_qr():
+    """Obtener la cantidad total de funcionarios con código QR en la base de datos local."""
+    with obtener_conexion_local() as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT COUNT(*) FROM qr_codes")  # Contar todos los registros en la tabla qr_codes
+        result = cursor.fetchone()
+        if not result:
+            raise ValueError("No se pudo obtener la cantidad total de funcionarios con QR.")
+        return result[0]
+
+def generar_firma(nome):
     """Generar HMAC-SHA256 basado en el nombre del contacto."""
     secret_key = b'secret_key'  # Cambiar por una clave segura
-    return hmac.new(secret_key, nombre.encode('utf-8'), hashlib.sha256).hexdigest()
+    return hmac.new(secret_key, nome.encode('utf-8'), hashlib.sha256).hexdigest()
 
 def generar_qr(ids):
     """Generar códigos QR para una lista de IDs."""
@@ -65,7 +85,7 @@ def generar_qr(ids):
 
     resultados = []
     placeholders = ','.join(['?'] * len(ids))  # SQL Server usa ?
-    query = f"SELECT * FROM contactos WHERE id IN ({placeholders})"
+    query = f"SELECT * FROM sonacard WHERE sap IN ({placeholders})"
 
     with obtener_conexion_remota() as conn:
         cursor = conn.cursor()
@@ -76,14 +96,14 @@ def generar_qr(ids):
         cursor = conn.cursor()
         for contacto in contactos:
             # Generar firma HMAC-SHA256
-            firma = generar_firma(contacto.nombre)
+            firma = generar_firma(contacto.nome)
 
             # Crear el código QR con la URL segura
             qr = qrcode.QRCode(version=5, error_correction=qrcode.constants.ERROR_CORRECT_H, box_size=12, border=4)
-            qr_url = f"http://{server_domain}:{server_port}/contacto?id={contacto.id}&hash={firma}"
+            qr_url = f"http://{server_domain}:{server_port}/contacto?sap={contacto.sap}&hash={firma}"
             qr.add_data(qr_url)
             qr.make(fit=True)
-            archivo_qr = os.path.join(output_folder, f"qr_{contacto.id}.png")
+            archivo_qr = os.path.join(output_folder, f"qr_{contacto.sap}.png")
             qr.make_image(fill_color="black", back_color="white").save(archivo_qr)
 
             # Guardar datos en la tabla qr_codes
@@ -94,10 +114,10 @@ def generar_qr(ids):
                 nombre = EXCLUDED.nombre,
                 firma = EXCLUDED.firma,
                 archivo_qr = EXCLUDED.archivo_qr
-            """, (contacto.id, contacto.nombre, firma, archivo_qr))  # PostgreSQL usa %s
+            """, (contacto.sap, contacto.nome, firma, archivo_qr))  # PostgreSQL usa %s
             conn.commit()
 
-            resultados.append({"id": contacto.id, "archivo": archivo_qr, "url": qr_url})
+            resultados.append({"sap": contacto.sap, "archivo": archivo_qr, "url": qr_url})
     return resultados
 
 def descargar_qr(contact_id):

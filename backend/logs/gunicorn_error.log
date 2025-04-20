@@ -1143,3 +1143,403 @@ SystemExit: 1
 [2025-04-17 12:19:36 +0100] [48483] [INFO] Booting worker with pid: 48483
 [2025-04-17 12:19:36 +0100] [47101] [ERROR] Worker (pid:47104) was sent SIGKILL! Perhaps out of memory?
 [2025-04-17 12:19:36 +0100] [48484] [INFO] Booting worker with pid: 48484
+[2025-04-17 15:24:24 +0100] [47101] [INFO] Handling signal: int
+[2025-04-17 15:24:24 +0100] [47102] [INFO] Worker exiting (pid: 47102)
+[2025-04-17 15:24:24 +0100] [47845] [INFO] Worker exiting (pid: 47845)
+[2025-04-17 15:24:24 +0100] [48483] [INFO] Worker exiting (pid: 48483)
+[2025-04-17 15:24:24 +0100] [48484] [INFO] Worker exiting (pid: 48484)
+[2025-04-17 15:24:25 +0100] [47101] [INFO] Shutting down: Master
+[2025-04-17 20:50:13 +0100] [61224] [INFO] Starting gunicorn 23.0.0
+[2025-04-17 20:50:13 +0100] [61224] [INFO] Listening at: http://192.168.158.204:7890 (61224)
+[2025-04-17 20:50:13 +0100] [61224] [INFO] Using worker: sync
+[2025-04-17 20:50:13 +0100] [61225] [INFO] Booting worker with pid: 61225
+[2025-04-17 20:50:13 +0100] [61226] [INFO] Booting worker with pid: 61226
+[2025-04-17 20:50:13 +0100] [61227] [INFO] Booting worker with pid: 61227
+[2025-04-17 20:50:13 +0100] [61228] [INFO] Booting worker with pid: 61228
+[2025-04-17 21:12:49 +0100] [61224] [CRITICAL] WORKER TIMEOUT (pid:61227)
+[2025-04-17 21:12:49 +0100] [61227] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/workers/sync.py", line 133, in handle
+    req = next(parser)
+          ^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/parser.py", line 41, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/message.py", line 259, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/message.py", line 271, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/message.py", line 262, in get_data
+    data = unreader.read()
+           ^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/unreader.py", line 36, in read
+    d = self.chunk()
+        ^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/unreader.py", line 63, in chunk
+    return self.sock.recv(self.mxchunk)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/workers/base.py", line 204, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2025-04-17 21:12:49 +0100] [61227] [INFO] Worker exiting (pid: 61227)
+[2025-04-17 21:12:49 +0100] [61608] [INFO] Booting worker with pid: 61608
+[2025-04-17 21:18:42 +0100] [61224] [CRITICAL] WORKER TIMEOUT (pid:61225)
+[2025-04-17 21:18:42 +0100] [61225] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/workers/sync.py", line 133, in handle
+    req = next(parser)
+          ^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/parser.py", line 41, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/message.py", line 259, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/message.py", line 271, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/message.py", line 262, in get_data
+    data = unreader.read()
+           ^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/unreader.py", line 36, in read
+    d = self.chunk()
+        ^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/unreader.py", line 63, in chunk
+    return self.sock.recv(self.mxchunk)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/workers/base.py", line 204, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2025-04-17 21:18:42 +0100] [61225] [INFO] Worker exiting (pid: 61225)
+[2025-04-17 21:18:42 +0100] [61706] [INFO] Booting worker with pid: 61706
+[2025-04-17 21:27:51 +0100] [61224] [INFO] Handling signal: int
+[2025-04-17 21:27:51 +0100] [61228] [INFO] Worker exiting (pid: 61228)
+[2025-04-17 21:27:51 +0100] [61706] [INFO] Worker exiting (pid: 61706)
+[2025-04-17 21:27:51 +0100] [61608] [INFO] Worker exiting (pid: 61608)
+[2025-04-17 21:27:51 +0100] [61226] [INFO] Worker exiting (pid: 61226)
+[2025-04-17 21:27:52 +0100] [61224] [INFO] Shutting down: Master
+[2025-04-17 21:28:52 +0100] [61883] [INFO] Starting gunicorn 23.0.0
+[2025-04-17 21:28:52 +0100] [61883] [INFO] Listening at: http://192.168.158.204:7890 (61883)
+[2025-04-17 21:28:52 +0100] [61883] [INFO] Using worker: sync
+[2025-04-17 21:28:52 +0100] [61884] [INFO] Booting worker with pid: 61884
+[2025-04-17 21:28:52 +0100] [61885] [INFO] Booting worker with pid: 61885
+[2025-04-17 21:28:52 +0100] [61886] [INFO] Booting worker with pid: 61886
+[2025-04-17 21:28:52 +0100] [61887] [INFO] Booting worker with pid: 61887
+[2025-04-17 21:31:01 +0100] [61883] [CRITICAL] WORKER TIMEOUT (pid:61885)
+[2025-04-17 21:31:01 +0100] [61885] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/workers/sync.py", line 133, in handle
+    req = next(parser)
+          ^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/parser.py", line 41, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/message.py", line 259, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/message.py", line 271, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/message.py", line 262, in get_data
+    data = unreader.read()
+           ^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/unreader.py", line 36, in read
+    d = self.chunk()
+        ^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/unreader.py", line 63, in chunk
+    return self.sock.recv(self.mxchunk)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/workers/base.py", line 204, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2025-04-17 21:31:01 +0100] [61885] [INFO] Worker exiting (pid: 61885)
+[2025-04-17 21:31:01 +0100] [61927] [INFO] Booting worker with pid: 61927
+[2025-04-17 21:42:05 +0100] [61883] [CRITICAL] WORKER TIMEOUT (pid:61927)
+[2025-04-17 21:42:05 +0100] [61927] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/workers/sync.py", line 133, in handle
+    req = next(parser)
+          ^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/parser.py", line 41, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/message.py", line 259, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/message.py", line 271, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/message.py", line 262, in get_data
+    data = unreader.read()
+           ^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/unreader.py", line 36, in read
+    d = self.chunk()
+        ^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/unreader.py", line 63, in chunk
+    return self.sock.recv(self.mxchunk)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/workers/base.py", line 204, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2025-04-17 21:42:05 +0100] [61927] [INFO] Worker exiting (pid: 61927)
+[2025-04-17 21:42:05 +0100] [62114] [INFO] Booting worker with pid: 62114
+[2025-04-17 21:42:50 +0100] [61883] [CRITICAL] WORKER TIMEOUT (pid:61884)
+[2025-04-17 21:42:50 +0100] [61884] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/workers/sync.py", line 133, in handle
+    req = next(parser)
+          ^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/parser.py", line 41, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/message.py", line 259, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/message.py", line 271, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/message.py", line 262, in get_data
+    data = unreader.read()
+           ^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/unreader.py", line 36, in read
+    d = self.chunk()
+        ^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/unreader.py", line 63, in chunk
+    return self.sock.recv(self.mxchunk)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/workers/base.py", line 204, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2025-04-17 21:42:50 +0100] [61884] [INFO] Worker exiting (pid: 61884)
+[2025-04-17 21:42:50 +0100] [62125] [INFO] Booting worker with pid: 62125
+[2025-04-17 21:46:17 +0100] [61883] [CRITICAL] WORKER TIMEOUT (pid:61886)
+[2025-04-17 21:46:17 +0100] [61886] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/workers/sync.py", line 133, in handle
+    req = next(parser)
+          ^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/parser.py", line 41, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/message.py", line 259, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/message.py", line 271, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/message.py", line 262, in get_data
+    data = unreader.read()
+           ^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/unreader.py", line 36, in read
+    d = self.chunk()
+        ^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/unreader.py", line 63, in chunk
+    return self.sock.recv(self.mxchunk)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/workers/base.py", line 204, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2025-04-17 21:46:17 +0100] [61886] [INFO] Worker exiting (pid: 61886)
+[2025-04-17 21:46:17 +0100] [62199] [INFO] Booting worker with pid: 62199
+[2025-04-17 21:46:46 +0100] [61883] [CRITICAL] WORKER TIMEOUT (pid:62125)
+[2025-04-17 21:46:46 +0100] [62125] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/workers/sync.py", line 133, in handle
+    req = next(parser)
+          ^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/parser.py", line 41, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/message.py", line 259, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/message.py", line 271, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/message.py", line 262, in get_data
+    data = unreader.read()
+           ^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/unreader.py", line 36, in read
+    d = self.chunk()
+        ^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/unreader.py", line 63, in chunk
+    return self.sock.recv(self.mxchunk)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/workers/base.py", line 204, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2025-04-17 21:46:46 +0100] [62125] [INFO] Worker exiting (pid: 62125)
+[2025-04-17 21:46:46 +0100] [62225] [INFO] Booting worker with pid: 62225
+[2025-04-17 22:24:14 +0100] [61883] [INFO] Handling signal: winch
+[2025-04-17 22:24:22 +0100] [61883] [INFO] Handling signal: winch
+[2025-04-17 22:29:13 +0100] [67819] [INFO] Starting gunicorn 23.0.0
+[2025-04-17 22:29:13 +0100] [67819] [ERROR] Invalid address: ('192.168.158.204', 7890)
+[2025-04-17 22:29:13 +0100] [67819] [ERROR] connection to ('192.168.158.204', 7890) failed: [Errno 49] Can't assign requested address
+[2025-04-17 22:29:14 +0100] [67819] [ERROR] Invalid address: ('192.168.158.204', 7890)
+[2025-04-17 22:29:14 +0100] [67819] [ERROR] connection to ('192.168.158.204', 7890) failed: [Errno 49] Can't assign requested address
+[2025-04-17 22:29:15 +0100] [67819] [ERROR] Invalid address: ('192.168.158.204', 7890)
+[2025-04-17 22:29:15 +0100] [67819] [ERROR] connection to ('192.168.158.204', 7890) failed: [Errno 49] Can't assign requested address
+[2025-04-17 22:29:16 +0100] [67819] [ERROR] Invalid address: ('192.168.158.204', 7890)
+[2025-04-17 22:29:16 +0100] [67819] [ERROR] connection to ('192.168.158.204', 7890) failed: [Errno 49] Can't assign requested address
+[2025-04-17 22:29:17 +0100] [67819] [ERROR] Invalid address: ('192.168.158.204', 7890)
+[2025-04-17 22:29:17 +0100] [67819] [ERROR] connection to ('192.168.158.204', 7890) failed: [Errno 49] Can't assign requested address
+[2025-04-17 22:29:18 +0100] [67819] [ERROR] Can't connect to ('192.168.158.204', 7890)
+[2025-04-17 22:43:29 +0100] [61883] [INFO] Handling signal: winch
+[2025-04-17 22:43:34 +0100] [61883] [INFO] Handling signal: winch
+[2025-04-17 22:47:00 +0100] [69479] [INFO] Starting gunicorn 23.0.0
+[2025-04-17 22:47:00 +0100] [69479] [INFO] Listening at: http://192.168.170.204:7890 (69479)
+[2025-04-17 22:47:00 +0100] [69479] [INFO] Using worker: sync
+[2025-04-17 22:47:00 +0100] [69480] [INFO] Booting worker with pid: 69480
+[2025-04-17 22:47:00 +0100] [69481] [INFO] Booting worker with pid: 69481
+[2025-04-17 22:47:00 +0100] [69482] [INFO] Booting worker with pid: 69482
+[2025-04-17 22:47:00 +0100] [69483] [INFO] Booting worker with pid: 69483
+[2025-04-17 22:48:10 +0100] [69479] [INFO] Handling signal: int
+[2025-04-17 22:48:10 +0100] [61883] [INFO] Handling signal: int
+[2025-04-17 22:48:10 +0100] [69482] [INFO] Worker exiting (pid: 69482)
+[2025-04-17 22:48:10 +0100] [69480] [INFO] Worker exiting (pid: 69480)
+[2025-04-17 22:48:10 +0100] [69483] [INFO] Worker exiting (pid: 69483)
+[2025-04-17 22:48:10 +0100] [69481] [INFO] Worker exiting (pid: 69481)
+[2025-04-17 22:48:10 +0100] [62114] [INFO] Worker exiting (pid: 62114)
+[2025-04-17 22:48:10 +0100] [61887] [INFO] Worker exiting (pid: 61887)
+[2025-04-17 22:48:10 +0100] [62199] [INFO] Worker exiting (pid: 62199)
+[2025-04-17 22:48:10 +0100] [62225] [INFO] Worker exiting (pid: 62225)
+[2025-04-17 22:48:10 +0100] [69479] [INFO] Shutting down: Master
+[2025-04-17 22:48:10 +0100] [61883] [INFO] Shutting down: Master
+[2025-04-17 22:48:29 +0100] [69549] [INFO] Starting gunicorn 23.0.0
+[2025-04-17 22:48:29 +0100] [69549] [INFO] Listening at: http://192.168.170.204:7890 (69549)
+[2025-04-17 22:48:29 +0100] [69549] [INFO] Using worker: sync
+[2025-04-17 22:48:29 +0100] [69550] [INFO] Booting worker with pid: 69550
+[2025-04-17 22:48:29 +0100] [69552] [INFO] Booting worker with pid: 69552
+[2025-04-17 22:48:29 +0100] [69553] [INFO] Booting worker with pid: 69553
+[2025-04-17 22:48:29 +0100] [69555] [INFO] Booting worker with pid: 69555
+[2025-04-17 23:44:27 +0100] [69549] [INFO] Handling signal: int
+[2025-04-17 23:44:27 +0100] [69555] [INFO] Worker exiting (pid: 69555)
+[2025-04-17 23:44:27 +0100] [69552] [INFO] Worker exiting (pid: 69552)
+[2025-04-17 23:44:27 +0100] [69550] [INFO] Worker exiting (pid: 69550)
+[2025-04-17 23:44:27 +0100] [69553] [INFO] Worker exiting (pid: 69553)
+[2025-04-17 23:44:27 +0100] [69549] [INFO] Shutting down: Master
+[2025-04-17 23:45:46 +0100] [71868] [INFO] Starting gunicorn 23.0.0
+[2025-04-17 23:45:46 +0100] [71868] [INFO] Listening at: http://192.168.170.204:7890 (71868)
+[2025-04-17 23:45:46 +0100] [71868] [INFO] Using worker: sync
+[2025-04-17 23:45:46 +0100] [71869] [INFO] Booting worker with pid: 71869
+[2025-04-17 23:45:46 +0100] [71870] [INFO] Booting worker with pid: 71870
+[2025-04-17 23:45:46 +0100] [71871] [INFO] Booting worker with pid: 71871
+[2025-04-17 23:45:46 +0100] [71872] [INFO] Booting worker with pid: 71872
+[2025-04-17 23:48:00 +0100] [71868] [CRITICAL] WORKER TIMEOUT (pid:71871)
+[2025-04-17 23:48:00 +0100] [71871] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/workers/sync.py", line 133, in handle
+    req = next(parser)
+          ^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/parser.py", line 41, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/message.py", line 259, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/message.py", line 271, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/message.py", line 262, in get_data
+    data = unreader.read()
+           ^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/unreader.py", line 36, in read
+    d = self.chunk()
+        ^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/unreader.py", line 63, in chunk
+    return self.sock.recv(self.mxchunk)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/workers/base.py", line 204, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2025-04-17 23:48:00 +0100] [71871] [INFO] Worker exiting (pid: 71871)
+[2025-04-17 23:48:00 +0100] [71971] [INFO] Booting worker with pid: 71971
+[2025-04-17 23:52:29 +0100] [71868] [CRITICAL] WORKER TIMEOUT (pid:71971)
+[2025-04-17 23:52:29 +0100] [71971] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/workers/sync.py", line 133, in handle
+    req = next(parser)
+          ^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/parser.py", line 41, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/message.py", line 259, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/message.py", line 271, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/message.py", line 262, in get_data
+    data = unreader.read()
+           ^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/unreader.py", line 36, in read
+    d = self.chunk()
+        ^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/unreader.py", line 63, in chunk
+    return self.sock.recv(self.mxchunk)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/workers/base.py", line 204, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2025-04-17 23:52:29 +0100] [71971] [INFO] Worker exiting (pid: 71971)
+[2025-04-17 23:52:30 +0100] [72087] [INFO] Booting worker with pid: 72087
+[2025-04-17 23:55:39 +0100] [71868] [CRITICAL] WORKER TIMEOUT (pid:71869)
+[2025-04-17 23:55:39 +0100] [71869] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/workers/sync.py", line 133, in handle
+    req = next(parser)
+          ^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/parser.py", line 41, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/message.py", line 259, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/message.py", line 271, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/message.py", line 262, in get_data
+    data = unreader.read()
+           ^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/unreader.py", line 36, in read
+    d = self.chunk()
+        ^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/http/unreader.py", line 63, in chunk
+    return self.sock.recv(self.mxchunk)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/gunicorn/workers/base.py", line 204, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2025-04-17 23:55:39 +0100] [71869] [INFO] Worker exiting (pid: 71869)
+[2025-04-17 23:55:39 +0100] [72192] [INFO] Booting worker with pid: 72192
+[2025-04-18 00:31:42 +0100] [71868] [INFO] Handling signal: int
+[2025-04-18 00:31:42 +0100] [72192] [INFO] Worker exiting (pid: 72192)
+[2025-04-18 00:31:42 +0100] [71872] [INFO] Worker exiting (pid: 71872)
+[2025-04-18 00:31:42 +0100] [72087] [INFO] Worker exiting (pid: 72087)
+[2025-04-18 00:31:42 +0100] [71870] [INFO] Worker exiting (pid: 71870)
+[2025-04-18 00:31:42 +0100] [71868] [INFO] Shutting down: Master
+[2025-04-18 00:32:24 +0100] [72952] [INFO] Starting gunicorn 23.0.0
+[2025-04-18 00:32:24 +0100] [72952] [INFO] Listening at: http://192.168.170.204:7890 (72952)
+[2025-04-18 00:32:24 +0100] [72952] [INFO] Using worker: sync
+[2025-04-18 00:32:24 +0100] [72953] [INFO] Booting worker with pid: 72953
+[2025-04-18 00:32:24 +0100] [72954] [INFO] Booting worker with pid: 72954
+[2025-04-18 00:32:24 +0100] [72955] [INFO] Booting worker with pid: 72955
+[2025-04-18 00:32:24 +0100] [72956] [INFO] Booting worker with pid: 72956
+[2025-04-18 09:59:55 +0100] [72952] [INFO] Handling signal: winch
+[2025-04-18 10:15:16 +0100] [72952] [INFO] Handling signal: winch
+[2025-04-18 10:18:35 +0100] [72952] [INFO] Handling signal: winch
+[2025-04-19 15:02:55 +0100] [72952] [INFO] Handling signal: winch
+[2025-04-20 00:04:22 +0100] [72952] [INFO] Handling signal: winch
+[2025-04-20 00:04:29 +0100] [72952] [INFO] Handling signal: winch

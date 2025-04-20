@@ -2,16 +2,13 @@ import * as React from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import Stack from '@mui/material/Stack';
 import AppTheme from '../shared-theme/AppTheme';
-import ColorModeSelect from '../shared-theme/ColorModeSelect';
 import SignInCard from '../components/SignInCard';
 import Content from '../components/Content';
 
-// Componente principal para la página de inicio de sesión
 export default function SignInSide(props: { disableCustomTheme?: boolean }) {
   return (
     <AppTheme {...props}>
       <CssBaseline enableColorScheme />
-      <ColorModeSelect sx={{ position: 'fixed', top: '1rem', right: '1rem' }} />
       <Stack
         direction={{ xs: 'column-reverse', md: 'row' }}
         component="main"
@@ -58,9 +55,7 @@ export default function SignInSide(props: { disableCustomTheme?: boolean }) {
               m: 'auto',
             }}
           >
-            {/* Componente de contenido */}
             <Content />
-            {/* Componente de tarjeta de inicio de sesión */}
             <SignInCard />
           </Stack>
         </Stack>

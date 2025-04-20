@@ -1,4 +1,13 @@
 import React, { useState, useEffect } from 'react';
+
+// Extend the Window interface to include electronAPI
+declare global {
+  interface Window {
+    electronAPI?: {
+      selectFolder: () => Promise<string | null>;
+    };
+  }
+}
 import {
   Container,
   Typography,
@@ -8,6 +17,10 @@ import {
   Snackbar,
   Alert,
 } from '@mui/material';
+import SaveIcon from '@mui/icons-material/Save';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import StopIcon from '@mui/icons-material/Stop';
+import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import axiosInstance from '../api/axiosInstance';
 
 interface Settings {
@@ -27,7 +40,7 @@ const defaultSettings: Settings = {
   database: '',
   outputFolder: '',
   serverDomain: 'example.com',
-  serverPort: '80', // Puerto predeterminado para HTTP
+  serverPort: '80', // Porta padrão para HTTP
 };
 
 const SettingsPage = () => {
@@ -60,7 +73,7 @@ const SettingsPage = () => {
           serverPort: fetchedSettings.serverPort || defaultSettings.serverPort,
         });
       } catch (error) {
-        setSnackbarMessage('Error al cargar la configuración.');
+        setSnackbarMessage('Erro ao carregar as configurações.');
         setSnackbarSeverity('error');
         setSnackbarOpen(true);
       }
@@ -72,7 +85,7 @@ const SettingsPage = () => {
     const { server, username, password, database, outputFolder, serverDomain, serverPort } = settings;
 
     if (!server || !username || !password || !database || !outputFolder || !serverDomain || !serverPort) {
-      setSnackbarMessage('Por favor complete todos los campos.');
+      setSnackbarMessage('Por favor, preencha todos os campos.');
       setSnackbarSeverity('error');
       setSnackbarOpen(true);
       return;
@@ -81,11 +94,11 @@ const SettingsPage = () => {
     // Save settings to the backend
     try {
       await axiosInstance.post('/settings', settings);
-      setSnackbarMessage('Configuración guardada exitosamente.');
+      setSnackbarMessage('Configurações guardadas com sucesso.');
       setSnackbarSeverity('success');
       setSnackbarOpen(true);
     } catch (error) {
-      setSnackbarMessage('Error al guardar la configuración.');
+      setSnackbarMessage('Erro ao guardar as configurações.');
       setSnackbarSeverity('error');
       setSnackbarOpen(true);
     }
@@ -94,12 +107,12 @@ const SettingsPage = () => {
   const handleServerAction = async (action: string) => {
     try {
       const response = await axiosInstance.post(`/settings/server/${action}`);
-      setSnackbarMessage(response.data.message || 'Acción realizada con éxito.');
+      setSnackbarMessage(response.data.message || 'Ação realizada com sucesso.');
       setSnackbarSeverity('success');
     } catch (error: any) {
       const errorMessage =
-        error.response?.data?.error || error.response?.data?.message || 'Error al realizar la acción.';
-      setSnackbarMessage(`Error: ${errorMessage}`);
+        error.response?.data?.error || error.response?.data?.message || 'Erro ao realizar a ação.';
+      setSnackbarMessage(`Erro: ${errorMessage}`);
       setSnackbarSeverity('error');
     } finally {
       setSnackbarOpen(true);
@@ -113,12 +126,12 @@ const SettingsPage = () => {
   return (
     <Container>
       <Typography variant="h4" gutterBottom>
-        Configuración
+        Configurações
       </Typography>
       <Grid container spacing={3}>
         <Grid item xs={12}>
           <TextField
-            label="Servidor (IP o Nombre)"
+            label="Servidor (IP ou Nome)"
             fullWidth
             value={settings.server}
             onChange={(e) => setSettings({ ...settings, server: e.target.value })}
@@ -126,7 +139,7 @@ const SettingsPage = () => {
         </Grid>
         <Grid item xs={12}>
           <TextField
-            label="Usuario"
+            label="Utilizador"
             fullWidth
             value={settings.username}
             onChange={(e) => setSettings({ ...settings, username: e.target.value })}
@@ -134,7 +147,7 @@ const SettingsPage = () => {
         </Grid>
         <Grid item xs={12}>
           <TextField
-            label="Contraseña"
+            label="Palavra-passe"
             type="password"
             fullWidth
             value={settings.password}
@@ -143,7 +156,7 @@ const SettingsPage = () => {
         </Grid>
         <Grid item xs={12}>
           <TextField
-            label="Nombre de la Base de Datos"
+            label="Nome da Base de Dados"
             fullWidth
             value={settings.database}
             onChange={(e) => setSettings({ ...settings, database: e.target.value })}
@@ -151,7 +164,7 @@ const SettingsPage = () => {
         </Grid>
         <Grid item xs={12}>
           <TextField
-            label="Carpeta de Salida para los Códigos QR"
+            label="Pasta de Saída para os Códigos QR"
             fullWidth
             value={settings.outputFolder}
             onChange={(e) => setSettings({ ...settings, outputFolder: e.target.value })}
@@ -159,7 +172,7 @@ const SettingsPage = () => {
         </Grid>
         <Grid item xs={12}>
           <TextField
-            label="Dominio o IP del servidor"
+            label="Domínio ou IP do servidor"
             fullWidth
             value={settings.serverDomain}
             onChange={(e) => setSettings({ ...settings, serverDomain: e.target.value })}
@@ -167,32 +180,66 @@ const SettingsPage = () => {
         </Grid>
         <Grid item xs={12}>
           <TextField
-            label="Puerto del servidor"
+            label="Porta do servidor"
             fullWidth
             value={settings.serverPort}
             onChange={(e) => setSettings({ ...settings, serverPort: e.target.value })}
           />
         </Grid>
         <Grid item xs={12}>
-          <Button variant="contained" color="primary" onClick={handleSave}>
-            Guardar Configuración
+          <Button
+            variant="contained"
+            startIcon={<SaveIcon sx={{ color: 'primary.main' }} />}
+            onClick={handleSave}
+            sx={{
+              textTransform: 'none',
+              fontWeight: 'bold',
+              padding: '10px 20px',
+              backgroundColor: '#A9A9A9', // Gris metálico
+              color: 'white',
+              '&:hover': {
+                backgroundColor: '#8F8F8F', // Gris metálico mais oscuro al pasar el mouse
+              },
+            }}
+          >
+            Guardar Configurações
           </Button>
         </Grid>
         <Grid item xs={12}>
           <Button
             variant="contained"
-            color="primary"
+            startIcon={<PlayArrowIcon sx={{ color: 'success.main' }} />}
             onClick={() => handleServerAction('start')}
-            sx={{ marginRight: 2 }}
+            sx={{
+              textTransform: 'none',
+              fontWeight: 'bold',
+              padding: '10px 20px',
+              marginRight: 2,
+              backgroundColor: '#A9A9A9', // Gris metálico
+              color: 'white',
+              '&:hover': {
+                backgroundColor: '#8F8F8F', // Gris metálico mais oscuro al pasar el mouse
+              },
+            }}
           >
             Iniciar Servidor
           </Button>
           <Button
             variant="contained"
-            color="error"
+            startIcon={<StopIcon sx={{ color: 'error.main' }} />}
             onClick={() => handleServerAction('stop')}
+            sx={{
+              textTransform: 'none',
+              fontWeight: 'bold',
+              padding: '10px 20px',
+              backgroundColor: '#A9A9A9', // Gris metálico
+              color: 'white',
+              '&:hover': {
+                backgroundColor: '#8F8F8F', // Gris metálico mais oscuro al pasar el mouse
+              },
+            }}
           >
-            Detener Servidor
+            Parar Servidor
           </Button>
         </Grid>
       </Grid>

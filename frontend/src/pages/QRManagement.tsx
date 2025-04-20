@@ -9,19 +9,18 @@ import {
   CircularProgress,
 } from '@mui/material';
 import QRTable from '../components/QRTable';
-import { fetchFuncionarios } from '../api/apiService'; // Asegúrate de que esta ruta sea correcta
+import { fetchFuncionarios } from '../api/apiService';
 
 interface Funcionario {
-  id: number;
-  nombre: string;
-  empresa: string;
-  telefono: string;
-  email: string;
-  cargo: string;
+  sap: string;
+  nome: string;
+  funcao: string;
+  area: string;
+  nif: string;
+  telefone: string;
 }
 
 const QRManagement = () => {
-  // Ya no gestionamos selectedIds aquí en esta implementación alternativa
   const [funcionarios, setFuncionarios] = useState<Funcionario[]>([]);
   const [loading, setLoading] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -32,13 +31,13 @@ const QRManagement = () => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const data = await fetchFuncionarios(1, 10, ''); // Ajusta los parámetros según tu API
-      console.log('API Response (Funcionarios):', data);
+      const data = await fetchFuncionarios(1, 10, '');
+      console.log('API Response (Funcionários):', data);
       setFuncionarios(data);
       setTotalRows(data.length);
     } catch (error) {
-      console.error('Error fetching funcionarios:', error);
-      setSnackbarMessage('Error al cargar los funcionarios.');
+      console.error('Erro ao carregar os funcionários:', error);
+      setSnackbarMessage('Erro ao carregar os funcionários.');
       setSnackbarSeverity('error');
       setSnackbarOpen(true);
     } finally {
@@ -55,13 +54,11 @@ const QRManagement = () => {
   return (
     <Container>
       <Typography variant="h4" gutterBottom>
-        Gestión de Códigos QR
+        Gestão de Códigos QR
       </Typography>
       <Grid container spacing={3}>
         <Grid item xs={12}>
-          <QRTable
-          // No pasamos selectedIds ni setSelectedIds como props ahora
-          />
+          <QRTable />
         </Grid>
       </Grid>
       {loading && <CircularProgress />}

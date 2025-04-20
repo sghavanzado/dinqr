@@ -5,7 +5,6 @@ import { DataGrid, GridRowParams, GridColDef } from '@mui/x-data-grid';
 import { TextField, Button, Box, CircularProgress, Typography, IconButton, Modal } from '@mui/material';
 import QrCodeIcon from '@mui/icons-material/QrCode';
 import DeleteIcon from '@mui/icons-material/Delete';
-import VisibilityIcon from '@mui/icons-material/Visibility';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import DownloadIcon from '@mui/icons-material/Download';
@@ -68,21 +67,21 @@ const QRTable: React.FC<QRTableProps> = () => {
 
   const handleGenerateQR = async (ids: number[]) => {
     if (!ids || ids.length === 0) {
-      alert('Por favor, seleccione al menos un funcionario para generar los códigos QR.');
+      alert('Por favor, selecione pelo menos um funcionário para gerar os códigos QR.');
       return;
     }
 
-    console.log('Generando QR para los siguientes IDs:', ids);
+    console.log('Gerando QR para os seguintes IDs:', ids);
 
     setLoading(true);
     try {
       await axiosInstance.post('/qr/generar', { ids });
-      alert('Códigos QR generados exitosamente.');
+      alert('Códigos QR gerados com sucesso.');
       fetchFuncionariosConQR();
       fetchFuncionariosSinQR();
     } catch (error) {
       console.error('Error generating QR codes:', error);
-      alert('Error al generar los códigos QR.');
+      alert('Erro ao gerar os códigos QR.');
     } finally {
       setLoading(false);
     }
@@ -92,12 +91,12 @@ const QRTable: React.FC<QRTableProps> = () => {
     setLoading(true);
     try {
       await axiosInstance.delete(`/qr/eliminar/${id}`);
-      alert('Código QR eliminado exitosamente.');
+      alert('Código QR eliminado com sucesso.');
       fetchFuncionariosConQR();
       fetchFuncionariosSinQR();
     } catch (error) {
       console.error('Error deleting QR code:', error);
-      alert('Error al eliminar el código QR.');
+      alert('Erro ao eliminar o código QR.');
     } finally {
       setLoading(false);
     }
@@ -112,7 +111,7 @@ const QRTable: React.FC<QRTableProps> = () => {
       setQrModalOpen(true);
     } catch (error) {
       console.error('Error viewing QR code:', error);
-      alert('Error al mostrar el código QR.');
+      alert('Erro ao mostrar o código QR.');
     }
   };
 
@@ -132,13 +131,13 @@ const QRTable: React.FC<QRTableProps> = () => {
       URL.revokeObjectURL(qrUrl);
     } catch (error) {
       console.error('Error downloading QR code:', error);
-      alert('Error al descargar el código QR.');
+      alert('Erro ao descarregar o código QR.');
     }
   };
 
   const handleViewContactCard = (funcionario) => {
-    const logoUrl = '/static/images/sonangol-logo.png'; // Ruta estática para el logo proporcionado
-    const headerBackgroundColor = '#F4CF0A'; // Amarillo del logo proporcionado
+    const logoUrl = '/static/images/sonangol-logo.png'; // Ruta estática para o logo fornecido
+    const headerBackgroundColor = '#F4CF0A'; // Amarelo do logo fornecido
     const htmlContent = `
       <div style="font-family: Arial, sans-serif; max-width: 400px; margin: auto; border: 1px solid #ccc; border-radius: 10px; overflow: hidden;">
         <div style="background-color: ${headerBackgroundColor}; padding: 10px; display: flex; align-items: center; justify-content: center;">
@@ -149,13 +148,12 @@ const QRTable: React.FC<QRTableProps> = () => {
           Sociedade Nacional de Combustíveis de Angola
         </div>
         <div style="padding: 20px; text-align: left;">
-          <p><strong>Nombre:</strong> ${funcionario.nombre}</p>
-          <p><strong>ID:</strong> ${funcionario.id}</p>
-          <p><strong>Empresa:</strong> ${funcionario.empresa || 'No especificada'}</p>
-          <p><strong>Cargo:</strong> ${funcionario.cargo || 'No especificado'}</p>
-          <p><strong>Correo:</strong> <a href="mailto:${funcionario.email}">${funcionario.email}</a></p>
-          <p><strong>Número de Teléfono:</strong> ${funcionario.telefono || 'No especificado'}</p>
-          <p><strong>Ext:</strong> ${funcionario.numero_ext || 'N/A'}</p>
+        <p><strong>Nome:</strong> ${funcionario.nome}</p>
+          <p><strong>SAP:</strong> ${funcionario.id}</p>
+          <p><strong>Função:</strong> ${funcionario.funcao || 'Não especificada'}</p>
+          <p><strong>Área:</strong> ${funcionario.area || 'Não especificada'}</p>
+          <p><strong>NIF:</strong> ${funcionario.nif || 'Não especificado'}</p>
+          <p><strong>Telefone:</strong> ${funcionario.telefone || 'Não especificado'}</p>
         </div>
       </div>
     `;
@@ -186,14 +184,14 @@ const QRTable: React.FC<QRTableProps> = () => {
 
   const columnsConQR = [
     { field: 'id', headerName: 'ID', width: 100 },
-    { field: 'nombre', headerName: 'Nombre', width: 200 },
-    { field: 'empresa', headerName: 'Empresa', width: 200 },
-    { field: 'telefono', headerName: 'Teléfono', width: 150 },
-    { field: 'email', headerName: 'Email', width: 200 },
-    { field: 'cargo', headerName: 'Cargo', width: 150 },
+    { field: 'nome', headerName: 'Nome', width: 200 },
+    { field: 'funcao', headerName: 'Função', width: 200 },
+    { field: 'area', headerName: 'Área', width: 150 },
+    { field: 'nif', headerName: 'NIF', width: 200 },
+    { field: 'telefone', headerName: 'Telefone', width: 150 },
     {
       field: 'actions',
-      headerName: 'Acciones',
+      headerName: 'Ações',
       width: 300,
       renderCell: (params) => (
         <Box sx={{ display: 'flex', gap: 1 }}>
@@ -248,15 +246,15 @@ const QRTable: React.FC<QRTableProps> = () => {
       ),
       sortable: false,
     },
-    { field: 'id', headerName: 'ID', width: 100 },
-    { field: 'nombre', headerName: 'Nombre', width: 200 },
-    { field: 'empresa', headerName: 'Empresa', width: 200 },
-    { field: 'telefono', headerName: 'Teléfono', width: 150 },
-    { field: 'email', headerName: 'Email', width: 200 },
-    { field: 'cargo', headerName: 'Cargo', width: 150 },
+    { field: 'id', headerName: 'SAP', width: 100 },
+    { field: 'nome', headerName: 'Nome', width: 200 },
+    { field: 'funcao', headerName: 'Função', width: 200 },
+    { field: 'Area', headerName: 'Área', width: 150 },
+    { field: 'nif', headerName: 'NIF', width: 200 },
+    { field: 'telefone', headerName: 'Telefone', width: 150 },
     {
       field: 'actions',
-      headerName: 'Acciones',
+      headerName: 'Ações',
       width: 150,
       renderCell: (params) => (
         <IconButton
@@ -270,11 +268,11 @@ const QRTable: React.FC<QRTableProps> = () => {
   ];
 
   const filteredFuncionariosConQR = funcionariosConQR.filter((funcionario) =>
-    funcionario.nombre.toLowerCase().includes(filterConQR.toLowerCase())
+    funcionario.nome.toLowerCase().includes(filterConQR.toLowerCase())
   );
 
   const filteredFuncionariosSinQR = funcionariosSinQR.filter((funcionario) =>
-    funcionario.nombre.toLowerCase().includes(filterSinQR.toLowerCase())
+    funcionario.nome.toLowerCase().includes(filterSinQR.toLowerCase())
   );
 
   console.log('QRTable rendered with selectedIds (with checkbox):', selectedIds);
@@ -282,11 +280,11 @@ const QRTable: React.FC<QRTableProps> = () => {
   return (
     <Box>
       <Typography variant="h6" gutterBottom>
-        Funcionarios con QR
+        Funcionários com QR
       </Typography>
       <Box sx={{ mb: 3, position: 'relative' }}>
         <TextField
-          label="Buscar en funcionarios con QR"
+          label="Procurar em funcionários com QR"
           variant="outlined"
           fullWidth
           value={filterConQR}
@@ -320,10 +318,10 @@ const QRTable: React.FC<QRTableProps> = () => {
       {showSinQRTable && (
         <Box sx={{ mt: 5 }}>
           <Typography variant="h6" gutterBottom>
-            Funcionarios sin QR
+            Funcionários sem QR
           </Typography>
           <TextField
-            label="Buscar en funcionarios sin QR"
+            label="Procurar em funcionários sem QR"
             variant="outlined"
             fullWidth
             value={filterSinQR}
@@ -362,7 +360,7 @@ const QRTable: React.FC<QRTableProps> = () => {
                     },
                   }}
                 >
-                  Generar
+                  Gerar
                 </Button>
               </Box>
             </>
@@ -395,7 +393,7 @@ const QRTable: React.FC<QRTableProps> = () => {
             onClick={handleCloseModal}
             sx={{ mt: 2 }}
           >
-            Cerrar
+            Fechar
           </Button>
         </Box>
       </Modal>
@@ -405,7 +403,7 @@ const QRTable: React.FC<QRTableProps> = () => {
         maxWidth="xs" 
         fullWidth
       >
-        <DialogTitle sx={{ textAlign: 'center' }}>Tarjeta de Contacto</DialogTitle>
+        <DialogTitle sx={{ textAlign: 'center' }}>Cartão de Contacto</DialogTitle>
         <DialogContent>
           <div dangerouslySetInnerHTML={{ __html: contactCardHtml }} />
         </DialogContent>

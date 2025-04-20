@@ -56,7 +56,7 @@ def obtener_configuracion(clave):
 @limiter.limit("10/minute")  # Límite de solicitudes
 def mostrar_contacto():
     """Devuelve la información de un contacto en formato HTML validando el ID y el hash."""
-    id_contacto = request.args.get('id', '').strip()
+    id_contacto = request.args.get('sap', '').strip()
     hash_recibido = request.args.get('hash', '').strip()
 
     logging.info(f"Parámetros recibidos: id_contacto={id_contacto}, hash_recibido={hash_recibido}")
@@ -85,7 +85,7 @@ def mostrar_contacto():
         # Consultar en la base de datos remota (externaldb)
         with obtener_conexion_remota() as conn:
             cursor = conn.cursor()
-            cursor.execute("SELECT * FROM contactos WHERE id = ?", (id_contacto,))
+            cursor.execute("SELECT * FROM sonacard WHERE sap = ?", (id_contacto,))
             contacto = cursor.fetchone()
 
         if not contacto:
@@ -99,7 +99,7 @@ def mostrar_contacto():
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Contacto - {contacto.nombre}</title>
+            <title>Contacto - {contacto.nome}</title>
             <style>
                 body {{
                     font-family: Arial, sans-serif;
@@ -136,6 +136,7 @@ def mostrar_contacto():
                 }}
                 .info-section {{
                     margin: 1.5rem 0;
+                    
                 }}
                 .info-section p {{
                     margin: 0.5rem 0;
@@ -163,19 +164,15 @@ def mostrar_contacto():
                     <img src="/static/images/sonangol-logo.png" alt="Sonangol Logo">
                     <span>Sonangol</span>
                 </div>
-                <h1>{contacto.nombre}</h1>
-                <div class="info-section">
-                    <p><strong>Empresa:</strong> {contacto.empresa or 'No especificada'}</p>
-                    <p><strong>Teléfono:</strong> {contacto.telefono or 'No especificado'}</p>
-                    <p><strong>Email:</strong> <a href="mailto:{contacto.email}">{contacto.email}</a></p>
-                    <p><strong>Sitio Web:</strong> <a href="{contacto.web}" target="_blank">{contacto.web or 'No especificado'}</a></p>
-                    <p><strong>Dirección:</strong> {contacto.direccion or 'No especificada'}</p>
-                    <p><strong>Categoría:</strong> {contacto.categoria or 'No especificada'}</p>
-                    <p><strong>Número de Extensión:</strong> {contacto.numero_ext or 'N/A'}</p>
-                    <p><strong>Cargo:</strong> {contacto.cargo or 'No especificado'}</p>
-                    <p><strong>Unidad de Negocio:</strong> {contacto.unidad_negocio or 'No especificada'}</p>
+                <h1>{contacto.nome}</h1>
+                <div class="">
+                    <p><strong>SAP:</strong> {contacto.sap or 'No especificada'}</p>
+                    <p><strong>Funçao:</strong> {contacto.funcao or 'No especificada'}</p>
+                    <p><strong>Area:</strong> {contacto.area or 'No especificado'}</p>
+                    <p><strong>Nif:</strong> {contacto.nif or 'No especificada'}</p>
+                    <p><strong>Telefone:</strong> {contacto.telefone or 'No especificada'}</p>
                 </div>
-                <a href="/contacto/vcard?id={id_contacto}&hash={hash_recibido}" class="import-button">
+                <a href="/contacto/vcard?sap={id_contacto}&hash={hash_recibido}" class="import-button">
                     Importar Contacto
                 </a>
             </div>
@@ -192,7 +189,7 @@ def mostrar_contacto():
 @app.route('/contacto/vcard', methods=['GET'])
 def descargar_vcard():
     """Generar y descargar un archivo vCard para el contacto."""
-    id_contacto = request.args.get('id', '').strip()
+    id_contacto = request.args.get('sap', '').strip()
     hash_recibido = request.args.get('hash', '').strip()
 
     try:
@@ -211,7 +208,7 @@ def descargar_vcard():
 
         with obtener_conexion_remota() as conn:
             cursor = conn.cursor()
-            cursor.execute("SELECT * FROM contactos WHERE id = ?", (id_contacto,))
+            cursor.execute("SELECT * FROM sonacard WHERE sap = ?", (id_contacto,))
             contacto = cursor.fetchone()
 
         if not contacto:
@@ -221,12 +218,10 @@ def descargar_vcard():
         vcard_content = f"""
         BEGIN:VCARD
         VERSION:3.0
-        FN:{contacto.nombre}
-        ORG:{contacto.empresa or ''}
-        TEL;TYPE=WORK,VOICE:{contacto.telefono or ''}
-        EMAIL;TYPE=WORK:{contacto.email or ''}
-        ADR;TYPE=WORK:;;{contacto.direccion or ''}
-        TITLE:{contacto.cargo or ''}
+        FN:{contacto.nome}
+        TITLE:{contacto.funcao or ''}
+        ORG:{contacto.area or ''}
+        TEL;TYPE=WORK,VOICE:{contacto.telefone or ''}
         END:VCARD
         """
 

@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: dinqr-backend
+    ports:
+      - "5050:5050"
+    environment:
+      FLASK_ENV: production
+      FLASK_APP: app.py
+      FLASK_SECRET_KEY: your_secret_key_here
+      DATABASE_URL: postgresql://postgres:postgr3s@localhost:5432/localdb
+    depends_on:
+      - db
+    volumes:
+      - ./backend:/app
+    networks:
+      - dinqr-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: dinqr-frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/app
+    networks:
+      - dinqr-network
+
+  db:
+    image: postgres:15
+    container_name: dinqr-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgr3s
+      POSTGRES_DB: localdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - dinqr-network
+
+  redis:
+    image: redis:alpine
+    container_name: dinqr-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - dinqr-network
+
+volumes:
+  postgres_data:
+
+networks:
+  dinqr-network:
+    driver: bridge

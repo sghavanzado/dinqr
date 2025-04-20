@@ -8,4 +8,8 @@ psycopg2-binary
 Flask-Limiter
 Flask-Talisman
 redis
+qrcode
+marshmallow
+pyodbc
+gunicorn
 

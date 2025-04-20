@@ -119,7 +119,7 @@ export default function CustomizedDataGrid() {
   const columnsConQR: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 100 },
     { field: 'nome', headerName: 'Nome', width: 150 },
-    { field: 'funcao', headerName: 'Função', width: 150 },
+    { field: 'funcao', headerName: 'Função', width: 0 },
     { field: 'area', headerName: 'Área', width: 150 },
     { field: 'nif', headerName: 'NIF', width: 150 },
     { field: 'telefone', headerName: 'Telefone', width: 150 },

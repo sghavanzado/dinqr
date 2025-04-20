@@ -6,7 +6,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
 import CustomizedDataGrid from './CustomizedDataGrid';
-import HighlightedCard from './HighlightedCard';
+import ServerStatus from './ServerStatus';
 import StatCard, { StatCardProps } from './StatCard';
 import axiosInstance from '../api/axiosInstance';
 
@@ -18,11 +18,11 @@ export default function MainGrid() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const totalResponse = await axiosInstance.get('/funcionarios/total'); // Endpoint para obtener el total
+        const totalResponse = await axiosInstance.get('/qr/funcionarios/total'); // Endpoint para obtener el total
         const total = totalResponse.data.total;
         setTotalFuncionarios(total);
 
-        const qrResponse = await axiosInstance.get('/funcionarios/total-con-qr'); // Endpoint para obtener los funcionarios con QR
+        const qrResponse = await axiosInstance.get('/qr/funcionarios/total-con-qr'); // Endpoint para obtener los funcionarios con QR
         const totalConQR = qrResponse.data.total;
         setFuncionariosComQR(totalConQR);
 
@@ -72,7 +72,7 @@ export default function MainGrid() {
           </Grid>
         ))}
         <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
-          <HighlightedCard />
+          <ServerStatus />
         </Grid>
     
         <Grid size={{ xs: 12, md: 6, lg: 3  }}>

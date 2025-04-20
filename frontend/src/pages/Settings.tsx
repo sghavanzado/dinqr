@@ -20,7 +20,6 @@ import {
 import SaveIcon from '@mui/icons-material/Save';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import StopIcon from '@mui/icons-material/Stop';
-import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import axiosInstance from '../api/axiosInstance';
 
 interface Settings {

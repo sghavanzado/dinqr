@@ -135,6 +135,17 @@ def detener_servidor():
     finally:
         server_process = None  # Asegurarse de que la variable global se reinicie
 
+def status_servidor():
+    """Consultar o estado do servidor."""
+    global server_process
+    try:
+        if server_process and server_process.poll() is None:
+            return {"status": "em execução", "pid": server_process.pid}
+        return {"status": "parado"}
+    except Exception as e:
+        logger.error(f"Erro ao consultar o estado do servidor: {str(e)}")
+        raise RuntimeError("Erro ao consultar o estado do servidor.")
+
 @app.before_request
 def log_request_info():
     """Registrar información de cada solicitud entrante."""

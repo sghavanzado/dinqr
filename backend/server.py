@@ -9,16 +9,16 @@ import os
 
 app = Flask(__name__, static_folder='static')
 
-# Configuración de seguridad
+# Configuração de segurança
 app.config['SESSION_COOKIE_SECURE'] = True
 app.config['SESSION_COOKIE_HTTPONLY'] = True
 
-# Configurar Talisman para cabeceras de seguridad
+# Configurar Talisman para cabeçalhos de segurança
 Talisman(
     app,
     content_security_policy=None,
-    force_https=False,  # Deshabilitar HTTPS
-    strict_transport_security=False,  # No habilitar HSTS
+    force_https=False,  # Desativar HTTPS
+    strict_transport_security=False,  # Não habilitar HSTS
     frame_options='DENY'
 )
 
@@ -39,63 +39,63 @@ limiter = Limiter(
 
 @app.before_request
 def log_request_details():
-    """Registrar detalles de cada solicitud entrante."""
-    logging.info(f"Solicitud entrante: {request.method} {request.url} desde {request.remote_addr}")
+    """Registar detalhes de cada pedido recebido."""
+    logging.info(f"Pedido recebido: {request.method} {request.url} de {request.remote_addr}")
 
-def obtener_configuracion(clave):
-    """Obtener un valor de configuración desde la tabla settings."""
+def obter_configuracao(chave):
+    """Obter um valor de configuração da tabela settings."""
     with obtener_conexion_local() as conn:
         cursor = conn.cursor()
-        cursor.execute("SELECT value FROM settings WHERE key = %s", (clave,))
+        cursor.execute("SELECT value FROM settings WHERE key = %s", (chave,))
         result = cursor.fetchone()
         if not result:
-            raise ValueError(f"No se encontró la configuración '{clave}' en la tabla settings.")
+            raise ValueError(f"Não foi encontrada a configuração '{chave}' na tabela settings.")
         return result[0]
 
 @app.route('/contacto')
-@limiter.limit("10/minute")  # Límite de solicitudes
+@limiter.limit("10/minuto")  # Limite de pedidos
 def mostrar_contacto():
-    """Devuelve la información de un contacto en formato HTML validando el ID y el hash."""
+    """Devolve a informação de um contacto em formato HTML validando o ID e o hash."""
     id_contacto = request.args.get('sap', '').strip()
-    hash_recibido = request.args.get('hash', '').strip()
+    hash_recebido = request.args.get('hash', '').strip()
 
-    logging.info(f"Parámetros recibidos: id_contacto={id_contacto}, hash_recibido={hash_recibido}")
+    logging.info(f"Parâmetros recebidos: id_contacto={id_contacto}, hash_recebido={hash_recebido}")
 
-    # Validar parámetros
-    if not id_contacto or not hash_recibido:
-        logging.warning(f"Parámetros faltantes desde {request.remote_addr}")
-        abort(400, description="Parámetros faltantes")
+    # Validar parâmetros
+    if not id_contacto or not hash_recebido:
+        logging.warning(f"Parâmetros em falta de {request.remote_addr}")
+        abort(400, description="Parâmetros em falta")
 
     try:
-        # Verificar en la base de datos local (localdb)
+        # Verificar na base de dados local (localdb)
         with obtener_conexion_local() as conn:
             cursor = conn.cursor()
             cursor.execute("SELECT firma FROM qr_codes WHERE contact_id = %s", (id_contacto,))
             resultado_local = cursor.fetchone()
 
         if not resultado_local:
-            logging.warning(f"ID no encontrado en la base de datos local: {id_contacto}")
-            abort(404, description="ID no encontrado")
+            logging.warning(f"ID não encontrado na base de dados local: {id_contacto}")
+            abort(404, description="ID não encontrado")
 
         firma_local = resultado_local[0]
-        if not hmac.compare_digest(firma_local, hash_recibido):
-            logging.warning(f"Hash no coincide para el ID {id_contacto} desde {request.remote_addr}")
-            abort(403, description="Hash no válido")
+        if not hmac.compare_digest(firma_local, hash_recebido):
+            logging.warning(f"Hash não coincide para o ID {id_contacto} de {request.remote_addr}")
+            abort(403, description="Hash inválido")
 
-        # Consultar en la base de datos remota (externaldb)
+        # Consultar na base de dados remota (externaldb)
         with obtener_conexion_remota() as conn:
             cursor = conn.cursor()
             cursor.execute("SELECT * FROM sonacard WHERE sap = ?", (id_contacto,))
             contacto = cursor.fetchone()
 
         if not contacto:
-            logging.warning(f"ID no encontrado en la base de datos remota: {id_contacto}")
-            abort(404, description="Contacto no encontrado")
+            logging.warning(f"ID não encontrado na base de dados remota: {id_contacto}")
+            abort(404, description="Contacto não encontrado")
 
-        # Generar la página HTML con los datos del contacto
+        # Gerar a página HTML com os dados do contacto
         html_template = f"""
         <!DOCTYPE html>
-        <html lang="es">
+        <html lang="pt">
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -166,45 +166,45 @@ def mostrar_contacto():
                 </div>
                 <h1>{contacto.nome}</h1>
                 <div class="">
-                    <p><strong>SAP:</strong> {contacto.sap or 'No especificada'}</p>
-                    <p><strong>Funçao:</strong> {contacto.funcao or 'No especificada'}</p>
-                    <p><strong>Area:</strong> {contacto.area or 'No especificado'}</p>
-                    <p><strong>Nif:</strong> {contacto.nif or 'No especificada'}</p>
-                    <p><strong>Telefone:</strong> {contacto.telefone or 'No especificada'}</p>
+                    <p><strong>SAP:</strong> {contacto.sap or 'Não especificado'}</p>
+                    <p><strong>Função:</strong> {contacto.funcao or 'Não especificada'}</p>
+                    <p><strong>Área:</strong> {contacto.area or 'Não especificada'}</p>
+                    <p><strong>NIF:</strong> {contacto.nif or 'Não especificado'}</p>
+                    <p><strong>Telefone:</strong> {contacto.telefone or 'Não especificado'}</p>
                 </div>
-                <a href="/contacto/vcard?sap={id_contacto}&hash={hash_recibido}" class="import-button">
+                <a href="/contacto/vcard?sap={id_contacto}&hash={hash_recebido}" class="import-button">
                     Importar Contacto
                 </a>
             </div>
         </body>
         </html>
         """
-        logging.info(f"Acceso autorizado a {id_contacto} desde {request.remote_addr}")
+        logging.info(f"Acesso autorizado ao ID {id_contacto} de {request.remote_addr}")
         return render_template_string(html_template)
 
     except Exception as e:
-        logging.error(f"Error al procesar la solicitud para el ID {id_contacto}: {str(e)}")
-        abort(500, description="Error interno del servidor")
+        logging.error(f"Erro ao processar o pedido para o ID {id_contacto}: {str(e)}")
+        abort(500, description="Erro interno do servidor")
 
 @app.route('/contacto/vcard', methods=['GET'])
 def descargar_vcard():
-    """Generar y descargar un archivo vCard para el contacto."""
+    """Gerar e descarregar um ficheiro vCard para o contacto."""
     id_contacto = request.args.get('sap', '').strip()
-    hash_recibido = request.args.get('hash', '').strip()
+    hash_recebido = request.args.get('hash', '').strip()
 
     try:
-        # Validar parámetros y obtener datos del contacto
+        # Validar parâmetros e obter dados do contacto
         with obtener_conexion_local() as conn:
             cursor = conn.cursor()
             cursor.execute("SELECT firma FROM qr_codes WHERE contact_id = %s", (id_contacto,))
             resultado_local = cursor.fetchone()
 
         if not resultado_local:
-            abort(404, description="ID no encontrado")
+            abort(404, description="ID não encontrado")
 
         firma_local = resultado_local[0]
-        if not hmac.compare_digest(firma_local, hash_recibido):
-            abort(403, description="Hash no válido")
+        if not hmac.compare_digest(firma_local, hash_recebido):
+            abort(403, description="Hash inválido")
 
         with obtener_conexion_remota() as conn:
             cursor = conn.cursor()
@@ -212,9 +212,9 @@ def descargar_vcard():
             contacto = cursor.fetchone()
 
         if not contacto:
-            abort(404, description="Contacto no encontrado")
+            abort(404, description="Contacto não encontrado")
 
-        # Generar contenido vCard
+        # Gerar conteúdo vCard
         vcard_content = f"""
         BEGIN:VCARD
         VERSION:3.0
@@ -225,61 +225,61 @@ def descargar_vcard():
         END:VCARD
         """
 
-        # Crear respuesta con el archivo vCard
+        # Criar resposta com o ficheiro vCard
         response = make_response(vcard_content.strip())
         response.headers['Content-Type'] = 'text/vcard'
         response.headers['Content-Disposition'] = f'attachment; filename=contacto_{id_contacto}.vcf'
         return response
 
     except Exception as e:
-        logging.error(f"Error al generar vCard para el ID {id_contacto}: {str(e)}")
-        abort(500, description="Error interno del servidor")
+        logging.error(f"Erro ao gerar vCard para o ID {id_contacto}: {str(e)}")
+        abort(500, description="Erro interno do servidor")
 
 @app.route('/server/control', methods=['POST'])
 def controlar_servidor():
-    """Controla el estado del servidor (iniciar, pausar, detener)."""
-    accion = request.json.get('accion', '').lower()
-    if accion == 'iniciar':
+    """Controla o estado do servidor (iniciar, pausar, parar)."""
+    acao = request.json.get('acao', '').lower()
+    if acao == 'iniciar':
         logging.info("Servidor iniciado.")
         return {"message": "Servidor iniciado."}, 200
-    elif accion == 'pausar':
+    elif acao == 'pausar':
         logging.info("Servidor pausado.")
         return {"message": "Servidor pausado."}, 200
-    elif accion == 'detener':
-        logging.info("Servidor detenido.")
+    elif acao == 'parar':
+        logging.info("Servidor parado.")
         os._exit(0)
     else:
-        return {"error": "Acción no válida."}, 400
+        return {"error": "Ação inválida."}, 400
 
 @app.errorhandler(400)
 def bad_request(error):
-    return "Solicitud incorrecta", 400
+    return "Pedido incorreto", 400
 
 @app.errorhandler(403)
 def forbidden(error):
-    return "Acceso no autorizado", 403
+    return "Acesso não autorizado", 403
 
 @app.errorhandler(404)
 def not_found(error):
-    return "Contacto no encontrado", 404
+    return "Contacto não encontrado", 404
 
 @app.errorhandler(429)
 def ratelimit_handler(error):
-    return "Demasiadas solicitudes. Por favor intente más tarde.", 429
+    return "Demasiados pedidos. Por favor, tente mais tarde.", 429
 
 @app.errorhandler(Exception)
 def handle_unexpected_error(error):
-    """Manejador global para errores inesperados."""
-    logging.error(f"Error inesperado: {str(error)}")
-    return "Error interno del servidor", 500
+    """Gestor global para erros inesperados."""
+    logging.error(f"Erro inesperado: {str(error)}")
+    return "Erro interno do servidor", 500
 
 if __name__ == '__main__':
     try:
-        # Forzar el uso del puerto 5678
+        # Forçar o uso da porta 5678
         port = 5678
 
-        # Inicia el servidor en localhost
+        # Inicia o servidor em localhost
         app.run(host='127.0.0.1', port=port, debug=True)
     except Exception as e:
-        logging.error(f"Error al iniciar el servidor: {str(e)}")
-        print(f"❌ Error al iniciar el servidor: {str(e)}")
+        logging.error(f"Erro ao iniciar o servidor: {str(e)}")
+        print(f"❌ Erro ao iniciar o servidor: {str(e)}")

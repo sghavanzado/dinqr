@@ -123,6 +123,7 @@ def generar_pagina_contacto(datos):
     html_template = f"""
     <!DOCTYPE html>
     <html lang="es">
+
     </html>
     """
     return render_template_string(html_template)

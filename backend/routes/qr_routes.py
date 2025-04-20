@@ -1,7 +1,15 @@
 # qr_routes.py
 from flask import Blueprint, request, jsonify, send_file, abort
 from marshmallow import Schema, fields, ValidationError
-from services.qr_service import generar_qr, listar_funcionarios, eliminar_qr, descargar_qr, descargar_multiples_qr
+from services.qr_service import (
+    generar_qr,
+    listar_funcionarios,
+    eliminar_qr,
+    descargar_qr,
+    descargar_multiples_qr,
+    obtener_total_funcionarios,
+    obtener_total_funcionarios_con_qr
+)
 from utils.db_utils import obtener_conexion_remota, obtener_conexion_local, liberar_conexion_local
 import logging
 
@@ -149,3 +157,23 @@ def descargar_codigos_qr_multiples():
 def eliminar_codigo_qr(contact_id):
     """Eliminar un código QR específico."""
     return jsonify(eliminar_qr(contact_id))
+
+@qr_bp.route('/funcionarios/total', methods=['GET'])
+def obtener_total_funcionarios_endpoint():
+    """Obtener la cantidad total de funcionarios desde la base de datos remota."""
+    try:
+        total = obtener_total_funcionarios()
+        return jsonify({"total": total})
+    except Exception as e:
+        logging.error(f"Error al obtener el total de funcionarios: {str(e)}")
+        return jsonify({"error": "Error interno del servidor"}), 500
+
+@qr_bp.route('/funcionarios/total-con-qr', methods=['GET'])
+def obtener_total_funcionarios_con_qr_endpoint():
+    """Obtener la cantidad total de funcionarios con código QR en la base de datos local."""
+    try:
+        total_con_qr = obtener_total_funcionarios_con_qr()
+        return jsonify({"total": total_con_qr})
+    except Exception as e:
+        logging.error(f"Error al obtener el total de funcionarios con QR: {str(e)}")
+        return jsonify({"error": "Error interno del servidor"}), 500

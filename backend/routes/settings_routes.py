@@ -6,7 +6,7 @@ import logging
 import subprocess
 import signal
 import psutil  # Para manejar procesos
-from server_manager import iniciar_servidor, detener_servidor
+from server_manager import iniciar_servidor, detener_servidor, status_servidor
 from utils.db_utils import obtener_conexion_local  # Importar la función para obtener conexión local
 from werkzeug.utils import secure_filename
 
@@ -105,6 +105,19 @@ def stop_server():
     except Exception as e:
         logging.error(f"Error al detener el servidor: {str(e)}")
         return jsonify({"error": "Error al detener el servidor."}), 500
+    
+@settings_bp.route('/server/status', methods=['GET'])
+def status_servidor():
+    """Consultar o estado do servidor."""
+    global server_process
+    try:
+        if server_process and server_process.poll() is None:
+            return jsonify({"status": "em execução", "pid": server_process.pid}), 200
+        return jsonify({"status": "parado"}), 200
+    except Exception as e:
+        logging.error(f"Erro ao consultar o estado do servidor: {str(e)}")
+        return jsonify({"error": "Erro ao consultar o estado do servidor."}), 500
+
 
 def obtener_configuracion_servidor():
     """Obtener configuración del servidor desde la base de datos."""

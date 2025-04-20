@@ -6,54 +6,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Stack from '@mui/material/Stack';
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
-import HomeIcon from '@mui/icons-material/Home';
-import StickyNote2Icon from '@mui/icons-material/StickyNote2';
-import StickyNote2OutlinedIcon from '@mui/icons-material/StickyNote2Outlined';
-import UpdateOutlinedIcon from '@mui/icons-material/UpdateOutlined';
-import MailOutlineOutlinedIcon from '@mui/icons-material/MailOutlineOutlined';
-import GavelOutlinedIcon from '@mui/icons-material/GavelOutlined';
-import CurrencyExchangeOutlinedIcon from '@mui/icons-material/CurrencyExchangeOutlined';
-import BlurOnOutlinedIcon from '@mui/icons-material/BlurOnOutlined';
-import PeopleOutlineOutlinedIcon from '@mui/icons-material/PeopleOutlineOutlined';
-import EngineeringOutlinedIcon from '@mui/icons-material/EngineeringOutlined';
-import AttachEmailOutlinedIcon from '@mui/icons-material/AttachEmailOutlined';
-import HandymanOutlinedIcon from '@mui/icons-material/HandymanOutlined';
-import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
-import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
-import FlipOutlinedIcon from '@mui/icons-material/FlipOutlined';
-import EventAvailableOutlinedIcon from '@mui/icons-material/EventAvailableOutlined';
-import EventRepeatOutlinedIcon from '@mui/icons-material/EventRepeatOutlined';
-import InventoryOutlinedIcon from '@mui/icons-material/InventoryOutlined';
-import EventNoteOutlinedIcon from '@mui/icons-material/EventNoteOutlined';
-import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
-import ListAltOutlinedIcon from '@mui/icons-material/ListAltOutlined';
-import FactCheckIcon from '@mui/icons-material/FactCheck';
-import ModeEditOutlineIcon from '@mui/icons-material/ModeEditOutline';
-import NoteAltIcon from '@mui/icons-material/NoteAlt';
-import FileUploadIcon from '@mui/icons-material/FileUpload';
-import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
-import DescriptionIcon from '@mui/icons-material/Description';
-import AssuredWorkloadIcon from '@mui/icons-material/AssuredWorkload';
-import CountertopsIcon from '@mui/icons-material/Countertops';
-import EditNoteIcon from '@mui/icons-material/EditNote';
-import ContentPasteGoIcon from '@mui/icons-material/ContentPasteGo';
-import ChecklistIcon from '@mui/icons-material/Checklist';
-import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
-import ImportContactsIcon from '@mui/icons-material/ImportContacts';
-import RequestQuoteIcon from '@mui/icons-material/RequestQuote';
-import AttachMoneyOutlinedIcon from '@mui/icons-material/AttachMoneyOutlined';
-import PointOfSaleOutlinedIcon from '@mui/icons-material/PointOfSaleOutlined';
-import LibraryBooksOutlinedIcon from '@mui/icons-material/LibraryBooksOutlined';
-import WorkspacePremiumOutlinedIcon from '@mui/icons-material/WorkspacePremiumOutlined';
-import AutoDeleteOutlinedIcon from '@mui/icons-material/AutoDeleteOutlined';
-import RequestQuoteOutlinedIcon from '@mui/icons-material/RequestQuoteOutlined';
-import LineStyleOutlinedIcon from '@mui/icons-material/LineStyleOutlined';
-import AssignmentTurnedInOutlinedIcon from '@mui/icons-material/AssignmentTurnedInOutlined';
-import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined';
-import ArticleIcon from '@mui/icons-material/Article';
-import MiscellaneousServicesIcon from '@mui/icons-material/MiscellaneousServices';
-import HomeRepairServiceIcon from '@mui/icons-material/HomeRepairService';
-import HelpIcon from '@mui/icons-material/Help';
+
 import clsx from 'clsx';
 import { animated, useSpring } from '@react-spring/web';
 import { styled, alpha } from '@mui/material/styles';
@@ -61,13 +14,9 @@ import { TransitionProps } from '@mui/material/transitions';
 import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
 import Typography from '@mui/material/Typography';
-import PriceCheckOutlinedIcon from '@mui/icons-material/PriceCheckOutlined';
-import DevicesFoldOutlinedIcon from '@mui/icons-material/DevicesFoldOutlined';
-import ReceiptOutlinedIcon from '@mui/icons-material/ReceiptOutlined';
+
 import ReceiptLongOutlinedIcon from '@mui/icons-material/ReceiptLongOutlined';
-import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
-import CalendarTodayOutlinedIcon from '@mui/icons-material/CalendarTodayOutlined';
-import DeleteIcon from '@mui/icons-material/Delete';
+
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { treeItemClasses } from '@mui/x-tree-view/TreeItem';
 import { useTreeItem2, UseTreeItem2Parameters } from '@mui/x-tree-view/useTreeItem2';
@@ -107,7 +56,7 @@ const ITEMS: TreeViewBaseItem<ExtendedTreeItemProps>[] = [
     children: [
       {
         id: '2.1',
-        label: 'QRCode',
+        label: 'Gerar Code',
         icon: ReceiptLongOutlinedIcon,
         to: '/qrcode',
       },

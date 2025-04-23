@@ -1,4 +1,4 @@
-import * as React from 'react';
+
 import { useState, useEffect } from 'react';
 import { DataGrid, GridRowsProp, GridColDef } from '@mui/x-data-grid';
 import { TextField, Button, Box, CircularProgress, Typography, IconButton, Modal } from '@mui/material';
@@ -80,7 +80,15 @@ export default function CustomizedDataGrid() {
       alert('Erro ao descarregar o código QR.');
     }
   };
-  const handleViewContactCard = (funcionario) => {
+
+  const handleViewContactCard = (funcionario: {
+    id: number;
+    nome: string;
+    funcao?: string;
+    area?: string;
+    nif?: string;
+    telefone?: string;
+  }) => {
     const logoUrl = '/static/images/sonangol-logo.png'; // Ruta estática para o logo fornecido
     const headerBackgroundColor = '#F4CF0A'; // Amarelo do logo fornecido
     const htmlContent = `
@@ -110,12 +118,12 @@ export default function CustomizedDataGrid() {
     setContactCardOpen(false);
     setContactCardHtml('');
   };
+
   const handleCloseModal = () => {
     setQrModalOpen(false);
     setQrImage('');
   };
-
-
+  
   const columnsConQR: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 100 },
     { field: 'nome', headerName: 'Nome', width: 150 },

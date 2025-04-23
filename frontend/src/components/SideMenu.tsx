@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import Avatar from '@mui/material/Avatar';
 import MuiDrawer, { drawerClasses } from '@mui/material/Drawer';
@@ -6,8 +5,10 @@ import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { useNavigate } from 'react-router-dom';
 import MenuContent from './MenuContent';
-import OptionsMenu from './OptionsMenu';
 import { useAuth } from './AuthContext'; // Import the AuthContext to access user data
 
 const drawerWidth = 340;
@@ -24,7 +25,13 @@ const Drawer = styled(MuiDrawer)({
 });
 
 export default function SideMenu() {
-  const { user } = useAuth(); // Access the logged-in user's data from AuthContext
+  const { user, logout } = useAuth(); // Access the logout function from AuthContext
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/signin'); // Redirect to the sign-in page after logout
+  };
 
   // If the user is not logged in, do not render the side menu
   if (!user) {
@@ -80,8 +87,10 @@ export default function SideMenu() {
             {user.email}
           </Typography>
         </Box>
-        {/* Render the options menu */}
-        <OptionsMenu />
+        {/* Render the Logout button */}
+        <IconButton onClick={handleLogout} color="error">
+          <LogoutIcon />
+        </IconButton>
       </Stack>
     </Drawer>
   );

@@ -1,5 +1,4 @@
 // src/pages/Unauthorized.tsx
-import React from 'react';
 
 const Unauthorized = () => {
   return (

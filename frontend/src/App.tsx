@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, Routes, Route } from 'react-router-dom';
 import { Box } from '@mui/material';
 import { AuthProvider, useAuth } from './components/AuthContext';
 import SideMenu from './components/SideMenu';
-import ProtectedRoute from './components/ProtectedRoute';
 import SignInSide from './pages/SignInSide';
 import LoadingBackdrop from './components/LoadingBackdrop';
 import ContentArea from './components/ContentArea'; // Import ContentArea

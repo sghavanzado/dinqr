@@ -7,6 +7,8 @@ import ListItemText from '@mui/material/ListItemText';
 import Stack from '@mui/material/Stack';
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 
+import PeopleOutlineOutlinedIcon from '@mui/icons-material/PeopleOutlineOutlined';
+
 import clsx from 'clsx';
 import { animated, useSpring } from '@react-spring/web';
 import { styled, alpha } from '@mui/material/styles';
@@ -19,17 +21,17 @@ import ReceiptLongOutlinedIcon from '@mui/icons-material/ReceiptLongOutlined';
 
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { treeItemClasses } from '@mui/x-tree-view/TreeItem';
-import { useTreeItem2, UseTreeItem2Parameters } from '@mui/x-tree-view/useTreeItem2';
+import { useTreeItem, UseTreeItemParameters } from '@mui/x-tree-view/useTreeItem';
 import {
-  TreeItem2Checkbox,
-  TreeItem2Content,
-  TreeItem2IconContainer,
-  TreeItem2Label,
-  TreeItem2Root,
-} from '@mui/x-tree-view/TreeItem2';
-import { TreeItem2Icon } from '@mui/x-tree-view/TreeItem2Icon';
-import { TreeItem2Provider } from '@mui/x-tree-view/TreeItem2Provider';
-import { TreeItem2DragAndDropOverlay } from '@mui/x-tree-view/TreeItem2DragAndDropOverlay';
+  TreeItemCheckbox,
+  TreeItemContent,
+  TreeItemIconContainer,
+  TreeItemLabel,
+  TreeItemRoot,
+} from '@mui/x-tree-view/TreeItem';
+import { TreeItemIcon } from '@mui/x-tree-view/TreeItemIcon';
+import { TreeItemProvider } from '@mui/x-tree-view/TreeItemProvider';
+import { TreeItemDragAndDropOverlay } from '@mui/x-tree-view/TreeItemDragAndDropOverlay';
 import { TreeViewBaseItem } from '@mui/x-tree-view/models';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import { Link, useNavigate } from 'react-router-dom';
@@ -92,7 +94,7 @@ declare module 'react' {
   }
 }
 
-const StyledTreeItemRoot = styled(TreeItem2Root)(({ theme }) => ({
+const StyledTreeItemRoot = styled(TreeItemRoot)(({ theme }) => ({
   color: theme.palette.grey[400],
   position: 'relative',
   [`& .${treeItemClasses.groupTransition}`]: {
@@ -101,9 +103,9 @@ const StyledTreeItemRoot = styled(TreeItem2Root)(({ theme }) => ({
   ...theme.applyStyles('light', {
     color: theme.palette.grey[800],
   }),
-})) as unknown as typeof TreeItem2Root;
+})) as unknown as typeof TreeItemRoot;
 
-const CustomTreeItemContent = styled(TreeItem2Content)(({ theme }) => ({
+const CustomTreeItemContent = styled(TreeItemContent)(({ theme }) => ({
   flexDirection: 'row-reverse',
   borderRadius: theme.spacing(0.7),
   marginBottom: theme.spacing(0.5),
@@ -181,7 +183,7 @@ function CustomLabel({
   ...other
 }: CustomLabelProps) {
   return (
-    <TreeItem2Label
+    <TreeItemLabel
       {...other}
       sx={{
         display: 'flex',
@@ -199,7 +201,7 @@ function CustomLabel({
 
       <StyledTreeItemLabelText variant="body2">{children}</StyledTreeItemLabelText>
       {expandable && <DotIcon />}
-    </TreeItem2Label>
+    </TreeItemLabel>
   );
 }
 
@@ -211,7 +213,7 @@ const isExpandable = (reactChildren: React.ReactNode) => {
 };
 
 interface CustomTreeItemProps
-  extends Omit<UseTreeItem2Parameters, 'rootRef'>,
+  extends Omit<UseTreeItemParameters, 'rootRef'>,
     Omit<React.HTMLAttributes<HTMLLIElement>, 'onFocus'> {}
 
 const CustomTreeItem = React.forwardRef(function CustomTreeItem(
@@ -230,14 +232,14 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
     getDragAndDropOverlayProps,
     status,
     publicAPI,
-  } = useTreeItem2({ id, itemId, children, label, disabled, rootRef: ref });
+  } = useTreeItem({ id, itemId, children, label, disabled, rootRef: ref });
 
   const item = publicAPI.getItem(itemId);
   const expandable = isExpandable(children);
   const icon = item.icon;
 
   return (
-    <TreeItem2Provider itemId={itemId}>
+    <TreeItemProvider itemId={itemId} id={id}>
       <StyledTreeItemRoot {...getRootProps(other)}>
         <CustomTreeItemContent
           {...getContentProps({
@@ -249,18 +251,18 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
             }),
           })}
         >
-          <TreeItem2IconContainer {...getIconContainerProps()}>
-            <TreeItem2Icon status={status} />
-          </TreeItem2IconContainer>
-          <TreeItem2Checkbox {...getCheckboxProps()} />
+          <TreeItemIconContainer {...getIconContainerProps()}>
+            <TreeItemIcon status={status} />
+          </TreeItemIconContainer>
+          <TreeItemCheckbox {...getCheckboxProps()} />
           <CustomLabel
             {...getLabelProps({ icon, expandable: expandable && status.expanded })}
           />
-          <TreeItem2DragAndDropOverlay {...getDragAndDropOverlayProps()} />
+          <TreeItemDragAndDropOverlay {...getDragAndDropOverlayProps()} />
         </CustomTreeItemContent>
         {children && <TransitionComponent {...getGroupTransitionProps()} />}
       </StyledTreeItemRoot>
-    </TreeItem2Provider>
+    </TreeItemProvider>
   );
 });
 

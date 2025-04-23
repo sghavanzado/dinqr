@@ -1,7 +1,7 @@
 // QRTable.tsx
-import * as React from 'react';
-import { useState, useEffect } from 'react';
-import { DataGrid, GridRowParams, GridColDef } from '@mui/x-data-grid';
+
+import { FC, useState, useEffect } from 'react';
+import { DataGrid, GridRowParams, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { TextField, Button, Box, CircularProgress, Typography, IconButton, Modal } from '@mui/material';
 import QrCodeIcon from '@mui/icons-material/QrCode';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -15,11 +15,22 @@ import DialogContent from '@mui/material/DialogContent';
 import axiosInstance from '../api/axiosInstance';
 import Checkbox from '@mui/material/Checkbox';
 
-interface QRTableProps {}
+interface Funcionario {
+  id: string;
+  nome: string;
+  funcao?: string;
+  area?: string;
+  nif?: string;
+  telefone?: string;
+}
 
-const QRTable: React.FC<QRTableProps> = () => {
-  const [funcionariosConQR, setFuncionariosConQR] = useState([]);
-  const [funcionariosSinQR, setFuncionariosSinQR] = useState([]);
+interface QRTableProps {
+  funcionarios: Funcionario[];
+}
+
+const QRTable: FC<QRTableProps> = ({ funcionarios }) => {
+  const [funcionariosConQR, setFuncionariosConQR] = useState<Funcionario[]>(funcionarios);
+  const [funcionariosSinQR, setFuncionariosSinQR] = useState<Funcionario[]>([]);
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [loading, setLoading] = useState(false);
   const [filterConQR, setFilterConQR] = useState('');
@@ -31,8 +42,8 @@ const QRTable: React.FC<QRTableProps> = () => {
   const [contactCardHtml, setContactCardHtml] = useState('');
 
   useEffect(() => {
-    fetchFuncionariosConQR();
-  }, []);
+    setFuncionariosConQR(funcionarios);
+  }, [funcionarios]);
 
   const fetchFuncionariosConQR = async () => {
     setLoading(true);
@@ -135,7 +146,7 @@ const QRTable: React.FC<QRTableProps> = () => {
     }
   };
 
-  const handleViewContactCard = (funcionario) => {
+  const handleViewContactCard = (funcionario: Funcionario) => {
     const logoUrl = '/static/images/sonangol-logo.png'; // Ruta estática para o logo fornecido
     const headerBackgroundColor = '#F4CF0A'; // Amarelo do logo fornecido
     const htmlContent = `
@@ -193,7 +204,7 @@ const QRTable: React.FC<QRTableProps> = () => {
       field: 'actions',
       headerName: 'Ações',
       width: 300,
-      renderCell: (params) => (
+      renderCell: (params: GridRenderCellParams) => (
         <Box sx={{ display: 'flex', gap: 1 }}>
           <IconButton
             color="success"
@@ -293,10 +304,14 @@ const QRTable: React.FC<QRTableProps> = () => {
         <DataGrid
           rows={filteredFuncionariosConQR}
           columns={columnsConQR}
-          pageSize={10}
-          rowsPerPageOptions={[10, 20, 50]}
+          initialState={{
+            pagination: {
+              paginationModel: { pageSize: 10 },
+            },
+          }}
+          pageSizeOptions={[10, 20, 50]}
           autoHeight
-          disableSelectionOnClick
+          disableRowSelectionOnClick
         />
         <Button
           variant="contained"
@@ -335,10 +350,15 @@ const QRTable: React.FC<QRTableProps> = () => {
               <DataGrid
                 rows={filteredFuncionariosSinQR}
                 columns={columnsSinQR}
-                pageSize={10}
-                rowsPerPageOptions={[10, 20, 50]}
+                initialState={{
+                  pagination: {
+                    paginationModel: { pageSize: 10 },
+                  },
+                }}
+                paginationModel={{ page: 0, pageSize: 10 }}
+                pageSizeOptions={[10, 20, 50]}
                 autoHeight
-                disableSelectionOnClick
+                disableRowSelectionOnClick
                 onRowClick={handleRowClickSinQR}
                 getRowClassName={(params) => (selectedIds.includes(params.row.id as number) ? 'Mui-selected' : '')}
               />

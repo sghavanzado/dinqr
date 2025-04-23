@@ -42,5 +42,20 @@ export const authService = {
   getCurrentUser: (): LoginResponse['user'] | null => {
     const token = localStorage.getItem('access_token');
     return token ? JSON.parse(atob(token.split('.')[1])) : null;
+  },
+
+  updateProfile: async (profileData: {
+    name: string;
+    last_name: string;
+    email: string;
+    username: string;
+  }) => {
+    try {
+      const response = await axiosInstance.put('/profile', profileData);
+      return response.data; // Return updated user data
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      throw error;
+    }
   }
 };

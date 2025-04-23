@@ -1,5 +1,4 @@
 // src/pages/UserProfile.tsx
-import React from 'react';
 
 const UserProfile = () => {
   return (

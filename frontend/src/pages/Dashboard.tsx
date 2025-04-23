@@ -1,4 +1,4 @@
-import * as React from 'react';
+
 import type {} from '@mui/x-date-pickers/themeAugmentation';
 import type {} from '@mui/x-charts/themeAugmentation';
 import type {} from '@mui/x-data-grid-pro/themeAugmentation';
@@ -7,7 +7,7 @@ import Stack from '@mui/material/Stack';
 import MainGrid from '../components/MainGrid';
 
 
-export default function Dashboard(props: { disableCustomTheme?: boolean }) {
+export default function Dashboard() {
   return (
 <Stack
     spacing={2}

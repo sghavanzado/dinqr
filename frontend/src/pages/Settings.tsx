@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 // Extend the Window interface to include electronAPI
 declare global {
@@ -13,10 +13,10 @@ import {
   Typography,
   TextField,
   Button,
-  Grid,
   Snackbar,
   Alert,
 } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import SaveIcon from '@mui/icons-material/Save';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import StopIcon from '@mui/icons-material/Stop';
@@ -71,7 +71,7 @@ const SettingsPage = () => {
           serverDomain: fetchedSettings.serverDomain || defaultSettings.serverDomain,
           serverPort: fetchedSettings.serverPort || defaultSettings.serverPort,
         });
-      } catch (error) {
+      } catch {
         setSnackbarMessage('Erro ao carregar as configurações.');
         setSnackbarSeverity('error');
         setSnackbarOpen(true);
@@ -96,7 +96,7 @@ const SettingsPage = () => {
       setSnackbarMessage('Configurações guardadas com sucesso.');
       setSnackbarSeverity('success');
       setSnackbarOpen(true);
-    } catch (error) {
+    } catch {
       setSnackbarMessage('Erro ao guardar as configurações.');
       setSnackbarSeverity('error');
       setSnackbarOpen(true);

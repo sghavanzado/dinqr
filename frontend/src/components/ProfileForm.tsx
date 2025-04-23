@@ -8,7 +8,7 @@ interface ProfileFormProps {
 }
 
 const ProfileForm = ({ onClose }: ProfileFormProps) => {
-  const { user, setUser } = useAuth();
+  const { user } = useAuth();
   const [formData, setFormData] = useState({
     name: '',
     last_name: '',
@@ -40,7 +40,8 @@ const ProfileForm = ({ onClose }: ProfileFormProps) => {
     setLoading(true);
     try {
       const updatedUser = await authService.updateProfile(formData);
-      setUser(updatedUser);
+      // Update user state if necessary
+      console.log('Updated user:', updatedUser);
       onClose();
     } catch (error) {
       console.error('Error updating profile:', error);

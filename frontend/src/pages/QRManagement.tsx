@@ -1,5 +1,5 @@
 // QRManagement.tsx
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Container,
   Typography,
@@ -12,7 +12,7 @@ import QRTable from '../components/QRTable';
 import { fetchFuncionarios } from '../api/apiService';
 
 interface Funcionario {
-  sap: string;
+  id: string;
   nome: string;
   funcao: string;
   area: string;
@@ -26,7 +26,7 @@ const QRManagement = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>('success');
-  const [totalRows, setTotalRows] = useState(0);
+  // Removed unused state 'totalRows'
 
   const fetchData = async () => {
     setLoading(true);
@@ -34,7 +34,7 @@ const QRManagement = () => {
       const data = await fetchFuncionarios(1, 10, '');
       console.log('API Response (Funcionários):', data);
       setFuncionarios(data);
-      setTotalRows(data.length);
+      // Removed unused state update for 'totalRows'
     } catch (error) {
       console.error('Erro ao carregar os funcionários:', error);
       setSnackbarMessage('Erro ao carregar os funcionários.');
@@ -58,7 +58,7 @@ const QRManagement = () => {
       </Typography>
       <Grid container spacing={3}>
         <Grid item xs={12}>
-          <QRTable />
+          <QRTable funcionarios={funcionarios} />
         </Grid>
       </Grid>
       {loading && <CircularProgress />}

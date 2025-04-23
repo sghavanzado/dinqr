@@ -1,9 +1,9 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react'; // Added React import
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import LoadingBackdrop from './LoadingBackdrop';
 
-const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
+const ProtectedRoute = ({ children }: { children: React.ReactElement }) => { // Updated JSX.Element to React.ReactElement
   const { token, loading } = useAuth();
   const navigate = useNavigate();
 

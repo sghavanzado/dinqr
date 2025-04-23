@@ -57,10 +57,10 @@ const QRManagement = () => {
         Gestão de Códigos QR
       </Typography>
       <Grid container spacing={3}>
-        <Grid item xs={12}>
+        
           <QRTable funcionarios={funcionarios} />
         </Grid>
-      </Grid>
+     
       {loading && <CircularProgress />}
       <Snackbar
         open={snackbarOpen}

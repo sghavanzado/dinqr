@@ -128,23 +128,23 @@ const SettingsPage = () => {
         Configurações
       </Typography>
       <Grid container spacing={3}>
-        <Grid item xs={12}>
+       
           <TextField
             label="Servidor (IP ou Nome)"
             fullWidth
             value={settings.server}
             onChange={(e) => setSettings({ ...settings, server: e.target.value })}
           />
-        </Grid>
-        <Grid item xs={12}>
+        
+        
           <TextField
             label="Utilizador"
             fullWidth
             value={settings.username}
             onChange={(e) => setSettings({ ...settings, username: e.target.value })}
           />
-        </Grid>
-        <Grid item xs={12}>
+        
+        
           <TextField
             label="Palavra-passe"
             type="password"
@@ -152,40 +152,40 @@ const SettingsPage = () => {
             value={settings.password}
             onChange={(e) => setSettings({ ...settings, password: e.target.value })}
           />
-        </Grid>
-        <Grid item xs={12}>
+       
+        
           <TextField
             label="Nome da Base de Dados"
             fullWidth
             value={settings.database}
             onChange={(e) => setSettings({ ...settings, database: e.target.value })}
           />
-        </Grid>
-        <Grid item xs={12}>
+        
+        
           <TextField
             label="Pasta de Saída para os Códigos QR"
             fullWidth
             value={settings.outputFolder}
             onChange={(e) => setSettings({ ...settings, outputFolder: e.target.value })}
           />
-        </Grid>
-        <Grid item xs={12}>
+        
+        
           <TextField
             label="Domínio ou IP do servidor"
             fullWidth
             value={settings.serverDomain}
             onChange={(e) => setSettings({ ...settings, serverDomain: e.target.value })}
           />
-        </Grid>
-        <Grid item xs={12}>
+        
+       
           <TextField
             label="Porta do servidor"
             fullWidth
             value={settings.serverPort}
             onChange={(e) => setSettings({ ...settings, serverPort: e.target.value })}
           />
-        </Grid>
-        <Grid item xs={12}>
+        
+        
           <Button
             variant="contained"
             startIcon={<SaveIcon sx={{ color: 'primary.main' }} />}
@@ -203,8 +203,8 @@ const SettingsPage = () => {
           >
             Guardar Configurações
           </Button>
-        </Grid>
-        <Grid item xs={12}>
+        
+       
           <Button
             variant="contained"
             startIcon={<PlayArrowIcon sx={{ color: 'success.main' }} />}
@@ -240,7 +240,7 @@ const SettingsPage = () => {
           >
             Parar Servidor
           </Button>
-        </Grid>
+      
       </Grid>
       <Snackbar
         open={snackbarOpen}

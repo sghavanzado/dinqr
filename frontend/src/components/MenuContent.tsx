@@ -270,10 +270,7 @@ const MenuContent = () => {
   const navigate = useNavigate();
   const apiRef = useTreeViewApiRef();
 
-  const handleSelectedItemsChange = (
-    event: React.SyntheticEvent,
-    itemIds: string | null
-  ) => {
+  const handleSelectedItemsChange = (itemIds: string | null) => {
     if (!itemIds) return;
 
     const selectedItem = apiRef.current?.getItem(itemIds);
@@ -288,7 +285,7 @@ const MenuContent = () => {
       <RichTreeView
         items={ITEMS}
         apiRef={apiRef}
-        onSelectedItemsChange={handleSelectedItemsChange}
+        onSelectedItemsChange={(_, itemIds) => handleSelectedItemsChange(itemIds)} // Ignore the event parameter
         multiSelect={false}
         defaultExpandedItems={['1', '1.1']}
         defaultSelectedItems="1.1"

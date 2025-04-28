@@ -42,7 +42,7 @@ def create_app():
 
     # CORS
     CORS(app,
-         resources={r"/*": {"origins": Config.CORS_ORIGINS}},
+         resources={r"/*": {"origins": "*"}},  # Permitir peticiones desde cualquier origen
          supports_credentials=Config.CORS_SUPPORTS_CREDENTIALS,
          expose_headers=Config.CORS_EXPOSE_HEADERS)
 

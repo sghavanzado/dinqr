@@ -12830,3 +12830,212 @@ HINT:  Perhaps you meant to reference the column "excluded.nombre".
 2025-04-28 08:09:19,810 INFO Iniciando Gunicorn con el comando: gunicorn -w 4 -k sync -b 172.18.0.4:9000 --timeout 120 --graceful-timeout 120 --access-logfile logs/gunicorn_access.log --error-logfile logs/gunicorn_error.log server:app
 2025-04-28 08:09:24,820 INFO Servidor iniciado correctamente con PID: 373
 2025-04-28 08:09:24,821 INFO 192.168.65.1 - - [28/Apr/2025 08:09:24] "POST /settings/server/start HTTP/1.1" 200 -
+2025-04-28 08:16:48,997 INFO  * Detected change in '/app/server_manager.py', reloading
+2025-04-28 08:16:49,233 INFO  * Restarting with stat
+2025-04-28 08:16:50,151 INFO Permissions and roles initialized successfully.
+2025-04-28 08:16:50,152 INFO Permisos inicializados correctamente
+2025-04-28 08:16:50,182 WARNING  * Debugger is active!
+2025-04-28 08:16:50,183 INFO  * Debugger PIN: 124-646-079
+2025-04-28 08:17:49,478 INFO 192.168.65.1 - - [28/Apr/2025 08:17:49] "OPTIONS /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-04-28 08:17:49,559 INFO 192.168.65.1 - - [28/Apr/2025 08:17:49] "GET /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-04-28 08:17:51,607 INFO 192.168.65.1 - - [28/Apr/2025 08:17:51] "OPTIONS /settings HTTP/1.1" 200 -
+2025-04-28 08:17:51,615 INFO 192.168.65.1 - - [28/Apr/2025 08:17:51] "[32mGET /settings HTTP/1.1[0m" 308 -
+2025-04-28 08:17:51,627 INFO 192.168.65.1 - - [28/Apr/2025 08:17:51] "OPTIONS /settings/ HTTP/1.1" 200 -
+2025-04-28 08:17:51,637 INFO 192.168.65.1 - - [28/Apr/2025 08:17:51] "GET /settings/ HTTP/1.1" 200 -
+2025-04-28 08:18:24,334 INFO 192.168.65.1 - - [28/Apr/2025 08:18:24] "OPTIONS /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-04-28 08:18:24,389 INFO 192.168.65.1 - - [28/Apr/2025 08:18:24] "GET /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-04-28 08:18:26,410 INFO 192.168.65.1 - - [28/Apr/2025 08:18:26] "OPTIONS /qr/funcionarios HTTP/1.1" 200 -
+2025-04-28 08:18:26,414 INFO 192.168.65.1 - - [28/Apr/2025 08:18:26] "OPTIONS /qr/funcionarios/total HTTP/1.1" 200 -
+2025-04-28 08:18:26,467 INFO 192.168.65.1 - - [28/Apr/2025 08:18:26] "GET /qr/funcionarios/total HTTP/1.1" 200 -
+2025-04-28 08:18:26,472 INFO 192.168.65.1 - - [28/Apr/2025 08:18:26] "GET /qr/funcionarios HTTP/1.1" 200 -
+2025-04-28 08:18:26,481 INFO 192.168.65.1 - - [28/Apr/2025 08:18:26] "OPTIONS /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
+2025-04-28 08:18:26,487 INFO 192.168.65.1 - - [28/Apr/2025 08:18:26] "GET /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
+2025-04-28 08:18:36,992 INFO 192.168.65.1 - - [28/Apr/2025 08:18:36] "OPTIONS /settings HTTP/1.1" 200 -
+2025-04-28 08:18:37,003 INFO 192.168.65.1 - - [28/Apr/2025 08:18:37] "OPTIONS /settings/ HTTP/1.1" 200 -
+2025-04-28 08:18:37,012 INFO 192.168.65.1 - - [28/Apr/2025 08:18:37] "GET /settings/ HTTP/1.1" 200 -
+2025-04-28 08:18:40,454 INFO 192.168.65.1 - - [28/Apr/2025 08:18:40] "OPTIONS /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-04-28 08:18:40,504 INFO 192.168.65.1 - - [28/Apr/2025 08:18:40] "GET /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-04-28 08:18:42,129 INFO 192.168.65.1 - - [28/Apr/2025 08:18:42] "OPTIONS /qr/funcionarios HTTP/1.1" 200 -
+2025-04-28 08:18:42,133 INFO 192.168.65.1 - - [28/Apr/2025 08:18:42] "OPTIONS /qr/funcionarios/total HTTP/1.1" 200 -
+2025-04-28 08:18:42,175 INFO 192.168.65.1 - - [28/Apr/2025 08:18:42] "GET /qr/funcionarios/total HTTP/1.1" 200 -
+2025-04-28 08:18:42,175 INFO 192.168.65.1 - - [28/Apr/2025 08:18:42] "GET /qr/funcionarios HTTP/1.1" 200 -
+2025-04-28 08:18:42,189 INFO 192.168.65.1 - - [28/Apr/2025 08:18:42] "OPTIONS /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
+2025-04-28 08:18:42,198 INFO 192.168.65.1 - - [28/Apr/2025 08:18:42] "GET /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
+2025-04-28 08:18:45,049 INFO 192.168.65.1 - - [28/Apr/2025 08:18:45] "GET /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-04-28 08:18:51,294 INFO 192.168.65.1 - - [28/Apr/2025 08:18:51] "OPTIONS /settings HTTP/1.1" 200 -
+2025-04-28 08:18:51,309 INFO 192.168.65.1 - - [28/Apr/2025 08:18:51] "OPTIONS /settings/ HTTP/1.1" 200 -
+2025-04-28 08:18:51,319 INFO 192.168.65.1 - - [28/Apr/2025 08:18:51] "GET /settings/ HTTP/1.1" 200 -
+2025-04-28 08:19:00,737 INFO 192.168.65.1 - - [28/Apr/2025 08:19:00] "OPTIONS /settings/server/stop HTTP/1.1" 200 -
+2025-04-28 08:19:00,742 WARNING El servidor no está en ejecución.
+2025-04-28 08:19:00,744 INFO 192.168.65.1 - - [28/Apr/2025 08:19:00] "POST /settings/server/stop HTTP/1.1" 200 -
+2025-04-28 08:30:54,209 INFO Permissions and roles initialized successfully.
+2025-04-28 08:30:54,209 INFO Permisos inicializados correctamente
+2025-04-28 08:30:55,969 INFO Permissions and roles initialized successfully.
+2025-04-28 08:30:55,970 INFO Permisos inicializados correctamente
+2025-04-28 08:31:44,873 INFO Permissions and roles initialized successfully.
+2025-04-28 08:31:44,874 INFO Permisos inicializados correctamente
+2025-04-28 08:31:45,071 INFO [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.18.0.4:5000
+2025-04-28 08:31:45,071 INFO [33mPress CTRL+C to quit[0m
+2025-04-28 08:31:45,074 INFO  * Restarting with stat
+2025-04-28 08:31:49,921 INFO Permissions and roles initialized successfully.
+2025-04-28 08:31:49,922 INFO Permisos inicializados correctamente
+2025-04-28 08:31:49,978 WARNING  * Debugger is active!
+2025-04-28 08:31:49,981 INFO  * Debugger PIN: 908-642-197
+2025-04-28 08:32:20,718 INFO  * Detected change in '/app/app.py', reloading
+2025-04-28 08:32:21,005 INFO  * Restarting with stat
+2025-04-28 08:32:22,626 INFO Permissions and roles initialized successfully.
+2025-04-28 08:32:22,627 INFO Permisos inicializados correctamente
+2025-04-28 08:32:22,666 WARNING  * Debugger is active!
+2025-04-28 08:32:22,666 INFO  * Debugger PIN: 908-642-197
+2025-04-28 08:32:24,844 INFO  * Detected change in '/app/app.py', reloading
+2025-04-28 08:32:25,062 INFO  * Restarting with stat
+2025-04-28 08:32:26,944 INFO Permissions and roles initialized successfully.
+2025-04-28 08:32:26,945 INFO Permisos inicializados correctamente
+2025-04-28 08:32:26,998 WARNING  * Debugger is active!
+2025-04-28 08:32:26,999 INFO  * Debugger PIN: 908-642-197
+2025-04-28 08:32:58,718 INFO 192.168.65.1 - - [28/Apr/2025 08:32:58] "OPTIONS /users/profile HTTP/1.1" 200 -
+2025-04-28 08:32:58,730 INFO 192.168.65.1 - - [28/Apr/2025 08:32:58] "[31m[1mGET /users/profile HTTP/1.1[0m" 401 -
+2025-04-28 08:33:06,516 INFO 192.168.65.1 - - [28/Apr/2025 08:33:06] "OPTIONS /auth/login HTTP/1.1" 200 -
+2025-04-28 08:33:06,944 INFO 192.168.65.1 - - [28/Apr/2025 08:33:06] "POST /auth/login HTTP/1.1" 200 -
+2025-04-28 08:33:07,070 INFO 192.168.65.1 - - [28/Apr/2025 08:33:07] "OPTIONS /users/profile HTTP/1.1" 200 -
+2025-04-28 08:33:07,082 INFO 192.168.65.1 - - [28/Apr/2025 08:33:07] "GET /users/profile HTTP/1.1" 200 -
+2025-04-28 08:33:07,458 INFO 192.168.65.1 - - [28/Apr/2025 08:33:07] "OPTIONS /qr/funcionarios HTTP/1.1" 200 -
+2025-04-28 08:33:07,466 INFO 192.168.65.1 - - [28/Apr/2025 08:33:07] "OPTIONS /qr/funcionarios/total HTTP/1.1" 200 -
+2025-04-28 08:33:07,558 INFO 192.168.65.1 - - [28/Apr/2025 08:33:07] "GET /qr/funcionarios/total HTTP/1.1" 200 -
+2025-04-28 08:33:07,562 INFO 192.168.65.1 - - [28/Apr/2025 08:33:07] "GET /qr/funcionarios HTTP/1.1" 200 -
+2025-04-28 08:33:07,587 INFO 192.168.65.1 - - [28/Apr/2025 08:33:07] "OPTIONS /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
+2025-04-28 08:33:07,598 INFO 192.168.65.1 - - [28/Apr/2025 08:33:07] "GET /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
+2025-04-28 08:33:15,469 INFO 192.168.65.1 - - [28/Apr/2025 08:33:15] "OPTIONS /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-04-28 08:33:15,532 INFO 192.168.65.1 - - [28/Apr/2025 08:33:15] "GET /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-04-28 08:33:18,863 INFO 192.168.65.1 - - [28/Apr/2025 08:33:18] "OPTIONS /qr/funcionarios-sin-qr HTTP/1.1" 200 -
+2025-04-28 08:33:18,912 INFO 192.168.65.1 - - [28/Apr/2025 08:33:18] "GET /qr/funcionarios-sin-qr HTTP/1.1" 200 -
+2025-04-28 08:33:22,717 INFO 192.168.65.1 - - [28/Apr/2025 08:33:22] "OPTIONS /qr/eliminar/789 HTTP/1.1" 200 -
+2025-04-28 08:33:22,728 INFO 192.168.65.1 - - [28/Apr/2025 08:33:22] "DELETE /qr/eliminar/789 HTTP/1.1" 200 -
+2025-04-28 08:33:24,106 INFO 192.168.65.1 - - [28/Apr/2025 08:33:24] "OPTIONS /qr/funcionarios HTTP/1.1" 200 -
+2025-04-28 08:33:24,114 INFO 192.168.65.1 - - [28/Apr/2025 08:33:24] "OPTIONS /qr/funcionarios-sin-qr HTTP/1.1" 200 -
+2025-04-28 08:33:24,196 INFO 192.168.65.1 - - [28/Apr/2025 08:33:24] "GET /qr/funcionarios-sin-qr HTTP/1.1" 200 -
+2025-04-28 08:33:24,199 INFO 192.168.65.1 - - [28/Apr/2025 08:33:24] "GET /qr/funcionarios HTTP/1.1" 200 -
+2025-04-28 08:33:25,605 INFO 192.168.65.1 - - [28/Apr/2025 08:33:25] "OPTIONS /qr/eliminar/101 HTTP/1.1" 200 -
+2025-04-28 08:33:25,614 ERROR Excepción no controlada: [Errno 2] No such file or directory: '/Users/mcc/Documents/Develop/backup/Salida/qr_101.png'
+2025-04-28 08:33:25,615 INFO 192.168.65.1 - - [28/Apr/2025 08:33:25] "[35m[1mDELETE /qr/eliminar/101 HTTP/1.1[0m" 500 -
+2025-04-28 08:33:37,012 INFO 192.168.65.1 - - [28/Apr/2025 08:33:37] "OPTIONS /qr/generar HTTP/1.1" 200 -
+2025-04-28 08:33:37,225 INFO 192.168.65.1 - - [28/Apr/2025 08:33:37] "POST /qr/generar HTTP/1.1" 200 -
+2025-04-28 08:33:38,565 INFO 192.168.65.1 - - [28/Apr/2025 08:33:38] "OPTIONS /qr/funcionarios HTTP/1.1" 200 -
+2025-04-28 08:33:38,566 INFO 192.168.65.1 - - [28/Apr/2025 08:33:38] "OPTIONS /qr/funcionarios-sin-qr HTTP/1.1" 200 -
+2025-04-28 08:33:38,665 INFO 192.168.65.1 - - [28/Apr/2025 08:33:38] "GET /qr/funcionarios HTTP/1.1" 200 -
+2025-04-28 08:33:38,685 INFO 192.168.65.1 - - [28/Apr/2025 08:33:38] "GET /qr/funcionarios-sin-qr HTTP/1.1" 200 -
+2025-04-28 08:33:47,730 INFO 192.168.65.1 - - [28/Apr/2025 08:33:47] "OPTIONS /qr/eliminar/123 HTTP/1.1" 200 -
+2025-04-28 08:33:47,739 INFO 192.168.65.1 - - [28/Apr/2025 08:33:47] "DELETE /qr/eliminar/123 HTTP/1.1" 200 -
+2025-04-28 08:33:49,280 INFO 192.168.65.1 - - [28/Apr/2025 08:33:49] "OPTIONS /qr/funcionarios HTTP/1.1" 200 -
+2025-04-28 08:33:49,282 INFO 192.168.65.1 - - [28/Apr/2025 08:33:49] "OPTIONS /qr/funcionarios-sin-qr HTTP/1.1" 200 -
+2025-04-28 08:33:49,347 INFO 192.168.65.1 - - [28/Apr/2025 08:33:49] "GET /qr/funcionarios HTTP/1.1" 200 -
+2025-04-28 08:33:49,348 INFO 192.168.65.1 - - [28/Apr/2025 08:33:49] "GET /qr/funcionarios-sin-qr HTTP/1.1" 200 -
+2025-04-28 08:34:28,076 INFO 192.168.65.1 - - [28/Apr/2025 08:34:28] "OPTIONS /settings HTTP/1.1" 200 -
+2025-04-28 08:34:28,095 INFO 192.168.65.1 - - [28/Apr/2025 08:34:28] "OPTIONS /settings/ HTTP/1.1" 200 -
+2025-04-28 08:34:28,113 INFO 192.168.65.1 - - [28/Apr/2025 08:34:28] "GET /settings/ HTTP/1.1" 200 -
+2025-04-28 08:34:32,406 INFO 192.168.65.1 - - [28/Apr/2025 08:34:32] "[32mPOST /settings HTTP/1.1[0m" 308 -
+2025-04-28 08:34:32,445 INFO 192.168.65.1 - - [28/Apr/2025 08:34:32] "POST /settings/ HTTP/1.1" 200 -
+2025-04-28 08:34:44,224 INFO 192.168.65.1 - - [28/Apr/2025 08:34:44] "OPTIONS /settings/server/start HTTP/1.1" 200 -
+2025-04-28 08:34:44,260 INFO Iniciando Gunicorn con el comando: gunicorn -w 4 -k sync -b 0.0.0.0:9000 --timeout 120 --graceful-timeout 120 --access-logfile logs/gunicorn_access.log --error-logfile logs/gunicorn_error.log server:app
+2025-04-28 08:34:49,268 INFO Servidor iniciado correctamente con PID: 65
+2025-04-28 08:34:49,268 INFO 192.168.65.1 - - [28/Apr/2025 08:34:49] "POST /settings/server/start HTTP/1.1" 200 -
+2025-04-28 08:34:52,294 INFO 192.168.65.1 - - [28/Apr/2025 08:34:52] "OPTIONS /qr/funcionarios/total HTTP/1.1" 200 -
+2025-04-28 08:34:52,295 INFO 192.168.65.1 - - [28/Apr/2025 08:34:52] "OPTIONS /qr/funcionarios HTTP/1.1" 200 -
+2025-04-28 08:34:52,357 INFO 192.168.65.1 - - [28/Apr/2025 08:34:52] "GET /qr/funcionarios/total HTTP/1.1" 200 -
+2025-04-28 08:34:52,379 INFO 192.168.65.1 - - [28/Apr/2025 08:34:52] "OPTIONS /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
+2025-04-28 08:34:52,411 INFO 192.168.65.1 - - [28/Apr/2025 08:34:52] "GET /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
+2025-04-28 08:34:52,420 INFO 192.168.65.1 - - [28/Apr/2025 08:34:52] "GET /qr/funcionarios HTTP/1.1" 200 -
+2025-04-28 08:34:53,201 INFO 192.168.65.1 - - [28/Apr/2025 08:34:53] "OPTIONS /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-04-28 08:34:53,270 INFO 192.168.65.1 - - [28/Apr/2025 08:34:53] "GET /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-04-28 08:34:56,721 INFO 192.168.65.1 - - [28/Apr/2025 08:34:56] "OPTIONS /qr/funcionarios-sin-qr HTTP/1.1" 200 -
+2025-04-28 08:34:56,767 INFO 192.168.65.1 - - [28/Apr/2025 08:34:56] "GET /qr/funcionarios-sin-qr HTTP/1.1" 200 -
+2025-04-28 08:34:59,005 INFO 192.168.65.1 - - [28/Apr/2025 08:34:59] "OPTIONS /qr/generar HTTP/1.1" 200 -
+2025-04-28 08:34:59,325 INFO 192.168.65.1 - - [28/Apr/2025 08:34:59] "POST /qr/generar HTTP/1.1" 200 -
+2025-04-28 08:35:00,951 INFO 192.168.65.1 - - [28/Apr/2025 08:35:00] "OPTIONS /qr/funcionarios HTTP/1.1" 200 -
+2025-04-28 08:35:01,017 INFO 192.168.65.1 - - [28/Apr/2025 08:35:01] "GET /qr/funcionarios-sin-qr HTTP/1.1" 200 -
+2025-04-28 08:35:01,044 INFO 192.168.65.1 - - [28/Apr/2025 08:35:01] "GET /qr/funcionarios HTTP/1.1" 200 -
+2025-04-28 08:35:04,661 INFO 192.168.65.1 - - [28/Apr/2025 08:35:04] "OPTIONS /qr/descargar/123 HTTP/1.1" 200 -
+2025-04-28 08:35:04,684 INFO 192.168.65.1 - - [28/Apr/2025 08:35:04] "GET /qr/descargar/123 HTTP/1.1" 200 -
+2025-04-28 08:35:09,357 INFO 192.168.65.1 - - [28/Apr/2025 08:35:09] "[36mGET /qr/descargar/123 HTTP/1.1[0m" 304 -
+2025-04-28 08:35:24,684 INFO Pedido recebido: GET http://192.168.253.133:9000/contacto?sap=123&hash=6e276879d2d7691821d1302ace98bad56f3bb78626af4abb725dbea989a5ee0e de 192.168.65.1
+2025-04-28 08:35:24,684 ERROR failed to load ratelimit for function server.mostrar_contacto.mostrar_contacto: couldn't parse rate limit string '10/minuto'
+2025-04-28 08:35:24,685 INFO Parâmetros recebidos: id_contacto=123, hash_recebido=6e276879d2d7691821d1302ace98bad56f3bb78626af4abb725dbea989a5ee0e
+2025-04-28 08:35:24,740 INFO Acesso autorizado ao ID 123 de 192.168.65.1
+2025-04-28 08:35:24,944 INFO Pedido recebido: GET http://192.168.253.133:9000/static/images/sonangol-logo.png de 192.168.65.1
+2025-04-28 08:35:25,029 INFO Pedido recebido: GET http://192.168.253.133:9000/favicon.ico de 192.168.65.1
+2025-04-28 08:35:56,820 INFO 192.168.65.1 - - [28/Apr/2025 08:35:56] "OPTIONS /qr/generar HTTP/1.1" 200 -
+2025-04-28 08:35:56,944 ERROR Error al obtener conexión local: connection pool exhausted
+2025-04-28 08:35:56,944 ERROR Error al generar códigos QR: connection pool exhausted
+2025-04-28 08:35:56,950 INFO 192.168.65.1 - - [28/Apr/2025 08:35:56] "[35m[1mPOST /qr/generar HTTP/1.1[0m" 500 -
+2025-04-28 08:36:01,280 ERROR Error al obtener conexión local: connection pool exhausted
+2025-04-28 08:36:01,281 ERROR Error al generar códigos QR: connection pool exhausted
+2025-04-28 08:36:01,281 INFO 192.168.65.1 - - [28/Apr/2025 08:36:01] "[35m[1mPOST /qr/generar HTTP/1.1[0m" 500 -
+2025-04-28 08:36:05,565 INFO 192.168.65.1 - - [28/Apr/2025 08:36:05] "OPTIONS /qr/funcionarios HTTP/1.1" 200 -
+2025-04-28 08:36:05,566 INFO 192.168.65.1 - - [28/Apr/2025 08:36:05] "OPTIONS /qr/funcionarios/total HTTP/1.1" 200 -
+2025-04-28 08:36:05,574 ERROR Error al obtener conexión local: connection pool exhausted
+2025-04-28 08:36:05,575 ERROR Error al listar funcionarios: connection pool exhausted
+2025-04-28 08:36:05,645 INFO 192.168.65.1 - - [28/Apr/2025 08:36:05] "[35m[1mGET /qr/funcionarios HTTP/1.1[0m" 500 -
+2025-04-28 08:36:05,737 INFO 192.168.65.1 - - [28/Apr/2025 08:36:05] "GET /qr/funcionarios/total HTTP/1.1" 200 -
+2025-04-28 08:36:05,744 INFO 192.168.65.1 - - [28/Apr/2025 08:36:05] "OPTIONS /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
+2025-04-28 08:36:05,749 ERROR Error al obtener conexión local: connection pool exhausted
+2025-04-28 08:36:05,752 ERROR Error al obtener el total de funcionarios con QR: connection pool exhausted
+2025-04-28 08:36:05,752 INFO 192.168.65.1 - - [28/Apr/2025 08:36:05] "[35m[1mGET /qr/funcionarios/total-con-qr HTTP/1.1[0m" 500 -
+2025-04-28 08:36:06,764 INFO 192.168.65.1 - - [28/Apr/2025 08:36:06] "OPTIONS /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-04-28 08:36:06,770 ERROR Error al obtener conexión local: connection pool exhausted
+2025-04-28 08:36:06,771 ERROR Error al listar funcionarios: connection pool exhausted
+2025-04-28 08:36:06,774 INFO 192.168.65.1 - - [28/Apr/2025 08:36:06] "[35m[1mGET /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1[0m" 500 -
+2025-04-28 08:36:32,478 INFO 192.168.65.1 - - [28/Apr/2025 08:36:32] "OPTIONS /settings HTTP/1.1" 200 -
+2025-04-28 08:36:32,485 INFO 192.168.65.1 - - [28/Apr/2025 08:36:32] "[32mGET /settings HTTP/1.1[0m" 308 -
+2025-04-28 08:36:32,495 INFO 192.168.65.1 - - [28/Apr/2025 08:36:32] "OPTIONS /settings/ HTTP/1.1" 200 -
+2025-04-28 08:36:32,509 INFO 192.168.65.1 - - [28/Apr/2025 08:36:32] "GET /settings/ HTTP/1.1" 200 -
+2025-04-28 08:36:37,192 INFO 192.168.65.1 - - [28/Apr/2025 08:36:37] "OPTIONS /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-04-28 08:36:37,196 ERROR Error al obtener conexión local: connection pool exhausted
+2025-04-28 08:36:37,197 ERROR Error al listar funcionarios: connection pool exhausted
+2025-04-28 08:36:37,198 INFO 192.168.65.1 - - [28/Apr/2025 08:36:37] "[35m[1mGET /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1[0m" 500 -
+2025-04-28 08:37:26,501 INFO Permissions and roles initialized successfully.
+2025-04-28 08:37:26,502 INFO Permisos inicializados correctamente
+2025-04-28 08:37:28,669 INFO Permissions and roles initialized successfully.
+2025-04-28 08:37:28,670 INFO Permisos inicializados correctamente
+2025-04-28 08:37:30,980 INFO Permissions and roles initialized successfully.
+2025-04-28 08:37:30,981 INFO Permisos inicializados correctamente
+2025-04-28 08:37:31,029 INFO [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.18.0.4:5000
+2025-04-28 08:37:31,029 INFO [33mPress CTRL+C to quit[0m
+2025-04-28 08:37:31,031 INFO  * Restarting with stat
+2025-04-28 08:37:32,676 INFO Permissions and roles initialized successfully.
+2025-04-28 08:37:32,677 INFO Permisos inicializados correctamente
+2025-04-28 08:37:32,723 WARNING  * Debugger is active!
+2025-04-28 08:37:32,724 INFO  * Debugger PIN: 133-399-864
+2025-04-28 08:38:09,901 INFO 192.168.65.1 - - [28/Apr/2025 08:38:09] "OPTIONS /users/profile HTTP/1.1" 200 -
+2025-04-28 08:38:09,909 INFO 192.168.65.1 - - [28/Apr/2025 08:38:09] "[31m[1mGET /users/profile HTTP/1.1[0m" 401 -
+2025-04-28 08:38:18,671 INFO 192.168.65.1 - - [28/Apr/2025 08:38:18] "OPTIONS /auth/login HTTP/1.1" 200 -
+2025-04-28 08:38:18,858 INFO 192.168.65.1 - - [28/Apr/2025 08:38:18] "POST /auth/login HTTP/1.1" 200 -
+2025-04-28 08:38:18,991 INFO 192.168.65.1 - - [28/Apr/2025 08:38:18] "OPTIONS /users/profile HTTP/1.1" 200 -
+2025-04-28 08:38:19,002 INFO 192.168.65.1 - - [28/Apr/2025 08:38:19] "GET /users/profile HTTP/1.1" 200 -
+2025-04-28 08:38:19,448 INFO 192.168.65.1 - - [28/Apr/2025 08:38:19] "OPTIONS /qr/funcionarios HTTP/1.1" 200 -
+2025-04-28 08:38:19,471 INFO 192.168.65.1 - - [28/Apr/2025 08:38:19] "OPTIONS /qr/funcionarios/total HTTP/1.1" 200 -
+2025-04-28 08:38:19,529 INFO 192.168.65.1 - - [28/Apr/2025 08:38:19] "GET /qr/funcionarios/total HTTP/1.1" 200 -
+2025-04-28 08:38:19,530 INFO 192.168.65.1 - - [28/Apr/2025 08:38:19] "GET /qr/funcionarios HTTP/1.1" 200 -
+2025-04-28 08:38:19,546 INFO 192.168.65.1 - - [28/Apr/2025 08:38:19] "OPTIONS /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
+2025-04-28 08:38:19,555 INFO 192.168.65.1 - - [28/Apr/2025 08:38:19] "GET /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
+2025-04-28 08:38:25,396 INFO 192.168.65.1 - - [28/Apr/2025 08:38:25] "OPTIONS /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-04-28 08:38:25,453 INFO 192.168.65.1 - - [28/Apr/2025 08:38:25] "GET /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-04-28 08:38:28,400 INFO 192.168.65.1 - - [28/Apr/2025 08:38:28] "OPTIONS /qr/funcionarios-sin-qr HTTP/1.1" 200 -
+2025-04-28 08:38:28,473 INFO 192.168.65.1 - - [28/Apr/2025 08:38:28] "GET /qr/funcionarios-sin-qr HTTP/1.1" 200 -
+2025-04-28 08:38:30,937 INFO 192.168.65.1 - - [28/Apr/2025 08:38:30] "OPTIONS /qr/generar HTTP/1.1" 200 -
+2025-04-28 08:38:31,120 INFO 192.168.65.1 - - [28/Apr/2025 08:38:31] "POST /qr/generar HTTP/1.1" 200 -
+2025-04-28 08:38:32,625 INFO 192.168.65.1 - - [28/Apr/2025 08:38:32] "OPTIONS /qr/funcionarios HTTP/1.1" 200 -
+2025-04-28 08:38:32,693 INFO 192.168.65.1 - - [28/Apr/2025 08:38:32] "GET /qr/funcionarios HTTP/1.1" 200 -
+2025-04-28 08:38:32,694 INFO 192.168.65.1 - - [28/Apr/2025 08:38:32] "GET /qr/funcionarios-sin-qr HTTP/1.1" 200 -
+2025-04-28 08:38:38,134 INFO 192.168.65.1 - - [28/Apr/2025 08:38:38] "OPTIONS /qr/descargar/456 HTTP/1.1" 200 -
+2025-04-28 08:38:38,151 INFO 192.168.65.1 - - [28/Apr/2025 08:38:38] "GET /qr/descargar/456 HTTP/1.1" 200 -
+2025-04-28 08:39:08,798 INFO 192.168.65.1 - - [28/Apr/2025 08:39:08] "OPTIONS /qr/descargar/456 HTTP/1.1" 200 -
+2025-04-28 08:39:08,819 INFO 192.168.65.1 - - [28/Apr/2025 08:39:08] "[36mGET /qr/descargar/456 HTTP/1.1[0m" 304 -
+2025-04-28 09:22:07,462 INFO 192.168.65.1 - - [28/Apr/2025 09:22:07] "OPTIONS /qr/eliminar/101 HTTP/1.1" 200 -
+2025-04-28 09:22:07,548 ERROR Excepción no controlada: [Errno 2] No such file or directory: '/Users/mcc/Documents/Develop/backup/Salida/qr_101.png'
+2025-04-28 09:22:07,551 INFO 192.168.65.1 - - [28/Apr/2025 09:22:07] "[35m[1mDELETE /qr/eliminar/101 HTTP/1.1[0m" 500 -

@@ -69,7 +69,7 @@ def iniciar_servidor():
                 "gunicorn",
                 "-w", os.environ.get("GUNICORN_WORKERS", "4"),  # Número de trabajadores
                 "-k", os.environ.get("GUNICORN_WORKER_CLASS", "sync"),  # Tipo de worker
-                "-b", f"{ip}:{port}",  # Dirección IP y puerto
+                "-b", "0.0.0.0:9000",  # Escuchar en todas las IPs y puerto 9000
                 "--timeout", os.environ.get("GUNICORN_TIMEOUT", "120"),  # Tiempo de espera
                 "--graceful-timeout", os.environ.get("GUNICORN_GRACEFUL_TIMEOUT", "120"),
                 "--access-logfile", "logs/gunicorn_access.log",

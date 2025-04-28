@@ -8,8 +8,8 @@ pg_connection_pool = pg_pool.SimpleConnectionPool(
     1, 20,  # Min y max conexiones
     dbname=os.environ.get('LOCAL_DB_NAME', 'localdb'),
     user=os.environ.get('LOCAL_DB_USER', 'postgres'),
-    password=os.environ.get('LOCAL_DB_PASSWORD', 'localpassword'),
-    host=os.environ.get('LOCAL_DB_HOST', 'localhost'),
+    password=os.environ.get('LOCAL_DB_PASSWORD', 'postgr3s'),
+    host=os.environ.get('LOCAL_DB_HOST', 'db'),
     port=os.environ.get('LOCAL_DB_PORT', 5432)
 )
 

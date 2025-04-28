@@ -1,41 +1,45 @@
-
 services:
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: dinqr-backend
+    container_name: qrcode-api
     ports:
-      - "5050:5050"
+      - "5000:5000"
+      - "9000:9000"
     environment:
       FLASK_ENV: production
       FLASK_APP: app.py
       FLASK_SECRET_KEY: your_secret_key_here
-      DATABASE_URL: postgresql://postgres:postgr3s@localhost:5432/localdb
+      DATABASE_URL: postgresql://postgres:postgr3s@db:5432/localdb
+      CORS_ORIGINS: http://localhost:5173,http://localhost:8000
+      REDIS_URL: redis://redis:6379/0
     depends_on:
       - db
+      - redis
     volumes:
       - ./backend:/app
+      - "${HOME}/Documents/salida:/app/salida"
     networks:
-      - dinqr-network
+      - qrcode-network
 
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: dinqr-frontend
+    container_name: qrcode
     ports:
-      - "5173:5173"
+      - "8000:80"
     depends_on:
       - backend
     volumes:
       - ./frontend:/app
     networks:
-      - dinqr-network
+      - qrcode-network
 
   db:
     image: postgres:15
-    container_name: dinqr-db
+    container_name: qrcode-db
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgr3s
@@ -45,7 +49,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
-      - dinqr-network
+      - qrcode-network
 
   redis:
     image: redis:alpine
@@ -53,11 +57,11 @@ services:
     ports:
       - "6379:6379"
     networks:
-      - dinqr-network
+      - qrcode-network
 
 volumes:
   postgres_data:
 
 networks:
-  dinqr-network:
+  qrcode-network:
     driver: bridge

@@ -1,0 +1,12 @@
+build
+data
+dist
+logs
+migrations
+models
+node_modules
+routes
+services
+static
+uploads
+utils

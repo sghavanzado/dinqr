@@ -9,24 +9,12 @@ import psycopg2
 load_dotenv()  # Cargar variables de entorno desde .env
 
 class Config:
-    # Configuración Base
-    SECRET_KEY = os.environ.get('SECRET_KEY') or os.urandom(32)
-    FLASK_ENV = os.environ.get('FLASK_ENV', 'production')
-    
-    
+
     # Configuración de SQLAlchemy
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
-        f"postgresql://{LOCAL_DB_CONFIG['user']}:{LOCAL_DB_CONFIG['password']}@{LOCAL_DB_CONFIG['host']}:{LOCAL_DB_CONFIG['port']}/{LOCAL_DB_CONFIG['database']}"
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SQLALCHEMY_ENGINE_OPTIONS = {
-        'pool_size': 10,
-        'pool_recycle': 300,
-        'pool_pre_ping': True,
-        'max_overflow': 20
-    }
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
     
     # Configuración CORS
-    CORS_ORIGINS = os.environ.get('CORS_ORIGINS', 'http://localhost:5173').split(',')
+    CORS_ORIGINS = os.environ.get('CORS_ORIGINS')
     CORS_SUPPORTS_CREDENTIALS = True
     CORS_EXPOSE_HEADERS = ['Content-Type', 'X-Total-Count', 'X-Requested-With', 'Authorization'] 
     
@@ -50,7 +38,7 @@ class Config:
     LOG_BACKUP_COUNT = 10
     
     # Configuración de Ratelimit
-    RATELIMIT_STORAGE_URL = os.environ.get('REDIS_URL', 'redis://localhost:6379')
+    RATELIMIT_STORAGE_URL = os.environ.get('REDIS_URL')
     RATELIMIT_STRATEGY = 'fixed-window'
     RATELIMIT_DEFAULT = '500 per hour'
     
@@ -67,9 +55,9 @@ class Config:
     JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=7)
     JWT_BLACKLIST_ENABLED = True
     JWT_BLACKLIST_TOKEN_CHECKS = ['access', 'refresh']
-    JWT_COOKIE_SECURE = False  # True en producción
+    JWT_COOKIE_SECURE = False  # Cambiar a True en producción con HTTPS
     JWT_COOKIE_CSRF_PROTECT = True
-    JWT_COOKIE_SAMESITE = 'Lax'  # Prevenir CSRF
+    JWT_COOKIE_SAMESITE = 'Lax'  # Asegúrate de que sea compatible con tu flujo
 
     @staticmethod
     def obtener_conexion_remota():

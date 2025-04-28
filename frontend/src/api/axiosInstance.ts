@@ -34,6 +34,7 @@ const axiosInstance: AxiosInstance = axios.create({
     'X-Requested-With': 'XMLHttpRequest',
   },
   timeout: 10000,
+  withCredentials: true, // Habilitar envío de cookies/credenciales
 });
 
 // Request interceptor

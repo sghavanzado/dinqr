@@ -1,0 +1,99 @@
+2025-04-14 00:20:51,204 ERROR: Exception on /qr/generar [POST] [in /Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/flask/app.py:875]
+Traceback (most recent call last):
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/Documents/Develop/backup/dinqr/backend/routes/qr_routes.py", line 75, in generar_codigos_qr
+    return jsonify(generar_qr(ids))
+                   ^^^^^^^^^^^^^^^
+  File "/Users/mcc/Documents/Develop/backup/dinqr/backend/services/qr_service.py", line 42, in generar_qr
+    server_domain = obtener_configuracion("serverDomain")  # Obtener serverDomain
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/Documents/Develop/backup/dinqr/backend/services/qr_service.py", line 20, in obtener_configuracion
+    cursor.execute("SELECT value FROM settings WHERE key = ?", (clave,))
+psycopg2.errors.SyntaxError: syntax error at end of input
+LINE 1: SELECT value FROM settings WHERE key = ?
+                                                ^
+
+2025-04-14 00:21:27,573 INFO: Inicio de la aplicación [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:34]
+2025-04-14 00:21:27,666 INFO: Permissions and roles initialized successfully. [in /Users/mcc/Documents/Develop/backup/dinqr/backend/models/user.py:139]
+2025-04-14 00:21:27,667 INFO: Permisos y roles inicializados correctamente [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:49]
+2025-04-14 00:21:40,029 WARNING: Intento de acceso con token inválido: Signature verification failed [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:57]
+2025-04-14 00:21:40,034 WARNING: Intento de acceso con token inválido: Signature verification failed [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:57]
+2025-04-14 00:22:03,890 ERROR: Exception on /qr/generar [POST] [in /Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/flask/app.py:875]
+Traceback (most recent call last):
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/.virtualenvs/sgha/lib/python3.12/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/Documents/Develop/backup/dinqr/backend/routes/qr_routes.py", line 75, in generar_codigos_qr
+    return jsonify(generar_qr(ids))
+                   ^^^^^^^^^^^^^^^
+  File "/Users/mcc/Documents/Develop/backup/dinqr/backend/services/qr_service.py", line 42, in generar_qr
+    server_domain = obtener_configuracion("serverDomain")  # Obtener serverDomain
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mcc/Documents/Develop/backup/dinqr/backend/services/qr_service.py", line 20, in obtener_configuracion
+    cursor.execute("SELECT value FROM settings WHERE key = ?", (clave,))
+psycopg2.errors.SyntaxError: syntax error at end of input
+LINE 1: SELECT value FROM settings WHERE key = ?
+                                                ^
+
+2025-04-14 00:35:02,961 INFO: Inicio de la aplicación [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:34]
+2025-04-14 00:35:03,058 INFO: Permissions and roles initialized successfully. [in /Users/mcc/Documents/Develop/backup/dinqr/backend/models/user.py:139]
+2025-04-14 00:35:03,058 INFO: Permisos y roles inicializados correctamente [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:49]
+2025-04-14 00:35:08,357 WARNING: Intento de acceso con token inválido: Signature verification failed [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:57]
+2025-04-14 00:35:08,368 WARNING: Intento de acceso con token inválido: Signature verification failed [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:57]
+2025-04-14 01:29:03,016 WARNING: Token expirado para el usuario: 1 [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:65]
+2025-04-14 01:29:03,021 WARNING: Token expirado para el usuario: 1 [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:65]
+2025-04-14 02:21:56,543 INFO: Inicio de la aplicación [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:34]
+2025-04-14 02:21:56,651 INFO: Permissions and roles initialized successfully. [in /Users/mcc/Documents/Develop/backup/dinqr/backend/models/user.py:139]
+2025-04-14 02:21:56,651 INFO: Permisos y roles inicializados correctamente [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:49]
+2025-04-14 02:22:00,959 WARNING: Intento de acceso con token inválido: Signature verification failed [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:57]
+2025-04-14 02:22:00,968 WARNING: Intento de acceso con token inválido: Signature verification failed [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:57]
+2025-04-14 02:28:17,615 INFO: Inicio de la aplicación [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:34]
+2025-04-14 02:28:17,710 INFO: Permissions and roles initialized successfully. [in /Users/mcc/Documents/Develop/backup/dinqr/backend/models/user.py:139]
+2025-04-14 02:28:17,711 INFO: Permisos y roles inicializados correctamente [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:49]
+2025-04-14 02:28:23,285 WARNING: Intento de acceso con token inválido: Signature verification failed [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:57]
+2025-04-14 02:28:23,297 WARNING: Intento de acceso con token inválido: Signature verification failed [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:57]
+2025-04-14 02:30:14,859 INFO: Inicio de la aplicación [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:34]
+2025-04-14 02:30:14,954 INFO: Permissions and roles initialized successfully. [in /Users/mcc/Documents/Develop/backup/dinqr/backend/models/user.py:139]
+2025-04-14 02:30:14,955 INFO: Permisos y roles inicializados correctamente [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:49]
+2025-04-14 02:32:43,863 WARNING: Intento de acceso con token inválido: Signature verification failed [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:57]
+2025-04-14 02:32:43,874 WARNING: Intento de acceso con token inválido: Signature verification failed [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:57]
+2025-04-14 02:41:25,374 INFO: Inicio de la aplicación [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:34]
+2025-04-14 02:41:25,494 INFO: Permissions and roles initialized successfully. [in /Users/mcc/Documents/Develop/backup/dinqr/backend/models/user.py:139]
+2025-04-14 02:41:25,494 INFO: Permisos y roles inicializados correctamente [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:49]
+2025-04-14 02:41:40,203 INFO: Inicio de la aplicación [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:34]
+2025-04-14 02:41:40,249 INFO: Permissions and roles initialized successfully. [in /Users/mcc/Documents/Develop/backup/dinqr/backend/models/user.py:139]
+2025-04-14 02:41:40,249 INFO: Permisos y roles inicializados correctamente [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:49]
+2025-04-14 02:41:48,429 INFO: Inicio de la aplicación [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:34]
+2025-04-14 02:41:48,477 INFO: Permissions and roles initialized successfully. [in /Users/mcc/Documents/Develop/backup/dinqr/backend/models/user.py:139]
+2025-04-14 02:41:48,477 INFO: Permisos y roles inicializados correctamente [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:49]
+2025-04-14 02:46:43,870 INFO: Inicio de la aplicación [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:34]
+2025-04-14 02:46:43,966 INFO: Permissions and roles initialized successfully. [in /Users/mcc/Documents/Develop/backup/dinqr/backend/models/user.py:139]
+2025-04-14 02:46:43,966 INFO: Permisos y roles inicializados correctamente [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:49]
+2025-04-14 02:46:55,304 WARNING: Intento de acceso con token inválido: Signature verification failed [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:57]
+2025-04-14 02:46:55,310 WARNING: Intento de acceso con token inválido: Signature verification failed [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:57]

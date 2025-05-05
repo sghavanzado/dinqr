@@ -1,0 +1,12 @@
+data
+dist
+logs
+migrations
+models
+node_modules
+routes
+salida
+services
+static
+uploads
+utils

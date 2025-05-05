@@ -1,0 +1,3 @@
+2025-04-14 16:38:31,099 INFO: Inicio de la aplicación [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:34]
+2025-04-14 16:38:31,205 INFO: Permissions and roles initialized successfully. [in /Users/mcc/Documents/Develop/backup/dinqr/backend/models/user.py:139]
+2025-04-14 16:38:31,205 INFO: Permisos y roles inicializados correctamente [in /Users/mcc/Documents/Develop/backup/dinqr/backend/app.py:49]

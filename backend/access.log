@@ -1,0 +1,169 @@
+2025-03-20 12:48:57,018 INFO [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://192.168.253.133:5000
+2025-03-20 12:48:57,019 INFO [33mPress CTRL+C to quit[0m
+2025-03-20 12:51:33,862 INFO [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://192.168.253.133:5000
+2025-03-20 12:51:33,862 INFO [33mPress CTRL+C to quit[0m
+2025-03-20 12:51:33,863 INFO  * Restarting with stat
+2025-03-20 12:51:34,154 WARNING  * Debugger is active!
+2025-03-20 12:51:34,164 INFO  * Debugger PIN: 515-798-154
+2025-04-08 11:43:47,717 INFO [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://192.168.253.133:5000
+2025-04-08 11:43:47,718 INFO [33mPress CTRL+C to quit[0m
+2025-04-08 11:43:47,719 INFO  * Restarting with stat
+2025-04-08 11:43:48,010 WARNING  * Debugger is active!
+2025-04-08 11:43:48,019 INFO  * Debugger PIN: 515-798-154
+2025-04-08 11:52:35,085 INFO  * Detected change in '/Users/mcc/Documents/Develop/backup/sgha/backend/qrgendina.py', reloading
+2025-04-08 11:52:35,139 INFO  * Restarting with stat
+2025-04-08 11:52:35,545 WARNING  * Debugger is active!
+2025-04-08 11:52:35,553 INFO  * Debugger PIN: 515-798-154
+2025-04-08 11:52:48,816 INFO [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://192.168.253.133:5000
+2025-04-08 11:52:48,816 INFO [33mPress CTRL+C to quit[0m
+2025-04-08 11:52:48,817 INFO  * Restarting with stat
+2025-04-08 11:52:49,056 WARNING  * Debugger is active!
+2025-04-08 11:52:49,063 INFO  * Debugger PIN: 515-798-154
+2025-04-08 11:56:39,756 INFO  * Detected change in '/Users/mcc/Documents/Develop/backup/sgha/backend/qrgendina.py', reloading
+2025-04-08 11:56:39,806 INFO  * Restarting with stat
+2025-04-08 11:56:40,047 WARNING  * Debugger is active!
+2025-04-08 11:56:40,057 INFO  * Debugger PIN: 515-798-154
+2025-04-08 11:57:00,957 INFO [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://192.168.253.133:5000
+2025-04-08 11:57:00,957 INFO [33mPress CTRL+C to quit[0m
+2025-04-08 11:57:00,958 INFO  * Restarting with stat
+2025-04-08 11:57:01,163 WARNING  * Debugger is active!
+2025-04-08 11:57:01,169 INFO  * Debugger PIN: 515-798-154
+2025-04-08 11:58:13,210 INFO  * Detected change in '/Users/mcc/Documents/Develop/backup/sgha/backend/qrdinamico.py', reloading
+2025-04-08 11:58:13,246 INFO  * Restarting with stat
+2025-04-08 11:58:13,463 WARNING  * Debugger is active!
+2025-04-08 11:58:13,470 INFO  * Debugger PIN: 515-798-154
+2025-04-08 12:07:40,643 INFO [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://192.168.253.133:5000
+2025-04-08 12:07:40,643 INFO [33mPress CTRL+C to quit[0m
+2025-04-08 12:07:40,644 INFO  * Restarting with stat
+2025-04-08 12:07:40,847 WARNING  * Debugger is active!
+2025-04-08 12:07:40,853 INFO  * Debugger PIN: 515-798-154
+2025-04-08 12:07:58,140 INFO  * Detected change in '/Users/mcc/Documents/Develop/backup/sgha/backend/qrdinamico.py', reloading
+2025-04-08 12:07:58,182 INFO  * Restarting with stat
+2025-04-08 12:07:58,416 WARNING  * Debugger is active!
+2025-04-08 12:07:58,427 INFO  * Debugger PIN: 515-798-154
+2025-04-08 12:08:49,073 INFO [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://192.168.253.133:5000
+2025-04-08 12:08:49,073 INFO [33mPress CTRL+C to quit[0m
+2025-04-08 12:08:49,074 INFO  * Restarting with stat
+2025-04-08 12:08:49,288 WARNING  * Debugger is active!
+2025-04-08 12:08:49,294 INFO  * Debugger PIN: 515-798-154
+2025-04-08 12:11:24,563 INFO  * Detected change in '/Users/mcc/Documents/Develop/backup/sgha/backend/qrgendina.py', reloading
+2025-04-08 12:11:24,620 INFO  * Restarting with stat
+2025-04-08 12:11:24,858 WARNING  * Debugger is active!
+2025-04-08 12:11:24,865 INFO  * Debugger PIN: 515-798-154
+2025-04-08 12:11:38,078 INFO  * Detected change in '/Users/mcc/Documents/Develop/backup/sgha/backend/qrgendina.py', reloading
+2025-04-08 12:11:38,126 INFO  * Restarting with stat
+2025-04-08 12:11:38,380 WARNING  * Debugger is active!
+2025-04-08 12:11:38,388 INFO  * Debugger PIN: 515-798-154
+2025-04-08 12:12:19,294 INFO Acceso autorizado a 123 desde 192.168.253.147
+2025-04-08 12:12:19,300 INFO 192.168.253.147 - - [08/Apr/2025 12:12:19] "GET /contacto?id=123 HTTP/1.1" 200 -
+2025-04-08 12:12:19,417 INFO 192.168.253.147 - - [08/Apr/2025 12:12:19] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-04-08 12:13:16,805 INFO  * Detected change in '/Users/mcc/Documents/Develop/backup/sgha/backend/qrdinamico.py', reloading
+2025-04-08 12:13:16,844 INFO  * Restarting with stat
+2025-04-08 12:13:17,119 WARNING  * Debugger is active!
+2025-04-08 12:13:17,127 INFO  * Debugger PIN: 515-798-154
+2025-04-08 12:13:46,894 INFO  * Detected change in '/Users/mcc/Documents/Develop/backup/sgha/backend/qrgendina.py', reloading
+2025-04-08 12:13:46,941 INFO  * Restarting with stat
+2025-04-08 12:13:47,234 WARNING  * Debugger is active!
+2025-04-08 12:13:47,246 INFO  * Debugger PIN: 515-798-154
+2025-04-08 12:14:17,617 INFO [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://192.168.253.133:5000
+2025-04-08 12:14:17,618 INFO [33mPress CTRL+C to quit[0m
+2025-04-08 12:14:17,619 INFO  * Restarting with stat
+2025-04-08 12:14:17,886 WARNING  * Debugger is active!
+2025-04-08 12:14:17,893 INFO  * Debugger PIN: 515-798-154
+2025-04-08 12:14:45,806 WARNING Intento de acceso no autorizado a 123 desde 192.168.253.147
+2025-04-08 12:14:45,807 INFO 192.168.253.147 - - [08/Apr/2025 12:14:45] "[31m[1mGET /contacto?id=123&firma=0139166b32472a83322fd82465abc1467e213e47366b93b540837cf1d60ba2ac HTTP/1.1[0m" 403 -
+2025-04-08 12:14:53,544 WARNING Intento de acceso no autorizado a 123 desde 192.168.253.147
+2025-04-08 12:14:53,545 INFO 192.168.253.147 - - [08/Apr/2025 12:14:53] "[31m[1mGET /contacto?id=123&firma=0139166b32472a83322fd82465abc1467e213e47366b93b540837cf1d60ba2ac HTTP/1.1[0m" 403 -
+2025-04-08 12:28:25,094 INFO  * Detected change in '/Users/mcc/Documents/Develop/backup/sgha/backend/qrdinamico.py', reloading
+2025-04-08 12:28:25,141 INFO  * Restarting with stat
+2025-04-08 12:28:25,428 WARNING  * Debugger is active!
+2025-04-08 12:28:25,440 INFO  * Debugger PIN: 515-798-154
+2025-04-08 12:39:49,219 INFO  * Detected change in '/Users/mcc/Documents/Develop/backup/sgha/backend/qrdinamico.py', reloading
+2025-04-08 12:39:49,264 INFO  * Restarting with stat
+2025-04-08 12:39:49,552 WARNING  * Debugger is active!
+2025-04-08 12:39:49,560 INFO  * Debugger PIN: 515-798-154
+2025-04-08 12:41:23,903 INFO [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://192.168.253.133:5000
+2025-04-08 12:41:23,903 INFO [33mPress CTRL+C to quit[0m
+2025-04-08 12:41:23,904 INFO  * Restarting with stat
+2025-04-08 12:41:24,167 WARNING  * Debugger is active!
+2025-04-08 12:41:24,173 INFO  * Debugger PIN: 515-798-154
+2025-04-08 12:42:10,539 INFO Acceso autorizado a 123 desde 192.168.253.147
+2025-04-08 12:42:10,543 INFO 192.168.253.147 - - [08/Apr/2025 12:42:10] "GET /contacto?id=123&firma=82e4425017149e9751880087e22e4e7d059d1c6f0d6aa9431b6e2f8e04ac793b HTTP/1.1" 200 -
+2025-04-08 14:50:49,955 INFO  * Detected change in '/Users/mcc/Documents/Develop/backup/sgha/backend/qrdinamico.py', reloading
+2025-04-08 14:50:50,014 INFO  * Restarting with stat
+2025-04-08 14:50:50,369 WARNING  * Debugger is active!
+2025-04-08 14:50:50,377 INFO  * Debugger PIN: 515-798-154
+2025-04-08 14:52:05,595 INFO  * Detected change in '/Users/mcc/Documents/Develop/backup/sgha/backend/qrdinamico.py', reloading
+2025-04-08 14:52:05,673 INFO  * Restarting with stat
+2025-04-08 14:52:05,989 WARNING  * Debugger is active!
+2025-04-08 14:52:05,996 INFO  * Debugger PIN: 515-798-154
+2025-04-08 14:52:11,087 INFO  * Detected change in '/Users/mcc/Documents/Develop/backup/sgha/backend/qrdinamico.py', reloading
+2025-04-08 14:52:11,145 INFO  * Restarting with stat
+2025-04-08 14:52:11,411 WARNING  * Debugger is active!
+2025-04-08 14:52:11,418 INFO  * Debugger PIN: 515-798-154
+2025-04-08 14:52:17,693 INFO [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://192.168.253.133:5000
+2025-04-08 14:52:17,693 INFO [33mPress CTRL+C to quit[0m
+2025-04-08 14:52:17,694 INFO  * Restarting with stat
+2025-04-08 14:52:17,945 WARNING  * Debugger is active!
+2025-04-08 14:52:17,951 INFO  * Debugger PIN: 515-798-154
+2025-04-08 14:52:54,972 INFO Acceso autorizado a 123 desde 192.168.253.147
+2025-04-08 14:52:54,978 INFO 192.168.253.147 - - [08/Apr/2025 14:52:54] "GET /contacto?id=123&firma=82e4425017149e9751880087e22e4e7d059d1c6f0d6aa9431b6e2f8e04ac793b HTTP/1.1" 200 -
+2025-04-08 15:14:02,930 INFO  * Detected change in '/Users/mcc/Documents/Develop/backup/sgha/backend/qrgendina.py', reloading
+2025-04-08 15:14:03,009 INFO  * Restarting with stat
+2025-04-08 15:29:29,483 INFO [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://192.168.253.133:5000
+2025-04-08 15:29:29,483 INFO [33mPress CTRL+C to quit[0m
+2025-04-08 15:29:29,484 INFO  * Restarting with stat
+2025-04-08 15:29:29,802 WARNING  * Debugger is active!
+2025-04-08 15:29:29,812 INFO  * Debugger PIN: 515-798-154
+2025-04-08 15:31:35,776 INFO  * Detected change in '/Users/mcc/Documents/Develop/backup/sgha/backend/qrgendina.py', reloading
+2025-04-08 15:31:35,894 INFO  * Restarting with stat
+2025-04-08 15:31:36,511 WARNING  * Debugger is active!
+2025-04-08 15:31:36,549 INFO  * Debugger PIN: 515-798-154
+2025-04-08 15:33:13,187 INFO  * Detected change in '/Users/mcc/Documents/Develop/backup/sgha/backend/qrgendina.py', reloading
+2025-04-08 15:33:13,265 INFO  * Restarting with stat
+2025-04-08 15:33:13,637 WARNING  * Debugger is active!
+2025-04-08 15:33:13,662 INFO  * Debugger PIN: 515-798-154
+2025-04-08 15:34:23,799 INFO  * Detected change in '/Users/mcc/Documents/Develop/backup/sgha/backend/qrgendina.py', reloading
+2025-04-08 15:34:23,853 INFO  * Restarting with stat
+2025-04-08 15:34:24,256 WARNING  * Debugger is active!
+2025-04-08 15:34:24,264 INFO  * Debugger PIN: 515-798-154
+2025-04-08 15:35:51,653 WARNING ID de contacto no encontrado: 456
+2025-04-08 15:35:51,654 INFO 192.168.253.147 - - [08/Apr/2025 15:35:51] "[33mGET /contacto?id=456&firma=9646748b5126ec9e120f0ed7452a7424305820071fecf725a674b87986ac4b0d HTTP/1.1[0m" 404 -
+2025-04-08 15:41:01,489 INFO  * Detected change in '/Users/mcc/Documents/Develop/backup/sgha/backend/qrdinamico.py', reloading
+2025-04-08 15:41:01,548 INFO  * Restarting with stat
+2025-04-08 15:41:01,954 WARNING  * Debugger is active!
+2025-04-08 15:41:01,961 INFO  * Debugger PIN: 515-798-154
+2025-04-08 15:41:14,165 INFO  * Detected change in '/Users/mcc/Documents/Develop/backup/sgha/backend/db_config.py', reloading
+2025-04-08 15:41:14,222 INFO  * Restarting with stat
+2025-04-08 15:41:14,622 WARNING  * Debugger is active!
+2025-04-08 15:41:14,634 INFO  * Debugger PIN: 515-798-154
+2025-04-08 15:41:26,864 INFO  * Detected change in '/Users/mcc/Documents/Develop/backup/sgha/backend/db_config.py', reloading
+2025-04-08 15:41:26,919 INFO  * Restarting with stat
+2025-04-08 15:41:27,291 WARNING  * Debugger is active!
+2025-04-08 15:41:27,298 INFO  * Debugger PIN: 515-798-154
+2025-04-08 15:41:59,773 WARNING ID de contacto no encontrado: 123
+2025-04-08 15:41:59,774 INFO 192.168.253.147 - - [08/Apr/2025 15:41:59] "[33mGET /contacto?id=123&firma=82e4425017149e9751880087e22e4e7d059d1c6f0d6aa9431b6e2f8e04ac793b HTTP/1.1[0m" 404 -
+2025-04-08 15:41:59,845 INFO 192.168.253.147 - - [08/Apr/2025 15:41:59] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-04-08 15:44:53,791 INFO  * Detected change in '/Users/mcc/Documents/Develop/backup/sgha/backend/qrdinamico.py', reloading
+2025-04-08 15:44:53,847 INFO  * Restarting with stat
+2025-04-08 15:46:17,961 INFO [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://192.168.253.133:5000
+2025-04-08 15:46:17,962 INFO [33mPress CTRL+C to quit[0m
+2025-04-08 15:46:17,963 INFO  * Restarting with stat
+2025-04-08 15:46:18,302 WARNING  * Debugger is active!
+2025-04-08 15:46:18,311 INFO  * Debugger PIN: 515-798-154
+2025-04-08 15:46:46,570 INFO Acceso autorizado a 123 desde 192.168.253.147
+2025-04-08 15:46:46,576 INFO 192.168.253.147 - - [08/Apr/2025 15:46:46] "GET /contacto?id=123&firma=82e4425017149e9751880087e22e4e7d059d1c6f0d6aa9431b6e2f8e04ac793b HTTP/1.1" 200 -
+2025-04-08 15:47:56,265 INFO Acceso autorizado a 123 desde 192.168.253.147
+2025-04-08 15:47:56,268 INFO 192.168.253.147 - - [08/Apr/2025 15:47:56] "GET /contacto?id=123&firma=82e4425017149e9751880087e22e4e7d059d1c6f0d6aa9431b6e2f8e04ac793b HTTP/1.1" 200 -

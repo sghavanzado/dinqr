@@ -4,6 +4,8 @@ import os
 import zipfile
 import hmac
 import hashlib
+from PIL import Image
+from vobject import vCard
 
 def obtener_carpeta_salida():
     """Obtener la carpeta de salida desde la tabla settings de la base de datos local."""
@@ -69,8 +71,60 @@ def generar_firma(nome):
     secret_key = b'secret_key'  # Cambiar por una clave segura
     return hmac.new(secret_key, nome.encode('utf-8'), hashlib.sha256).hexdigest()
 
+def generar_qr_estatico(ids):
+    """Generar códigos QR estáticos para una lista de IDs."""
+    if not ids:
+        raise ValueError("La lista de IDs está vacía.")
+
+    # Obtener configuraciones desde la base de datos
+    output_folder = obtener_carpeta_salida()
+
+    # Crear la carpeta de salida si no existe
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder, exist_ok=True)
+
+    resultados = []
+    placeholders = ','.join(['?'] * len(ids))  # SQL Server usa ?
+    query = f"SELECT * FROM sonacard WHERE sap IN ({placeholders})"
+
+    with obtener_conexion_remota() as conn:
+        cursor = conn.cursor()
+        cursor.execute(query, ids)
+        contactos = cursor.fetchall()
+
+    for contacto in contactos:
+        try:
+            # Crear vCard
+            vcard = vCard()
+            vcard.add("tel").value = contacto.telefone
+            vcard.add("email").value = contacto.email
+            vcard.add("fn").value = contacto.nome
+            vcard.add("title").value = contacto.funcao
+            vcard.add("nickname").value = contacto.area
+            vcard.add("uid").value = contacto.sap
+
+            # Serializar vCard
+            vcard_data = vcard.serialize()
+
+            # Generar código QR
+            qr = qrcode.QRCode(version=1, box_size=10, border=5)
+            qr.add_data(vcard_data)
+            qr.make(fit=True)
+            img = qr.make_image(fill="black", back_color="white")
+
+            # Guardar el código QR
+            qr_file_name = f"static_qr_{contacto.sap}.png"
+            qr_file_path = os.path.join(output_folder, qr_file_name)
+            img.save(qr_file_path)
+
+            resultados.append({"sap": contacto.sap, "archivo": qr_file_path})
+        except Exception as e:
+            resultados.append({"sap": contacto.sap, "error": str(e)})
+
+    return resultados
+
 def generar_qr(ids):
-    """Generar códigos QR para una lista de IDs."""
+    """Generar códigos QR dinámicos para una lista de IDs."""
     if not ids:
         raise ValueError("La lista de IDs está vacía.")
 

@@ -2,7 +2,7 @@
 
 import { FC, useState, useEffect } from 'react';
 import { DataGrid, GridRowParams, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
-import { TextField, Button, Box, CircularProgress, Typography, IconButton, Modal } from '@mui/material';
+import { TextField, Button, Box, CircularProgress, Typography, IconButton, Modal, Tooltip } from '@mui/material';
 import QrCodeIcon from '@mui/icons-material/QrCode';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
@@ -94,6 +94,28 @@ const QRTable: FC<QRTableProps> = ({ funcionarios }) => {
     } catch (error) {
       console.error('Error generating QR codes:', error);
       alert('Erro ao gerar os códigos QR.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGenerateStaticQR = async (ids: number[]) => {
+    if (!ids || ids.length === 0) {
+      alert('Por favor, selecione pelo menos um funcionário para gerar os códigos QR estáticos.');
+      return;
+    }
+
+    console.log('Gerando QR estático para os seguintes IDs:', ids);
+
+    setLoading(true);
+    try {
+      await axiosInstance.post('/qr/generar-estatico', { ids });
+      alert('Códigos QR estáticos gerados com sucesso.');
+      fetchFuncionariosConQR();
+      fetchFuncionariosSinQR();
+    } catch (error) {
+      console.error('Error generating static QR codes:', error);
+      alert('Erro ao gerar os códigos QR estáticos.');
     } finally {
       setLoading(false);
     }
@@ -323,14 +345,26 @@ const QRTable: FC<QRTableProps> = ({ funcionarios }) => {
     {
       field: 'actions',
       headerName: 'Ações',
-      width: 150,
+      width: 200,
       renderCell: (params) => (
-        <IconButton
-          color="primary"
-          onClick={() => handleGenerateQR([params.row.id])}
-        >
-          <QrCodeIcon />
-        </IconButton>
+        <Box sx={{ display: 'flex', gap: 1 }}>
+          <Tooltip title="Gerar QR Dinâmico">
+            <IconButton
+              color="primary"
+              onClick={() => handleGenerateQR([params.row.id])}
+            >
+              <QrCodeIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Gerar QR Estático">
+            <IconButton
+              sx={{ color: 'black' }}
+              onClick={() => handleGenerateStaticQR([params.row.id])}
+            >
+              <QrCodeIcon />
+            </IconButton>
+          </Tooltip>
+        </Box>
       ),
     },
   ];
@@ -419,7 +453,7 @@ const QRTable: FC<QRTableProps> = ({ funcionarios }) => {
                 onRowClick={handleRowClickSinQR}
                 getRowClassName={(params) => (selectedIds.includes(params.row.id as number) ? 'Mui-selected' : '')}
               />
-              <Box sx={{ mt: 3, textAlign: 'right' }}>
+              <Box sx={{ mt: 3, textAlign: 'right', display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
                 <Button
                   variant="contained"
                   onClick={() => handleGenerateQR(selectedIds)}
@@ -430,14 +464,33 @@ const QRTable: FC<QRTableProps> = ({ funcionarios }) => {
                     padding: '6px 12px',
                     borderRadius: '4px',
                     textTransform: 'none',
-                    backgroundColor: selectedIds.length === 0 ? '#d3d3d3' : '#808080',
+                    backgroundColor: selectedIds.length === 0 ? '#d3d3d3' : '#1976d2',
                     color: 'white',
                     '&:hover': {
-                      backgroundColor: selectedIds.length === 0 ? '#d3d3d3' : '#696969',
+                      backgroundColor: selectedIds.length === 0 ? '#d3d3d3' : '#1565c0',
                     },
                   }}
                 >
-                  Gerar
+                  Gerar Dinâmico
+                </Button>
+                <Button
+                  variant="contained"
+                  onClick={() => handleGenerateStaticQR(selectedIds)}
+                  disabled={selectedIds.length === 0}
+                  startIcon={<QrCodeIcon />}
+                  sx={{
+                    fontSize: '0.9rem',
+                    padding: '6px 12px',
+                    borderRadius: '4px',
+                    textTransform: 'none',
+                    backgroundColor: selectedIds.length === 0 ? '#d3d3d3' : '#000000',
+                    color: 'white',
+                    '&:hover': {
+                      backgroundColor: selectedIds.length === 0 ? '#d3d3d3' : '#333333',
+                    },
+                  }}
+                >
+                  Gerar Estático
                 </Button>
               </Box>
             </>

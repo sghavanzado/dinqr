@@ -3,6 +3,7 @@ from flask import Blueprint, request, jsonify, send_file, abort
 from marshmallow import Schema, fields, ValidationError
 from services.qr_service import (
     generar_qr,
+    generar_qr_estatico,
     listar_funcionarios,
     eliminar_qr,
     descargar_qr,
@@ -48,7 +49,7 @@ def listar_funcionarios():
         with obtener_conexion_remota() as conn:
             cursor = conn.cursor()
             query = """
-                SELECT sap, nome, funcao, area, nif, telefone, uo
+                SELECT sap, nome, funcao, area, nif, telefone, email, uo
                 FROM sonacard
                 WHERE sap IN ({})
                 AND nome LIKE ?
@@ -67,6 +68,7 @@ def listar_funcionarios():
                 "area": funcionario.area,
                 "nif": funcionario.nif,
                 "telefone": funcionario.telefone,
+                "email": funcionario.email,
                 "uo": funcionario.uo,
                 "qrGenerated": True  # Todos los funcionarios en esta lista tienen QR
             }
@@ -98,7 +100,7 @@ def listar_funcionarios_sin_qr():
             cursor = conn.cursor()
             if qr_generated_ids:
                 query = """
-                    SELECT sap, nome, funcao, area, nif, telefone, uo
+                    SELECT sap, nome, funcao, area, nif, telefone, email, uo
                     FROM sonacard
                     WHERE sap NOT IN ({})
                 """.format(",".join("?" for _ in qr_generated_ids))
@@ -106,7 +108,7 @@ def listar_funcionarios_sin_qr():
             else:
                 # Si no hay IDs en qr_generated_ids, devolver todos los funcionarios
                 query = """
-                    SELECT sap, nome, funcao, area, nif, telefone, uo
+                    SELECT sap, nome, funcao, area, nif, telefone, email, uo
                     FROM sonacard
                 """
                 cursor.execute(query)
@@ -120,6 +122,7 @@ def listar_funcionarios_sin_qr():
                 "area": funcionario.area,
                 "nif": funcionario.nif,
                 "telefone": funcionario.telefone,
+                "email": funcionario.email,
                 "uo": funcionario.uo,
             }
             for funcionario in funcionarios
@@ -142,6 +145,19 @@ def generar_codigos_qr():
         return jsonify({"error": e.messages}), 400
     except Exception as e:
         logging.error(f"Error al generar códigos QR: {str(e)}")
+        return jsonify({"error": "Error interno del servidor"}), 500
+
+@qr_bp.route('/generar-estatico', methods=['POST'])
+def generar_codigos_qr_estaticos():
+    """Generar códigos QR estáticos para funcionarios."""
+    try:
+        data = QRRequestSchema().load(request.json)
+        ids = data['ids']
+        return jsonify(generar_qr_estatico(ids))
+    except ValidationError as e:
+        return jsonify({"error": e.messages}), 400
+    except Exception as e:
+        logging.error(f"Error al generar códigos QR estáticos: {str(e)}")
         return jsonify({"error": "Error interno del servidor"}), 500
 
 @qr_bp.route('/descargar/<int:contact_id>', methods=['GET'])

@@ -20,6 +20,8 @@ import Grid from '@mui/material/Grid';
 import SaveIcon from '@mui/icons-material/Save';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import StopIcon from '@mui/icons-material/Stop';
+import UploadFileIcon from '@mui/icons-material/UploadFile';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import axiosInstance from '../api/axiosInstance';
 
 interface Settings {
@@ -116,6 +118,41 @@ const SettingsPage = () => {
     } finally {
       setSnackbarOpen(true);
     }
+  };
+
+  const handleImportCSV = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const response = await axiosInstance.post('/qr/importar-funcionarios', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      setSnackbarMessage(response.data.message || 'Importação realizada com sucesso.');
+      setSnackbarSeverity('success');
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.error || 'Erro ao importar o arquivo.';
+      setSnackbarMessage(errorMessage);
+      setSnackbarSeverity('error');
+    } finally {
+      setSnackbarOpen(true);
+    }
+  };
+
+  const handleGenerateTemplate = () => {
+    const csvContent = `sap,nome,funcao,area,nif,telefone,email,uo\n`;
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'template_funcionarios.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   };
 
   const handleSnackbarClose = () => {
@@ -240,7 +277,50 @@ const SettingsPage = () => {
           >
             Parar Servidor
           </Button>
-      
+        
+        <Grid item xs={12}>
+          <Button
+            variant="contained"
+            startIcon={<UploadFileIcon />}
+            component="label"
+            sx={{
+              textTransform: 'none',
+              fontWeight: 'bold',
+              padding: '10px 20px',
+              backgroundColor: '#A9A9A9',
+              color: 'white',
+              '&:hover': {
+                backgroundColor: '#8F8F8F',
+              },
+            }}
+          >
+            Importar Funcionários
+            <input
+              type="file"
+              accept=".csv"
+              hidden
+              onChange={handleImportCSV}
+            />
+          </Button>
+          <Button
+            variant="contained"
+            startIcon={<FileDownloadIcon />}
+            onClick={handleGenerateTemplate}
+            sx={{
+              textTransform: 'none',
+              fontWeight: 'bold',
+              padding: '10px 20px',
+              marginLeft: 2,
+              backgroundColor: '#A9A9A9',
+              color: 'white',
+              '&:hover': {
+                backgroundColor: '#8F8F8F',
+              },
+            }}
+          >
+            Gerar Template CSV
+          </Button>
+        </Grid>
       </Grid>
       <Snackbar
         open={snackbarOpen}

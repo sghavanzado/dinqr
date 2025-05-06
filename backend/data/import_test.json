@@ -1,0 +1,32 @@
+[
+  {
+    "sap": 1001,
+    "nome": "Juan Perez",
+    "funcao": "Gerente",
+    "area": "Ventas",
+    "nif": "123456789",
+    "telefone": "555-1234",
+    "email": "juan.perez@example.com",
+    "uo": "Oficina Central"
+  },
+  {
+    "sap": 1002,
+    "nome": "Maria Lopez",
+    "funcao": "Analista",
+    "area": "Finanzas",
+    "nif": "987654321",
+    "telefone": "555-5678",
+    "email": "maria.lopez@example.com",
+    "uo": "Sucursal Norte"
+  },
+  {
+    "sap": 1003,
+    "nome": "Carlos Gomez",
+    "funcao": "Técnico",
+    "area": "Soporte",
+    "nif": "456789123",
+    "telefone": "555-8765",
+    "email": "carlos.gomez@example.com",
+    "uo": "Sucursal Sur"
+  }
+]

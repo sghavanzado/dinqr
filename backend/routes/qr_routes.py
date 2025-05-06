@@ -13,6 +13,14 @@ from services.qr_service import (
 )
 from utils.db_utils import obtener_conexion_remota, obtener_conexion_local, liberar_conexion_local
 import logging
+import csv
+from werkzeug.utils import secure_filename
+import os
+
+ALLOWED_EXTENSIONS = {'csv'}
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 qr_bp = Blueprint('qr', __name__)
 
@@ -195,3 +203,78 @@ def obtener_total_funcionarios_con_qr_endpoint():
     except Exception as e:
         logging.error(f"Error al obtener el total de funcionarios con QR: {str(e)}")
         return jsonify({"error": "Error interno del servidor"}), 500
+
+@qr_bp.route('/importar-funcionarios', methods=['POST'])
+def importar_funcionarios():
+    """Importar funcionarios desde un archivo CSV a la base de datos externa."""
+    if 'file' not in request.files:
+        return jsonify({"error": "No se encontró el archivo."}), 400
+
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({"error": "No se seleccionó ningún archivo."}), 400
+
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        filepath = os.path.join('uploads', filename)
+        os.makedirs('uploads', exist_ok=True)
+        file.save(filepath)
+
+        try:
+            for encoding in ['utf-8', 'latin-1', 'cp1252']:
+                try:
+                    with open(filepath, 'r', encoding=encoding) as csvfile:
+                        reader = csv.DictReader(csvfile)
+                        rows = [row for row in reader]
+                    print(f"Archivo leído correctamente con codificación: {encoding}")
+                    break
+                except UnicodeDecodeError:
+                    print(f"Error al leer con codificación: {encoding}. Intentando con otra codificación.")
+            else:
+                logging.error("No se pudo decodificar el archivo con las codificaciones intentadas.")
+                return jsonify({"error": "Error al leer el archivo CSV. Problema de codificación."}), 400
+
+            with obtener_conexion_remota() as conn:
+                cursor = conn.cursor()
+                for row in rows:
+                    # Primero, intentamos actualizar la fila si existe
+                    cursor.execute("""
+                        UPDATE sonacard
+                        SET nome = ?, funcao = ?, area = ?, nif = ?, telefone = ?, email = ?, uo = ?
+                        WHERE sap = ?
+                    """, (
+                        row['nome'],
+                        row['funcao'],
+                        row['area'],
+                        row['nif'],
+                        row['telefone'],
+                        row['email'],
+                        row['uo'],
+                        row['sap']
+                    ))
+
+                    # Luego, si no se actualizó ninguna fila (es decir, no existía), insertamos una nueva
+                    if cursor.rowcount == 0:
+                        cursor.execute("""
+                            INSERT INTO sonacard (sap, nome, funcao, area, nif, telefone, email, uo)
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                        """, (
+                            row['sap'],
+                            row['nome'],
+                            row['funcao'],
+                            row['area'],
+                            row['nif'],
+                            row['telefone'],
+                            row['email'],
+                            row['uo']
+                        ))
+                conn.commit()
+
+            return jsonify({"message": "Funcionarios importados exitosamente."}), 200
+        except Exception as e:
+            logging.error(f"Error al importar funcionarios: {str(e)}")
+            return jsonify({"error": "Error al importar funcionarios."}), 500
+        finally:
+            os.remove(filepath)
+
+    return jsonify({"error": "Formato de archivo no permitido. Solo se permiten archivos CSV."}), 400

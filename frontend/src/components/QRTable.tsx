@@ -23,6 +23,7 @@ interface Funcionario {
   nif?: string;
   telefone?: string;
   uo?: string;
+  firma?: string; // Added to differentiate static and dynamic QR codes
 }
 
 interface QRTableProps {
@@ -246,8 +247,8 @@ const QRTable: FC<QRTableProps> = ({ funcionarios }) => {
         />
       ),
       width: 50,
-      sortable: false, // Disable sorting
-      filterable: false, // Disable filtering
+      sortable: false,
+      filterable: false,
       renderCell: (params) => (
         <Checkbox
           checked={selectedIds.includes(params.row.id as number)}
@@ -277,30 +278,38 @@ const QRTable: FC<QRTableProps> = ({ funcionarios }) => {
       width: 300,
       renderCell: (params: GridRenderCellParams) => (
         <Box sx={{ display: 'flex', gap: 1 }}>
-          <IconButton
-            color="success"
-            onClick={() => handleViewQR(params.row.id)}
-          >
-            <QrCodeIcon />
-          </IconButton>
-          <IconButton
-            color="error"
-            onClick={() => handleDeleteQR(params.row.id)}
-          >
-            <DeleteIcon />
-          </IconButton>
-          <IconButton
-            color="success"
-            onClick={() => handleDownloadQR(params.row.id)}
-          >
-            <DownloadIcon />
-          </IconButton>
-          <IconButton
-            color="info"
-            onClick={() => handleViewContactCard(params.row)}
-          >
-            <OpenInNewIcon />
-          </IconButton>
+          <Tooltip title="Ver QR">
+            <IconButton
+              color={params.row.firma === 'static' ? 'default' : 'success'} // Black for static, green for dynamic
+              onClick={() => handleViewQR(params.row.id)}
+            >
+              <QrCodeIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Eliminar QR">
+            <IconButton
+              color="error"
+              onClick={() => handleDeleteQR(params.row.id)}
+            >
+              <DeleteIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Descargar QR">
+            <IconButton
+              color="success"
+              onClick={() => handleDownloadQR(params.row.id)}
+            >
+              <DownloadIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Ver Contact Card">
+            <IconButton
+              color="info"
+              onClick={() => handleViewContactCard(params.row)}
+            >
+              <OpenInNewIcon />
+            </IconButton>
+          </Tooltip>
         </Box>
       ),
     },
@@ -317,8 +326,8 @@ const QRTable: FC<QRTableProps> = ({ funcionarios }) => {
         />
       ),
       width: 50,
-      sortable: false, // Disable sorting
-      filterable: false, // Disable filtering
+      sortable: false,
+      filterable: false,
       renderCell: (params) => (
         <Checkbox
           checked={selectedIds.includes(params.row.id as number)}

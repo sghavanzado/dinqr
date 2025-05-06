@@ -92,34 +92,47 @@ def generar_qr_estatico(ids):
         cursor.execute(query, ids)
         contactos = cursor.fetchall()
 
-    for contacto in contactos:
-        try:
-            # Crear vCard
-            vcard = vCard()
-            vcard.add("tel").value = contacto.telefone
-            vcard.add("email").value = contacto.email
-            vcard.add("fn").value = contacto.nome
-            vcard.add("title").value = contacto.funcao
-            vcard.add("nickname").value = contacto.area
-            vcard.add("uid").value = contacto.sap
+    with obtener_conexion_local() as conn:
+        cursor = conn.cursor()
+        for contacto in contactos:
+            try:
+                # Crear vCard
+                vcard = vCard()
+                vcard.add("tel").value = contacto.telefone
+                vcard.add("email").value = contacto.email
+                vcard.add("fn").value = contacto.nome
+                vcard.add("title").value = contacto.funcao
+                vcard.add("nickname").value = contacto.area
+                vcard.add("uid").value = contacto.sap
 
-            # Serializar vCard
-            vcard_data = vcard.serialize()
+                # Serializar vCard
+                vcard_data = vcard.serialize()
 
-            # Generar código QR
-            qr = qrcode.QRCode(version=1, box_size=10, border=5)
-            qr.add_data(vcard_data)
-            qr.make(fit=True)
-            img = qr.make_image(fill="black", back_color="white")
+                # Generar código QR
+                qr = qrcode.QRCode(version=1, box_size=10, border=5)
+                qr.add_data(vcard_data)
+                qr.make(fit=True)
+                img = qr.make_image(fill="black", back_color="white")
 
-            # Guardar el código QR
-            qr_file_name = f"static_qr_{contacto.sap}.png"
-            qr_file_path = os.path.join(output_folder, qr_file_name)
-            img.save(qr_file_path)
+                # Guardar el código QR
+                qr_file_name = f"static_qr_{contacto.sap}.png"
+                qr_file_path = os.path.join(output_folder, qr_file_name)
+                img.save(qr_file_path)
 
-            resultados.append({"sap": contacto.sap, "archivo": qr_file_path})
-        except Exception as e:
-            resultados.append({"sap": contacto.sap, "error": str(e)})
+                # Guardar datos en la tabla qr_codes
+                cursor.execute("""
+                    INSERT INTO qr_codes (contact_id, nombre, firma, archivo_qr)
+                    VALUES (%s, %s, %s, %s)
+                    ON CONFLICT (contact_id) DO UPDATE SET
+                    nombre = EXCLUDED.nombre,
+                    firma = EXCLUDED.firma,
+                    archivo_qr = EXCLUDED.archivo_qr
+                """, (contacto.sap, contacto.nome, "static", qr_file_path))  # "static" indica QR estático
+                conn.commit()
+
+                resultados.append({"sap": contacto.sap, "archivo": qr_file_path})
+            except Exception as e:
+                resultados.append({"sap": contacto.sap, "error": str(e)})
 
     return resultados
 

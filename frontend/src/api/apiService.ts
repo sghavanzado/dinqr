@@ -70,6 +70,17 @@ export const downloadMultipleQR = async (ids: number[]) => {
 };
 
 export const generateAllQR = async () => {
-  const response = await axiosInstance.post('/qr/generar-todos');
-  return response.data;
+  const batchSize = 100; // Define the batch size
+  let allData: any[] = [];
+  let hasMoreData = true;
+  let page = 1;
+
+  while (hasMoreData) {
+    const response = await axiosInstance.post('/qr/generar-todos', { page, batchSize });
+    allData = allData.concat(response.data.items);
+    hasMoreData = response.data.hasMore;
+    page++;
+  }
+
+  return allData;
 };

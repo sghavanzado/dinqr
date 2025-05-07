@@ -14,7 +14,6 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import axiosInstance from '../api/axiosInstance';
 import Checkbox from '@mui/material/Checkbox';
-import { generateAllQR } from '../api/apiService'; // Import the new API service
 
 interface Funcionario {
   id: string;
@@ -42,18 +41,33 @@ const QRTable: FC<QRTableProps> = ({ funcionarios }) => {
   const [qrImage, setQrImage] = useState('');
   const [contactCardOpen, setContactCardOpen] = useState(false);
   const [contactCardHtml, setContactCardHtml] = useState('');
+  const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 }); // Track pagination state
 
   useEffect(() => {
     setFuncionariosConQR(funcionarios);
   }, [funcionarios]);
 
+  const filteredFuncionariosConQR = funcionariosConQR.filter((funcionario) =>
+    funcionario.nome.toLowerCase().includes(filterConQR.toLowerCase())
+  );
+
+  const filteredFuncionariosSinQR = funcionariosSinQR.filter((funcionario) =>
+    funcionario.nome.toLowerCase().includes(filterSinQR.toLowerCase())
+  );
+
   const fetchFuncionariosConQR = async () => {
     setLoading(true);
     try {
       const response = await axiosInstance.get('/qr/funcionarios');
-      setFuncionariosConQR(response.data);
+      if (response.status === 200) {
+        setFuncionariosConQR(response.data);
+      } else {
+        console.error('Unexpected response:', response);
+        alert('Erro ao carregar funcionários com QR. Verifique o console para mais detalhes.');
+      }
     } catch (error) {
       console.error('Error fetching funcionarios con QR:', error);
+      alert('Erro ao carregar funcionários com QR. Tente novamente.');
     } finally {
       setLoading(false);
     }
@@ -63,9 +77,15 @@ const QRTable: FC<QRTableProps> = ({ funcionarios }) => {
     setLoading(true);
     try {
       const response = await axiosInstance.get('/qr/funcionarios-sin-qr');
-      setFuncionariosSinQR(response.data);
+      if (response.status === 200) {
+        setFuncionariosSinQR(response.data);
+      } else {
+        console.error('Unexpected response:', response);
+        alert('Erro ao carregar funcionários sem QR. Verifique o console para mais detalhes.');
+      }
     } catch (error) {
       console.error('Error fetching funcionarios sin QR:', error);
+      alert('Erro ao carregar funcionários sem QR. Tente novamente.');
     } finally {
       setLoading(false);
     }
@@ -94,22 +114,7 @@ const QRTable: FC<QRTableProps> = ({ funcionarios }) => {
       fetchFuncionariosSinQR();
     } catch (error) {
       console.error('Error generating QR codes:', error);
-      alert('Erro ao gerar os códigos QR.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleGenerateAllQR = async () => {
-    setLoading(true);
-    try {
-      await generateAllQR(); // Use the new API service
-      alert('Códigos QR gerados para todos os funcionários com sucesso.');
-      fetchFuncionariosConQR();
-      fetchFuncionariosSinQR();
-    } catch (error) {
-      console.error('Error generating QR codes for all employees:', error);
-      alert('Erro ao gerar os códigos QR para todos os funcionários.');
+      alert('Erro ao gerar os códigos QR. Verifique o console para mais detalhes.');
     } finally {
       setLoading(false);
     }
@@ -211,6 +216,34 @@ const QRTable: FC<QRTableProps> = ({ funcionarios }) => {
     }
   };
 
+  const handleSelectAll = (checked: boolean) => {
+    const startIndex = paginationModel.page * paginationModel.pageSize;
+    const endIndex = startIndex + paginationModel.pageSize;
+    const visibleRows = filteredFuncionariosSinQR.slice(startIndex, endIndex); // Get rows visible on the current page
+
+    if (checked) {
+      // Select all IDs currently visible on the current page
+      const allIds = visibleRows.map((funcionario) => Number(funcionario.id));
+      setSelectedIds((prevIds) => Array.from(new Set([...prevIds, ...allIds]))); // Avoid duplicates
+    } else {
+      // Deselect all IDs currently visible on the current page
+      const visibleIds = visibleRows.map((funcionario) => Number(funcionario.id));
+      setSelectedIds((prevIds) => prevIds.filter((id) => !visibleIds.includes(id)));
+    }
+  };
+
+  const handleRowCheckboxChange = (id: number, checked: boolean) => {
+    if (checked) {
+      setSelectedIds((prevIds) => [...prevIds, id]); // Add the ID to the selected list
+    } else {
+      setSelectedIds((prevIds) => prevIds.filter((selectedId) => selectedId !== id)); // Remove the ID from the selected list
+    }
+  };
+
+  const handlePaginationChange = (model: { page: number; pageSize: number }) => {
+    setPaginationModel(model); // Update pagination state
+  };
+
   const columnsConQR = [
     { field: 'id', headerName: 'ID', width: 100 },
     { field: 'nome', headerName: 'Nome', width: 200 },
@@ -256,20 +289,39 @@ const QRTable: FC<QRTableProps> = ({ funcionarios }) => {
   const columnsSinQR: GridColDef[] = [
     {
       field: 'selection',
-      headerName: '',
-      width: 50,
+      headerName: (
+        <Checkbox
+          checked={
+            filteredFuncionariosSinQR
+              .slice(paginationModel.page * paginationModel.pageSize, (paginationModel.page + 1) * paginationModel.pageSize)
+              .every((funcionario) => selectedIds.includes(Number(funcionario.id)))
+          }
+          indeterminate={
+            filteredFuncionariosSinQR
+              .slice(paginationModel.page * paginationModel.pageSize, (paginationModel.page + 1) * paginationModel.pageSize)
+              .some((funcionario) => selectedIds.includes(Number(funcionario.id))) &&
+            !filteredFuncionariosSinQR
+              .slice(paginationModel.page * paginationModel.pageSize, (paginationModel.page + 1) * paginationModel.pageSize)
+              .every((funcionario) => selectedIds.includes(Number(funcionario.id)))
+          }
+          onChange={(event) => handleSelectAll(event.target.checked)}
+          sx={{
+            padding: 0, // Remove extra padding
+            '& .MuiSvgIcon-root': { fontSize: 20 }, // Adjust icon size
+          }}
+        />
+      ),
+      width: 70, // Ensure sufficient width for the checkbox
       renderCell: (params) => (
         <Checkbox
-          checked={selectedIds.includes(params.row.id as number)}
-          onClick={(event) => {
+          checked={selectedIds.includes(params.row.id as number)} // Sync with `selectedIds`
+          onChange={(event) => {
             event.stopPropagation();
-            const id = params.row.id as number;
-            const isSelected = selectedIds.includes(id);
-            if (isSelected) {
-              setSelectedIds(prevIds => prevIds.filter(selectedId => selectedId !== id));
-            } else {
-              setSelectedIds(prevIds => [...prevIds, id]);
-            }
+            handleRowCheckboxChange(params.row.id as number, event.target.checked);
+          }}
+          sx={{
+            padding: 0, // Remove extra padding
+            '& .MuiSvgIcon-root': { fontSize: 20 }, // Adjust icon size
           }}
         />
       ),
@@ -296,14 +348,6 @@ const QRTable: FC<QRTableProps> = ({ funcionarios }) => {
     },
   ];
 
-  const filteredFuncionariosConQR = funcionariosConQR.filter((funcionario) =>
-    funcionario.nome.toLowerCase().includes(filterConQR.toLowerCase())
-  );
-
-  const filteredFuncionariosSinQR = funcionariosSinQR.filter((funcionario) =>
-    funcionario.nome.toLowerCase().includes(filterSinQR.toLowerCase())
-  );
-
   console.log('QRTable rendered with selectedIds (with checkbox):', selectedIds);
 
   return (
@@ -327,7 +371,7 @@ const QRTable: FC<QRTableProps> = ({ funcionarios }) => {
               paginationModel: { pageSize: 10 },
             },
           }}
-          pageSizeOptions={[10, 20, 50]}
+          pageSizeOptions={[10, 20, 50, 100]} // Enable pagination with these options
           autoHeight
           disableRowSelectionOnClick
         />
@@ -373,33 +417,14 @@ const QRTable: FC<QRTableProps> = ({ funcionarios }) => {
                     paginationModel: { pageSize: 10 },
                   },
                 }}
-                paginationModel={{ page: 0, pageSize: 10 }}
-                pageSizeOptions={[10, 20, 50]}
+                pageSizeOptions={[10, 20, 50, 100]} // Enable pagination with these options
                 autoHeight
                 disableRowSelectionOnClick
                 onRowClick={handleRowClickSinQR}
+                onPaginationModelChange={(model) => handlePaginationChange(model)} // Track pagination changes
                 getRowClassName={(params) => (selectedIds.includes(params.row.id as number) ? 'Mui-selected' : '')}
               />
-              <Box sx={{ mt: 3, display: 'flex', justifyContent: 'space-between' }}>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  onClick={handleGenerateAllQR}
-                  startIcon={<QrCodeIcon />}
-                  sx={{
-                    fontSize: '0.9rem',
-                    padding: '6px 12px',
-                    borderRadius: '4px',
-                    textTransform: 'none',
-                    backgroundColor: '#808080',
-                    color: 'white',
-                    '&:hover': {
-                      backgroundColor: '#696969',
-                    },
-                  }}
-                >
-                  Gerar Todos
-                </Button>
+              <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
                 <Button
                   variant="contained"
                   onClick={() => handleGenerateQR(selectedIds)}

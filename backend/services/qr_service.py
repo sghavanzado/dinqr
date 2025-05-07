@@ -40,12 +40,23 @@ def obtener_server_port():
 
 def listar_funcionarios(page, per_page, filtro):
     """Listar funcionarios desde la base de datos remota."""
-    with obtener_conexion_remota() as conn:
-        cursor = conn.cursor()
-        query = "SELECT * FROM sonacard WHERE nome LIKE ? ORDER BY sap OFFSET ? ROWS FETCH NEXT ? ROWS ONLY"  # SQL Server usa ?
-        cursor.execute(query, (f"%{filtro}%", (page - 1) * per_page, per_page))
-        funcionarios = cursor.fetchall()
-    return [{"sap": row.sap, "nome": row.nome} for row in funcionarios]
+    try:
+        with obtener_conexion_remota() as conn:
+            cursor = conn.cursor()
+            query = """
+                SELECT sap, nome, funcao, area, nif, telefone, email, uo
+                FROM sonacard
+                WHERE nome LIKE ?
+                ORDER BY sap
+                OFFSET ? ROWS FETCH NEXT ? ROWS ONLY
+            """
+            cursor.execute(query, (f"%{filtro}%", (page - 1) * per_page, per_page))
+            funcionarios = cursor.fetchall()
+            logging.info(f"Funcionarios obtenidos: {len(funcionarios)} registros")
+        return [{"sap": row.sap, "nome": row.nome} for row in funcionarios]
+    except Exception as e:
+        logging.error(f"Error al listar funcionarios: {str(e)}")
+        raise
 
 def obtener_total_funcionarios():
     """Obtener la cantidad total de funcionarios desde la base de datos remota."""

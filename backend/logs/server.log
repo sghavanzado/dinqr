@@ -18114,3 +18114,12 @@ HINT:  Perhaps you meant to reference the column "excluded.nombre".
 2025-05-07 09:42:14,002 WARNING El puerto 9000 ya está en uso. No se puede iniciar Gunicorn.
 2025-05-07 09:42:14,026 WARNING  * Debugger is active!
 2025-05-07 09:42:14,034 INFO  * Debugger PIN: 249-684-588
+2025-05-07 10:40:41,536 ERROR Error al conectar con Redis: Error 61 connecting to localhost:6379. Connection refused.
+2025-05-07 10:40:41,574 INFO Permissions and roles initialized successfully.
+2025-05-07 10:40:41,574 INFO Permisos inicializados correctamente
+2025-05-07 10:40:41,585 INFO Use Gunicorn to run this application in production.
+2025-05-07 10:40:41,585 INFO Example: gunicorn -w 4 -b 0.0.0.0:5000 server:app
+2025-05-07 10:40:41,585 INFO Starting the server using server_manager...
+2025-05-07 10:40:41,586 WARNING El puerto 9000 ya está en uso. No se puede iniciar Gunicorn.
+2025-05-07 10:40:41,631 WARNING  * Debugger is active!
+2025-05-07 10:40:41,642 INFO  * Debugger PIN: 249-684-588

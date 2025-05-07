@@ -89,7 +89,7 @@ def generar_qr_estatico(ids):
 
     with obtener_conexion_remota() as conn:
         cursor = conn.cursor()
-        cursor.execute(query, ids)
+        cursor.execute(query, *ids)
         contactos = cursor.fetchall()
 
     with obtener_conexion_local() as conn:
@@ -115,7 +115,7 @@ def generar_qr_estatico(ids):
                 img = qr.make_image(fill="black", back_color="white")
 
                 # Guardar el código QR
-                qr_file_name = f"static_qr_{contacto.sap}.png"
+                qr_file_name = f"{contacto.sap}.png"
                 qr_file_path = os.path.join(output_folder, qr_file_name)
                 img.save(qr_file_path)
 
@@ -156,7 +156,7 @@ def generar_qr(ids):
 
     with obtener_conexion_remota() as conn:
         cursor = conn.cursor()
-        cursor.execute(query, ids)
+        cursor.execute(query, *ids)
         contactos = cursor.fetchall()
 
     with obtener_conexion_local() as conn:

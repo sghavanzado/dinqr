@@ -203,15 +203,24 @@ def obtener_total_funcionarios_con_qr_endpoint():
     except Exception as e:
         logging.error(f"Error al obtener el total de funcionarios con QR: {str(e)}")
         return jsonify({"error": "Error interno del servidor"}), 500
+    
+    def allowed_file(filename):
+     """Verifica si la extensión del archivo está permitida."""
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() == 'csv'
 
 @qr_bp.route('/importar-funcionarios', methods=['POST'])
 def importar_funcionarios():
     """Importar funcionarios desde un archivo CSV a la base de datos externa."""
+    logging.basicConfig(filename='import.log', level=logging.INFO,
+                       format='%(asctime)s - %(levelname)s - %(message)s')
+    
     if 'file' not in request.files:
+        logging.error("No se encontró el archivo")
         return jsonify({"error": "No se encontró el archivo."}), 400
 
     file = request.files['file']
     if file.filename == '':
+        logging.error("No se seleccionó ningún archivo")
         return jsonify({"error": "No se seleccionó ningún archivo."}), 400
 
     if file and allowed_file(file.filename):
@@ -220,61 +229,91 @@ def importar_funcionarios():
         os.makedirs('uploads', exist_ok=True)
         file.save(filepath)
 
+        usuarios_importados = 0
+        errores = 0
+        errores_detalle = []
+
         try:
             for encoding in ['utf-8', 'latin-1', 'cp1252']:
                 try:
                     with open(filepath, 'r', encoding=encoding) as csvfile:
                         reader = csv.DictReader(csvfile)
                         rows = [row for row in reader]
-                    print(f"Archivo leído correctamente con codificación: {encoding}")
+                    logging.info(f"Archivo leído correctamente con codificación: {encoding}")
                     break
                 except UnicodeDecodeError:
-                    print(f"Error al leer con codificación: {encoding}. Intentando con otra codificación.")
+                    logging.warning(f"Error al leer con codificación: {encoding}. Intentando con otra codificación.")
             else:
-                logging.error("No se pudo decodificar el archivo con las codificaciones intentadas.")
+                logging.error("No se pudo decodificar el archivo con las codificaciones intentadas")
                 return jsonify({"error": "Error al leer el archivo CSV. Problema de codificación."}), 400
 
             with obtener_conexion_remota() as conn:
                 cursor = conn.cursor()
                 for row in rows:
-                    # Primero, intentamos actualizar la fila si existe
-                    cursor.execute("""
-                        UPDATE sonacard
-                        SET nome = ?, funcao = ?, area = ?, nif = ?, telefone = ?, email = ?, uo = ?
-                        WHERE sap = ?
-                    """, (
-                        row['nome'],
-                        row['funcao'],
-                        row['area'],
-                        row['nif'],
-                        row['telefone'],
-                        row['email'],
-                        row['uo'],
-                        row['sap']
-                    ))
-
-                    # Luego, si no se actualizó ninguna fila (es decir, no existía), insertamos una nueva
-                    if cursor.rowcount == 0:
+                    try:
+                        # Primero, intentamos actualizar la fila si existe
                         cursor.execute("""
-                            INSERT INTO sonacard (sap, nome, funcao, area, nif, telefone, email, uo)
-                            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                            UPDATE sonacard
+                            SET nome = ?, funcao = ?, area = ?, nif = ?, telefone = ?, email = ?, uo = ?
+                            WHERE sap = ?
                         """, (
-                            row['sap'],
                             row['nome'],
                             row['funcao'],
                             row['area'],
                             row['nif'],
                             row['telefone'],
                             row['email'],
-                            row['uo']
+                            row['uo'],
+                            row['sap']
                         ))
+
+                        # Si no se actualizó ninguna fila, insertamos una nueva
+                        if cursor.rowcount == 0:
+                            cursor.execute("""
+                                INSERT INTO sonacard (nome, funcao, area, nif, telefone, email, uo, sap)
+                                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                            """, (
+                                row['nome'],
+                                row['funcao'],
+                                row['area'],
+                                row['nif'],
+                                row['telefone'],
+                                row['email'],
+                                row['uo'],
+                                row['sap']
+                            ))
+                        usuarios_importados += 1
+                        logging.info(f"Usuario importado/actualizado exitosamente: {row['nome']} (SAP: {row['sap']})")
+                    except Exception as e:
+                        errores += 1
+                        error_detalle = f"Error al procesar usuario {row.get('nome', 'desconocido')} (SAP: {row.get('sap', 'desconocido')}): {str(e)}"
+                        errores_detalle.append(error_detalle)
+                        logging.error(error_detalle)
+
                 conn.commit()
+                logging.info(f"Importación completada. Total usuarios importados: {usuarios_importados}, Errores: {errores}")
+                
+                if errores > 0:
+                    logging.info("Detalle de errores:")
+                    for error in errores_detalle:
+                        logging.info(error)
 
-            return jsonify({"message": "Funcionarios importados exitosamente."}), 200
+                return jsonify({
+                    "mensaje": "Importación completada",
+                    "usuarios_importados": usuarios_importados,
+                    "errores": errores,
+                    "errores_detalle": errores_detalle
+                })
+
         except Exception as e:
-            logging.error(f"Error al importar funcionarios: {str(e)}")
-            return jsonify({"error": "Error al importar funcionarios."}), 500
-        finally:
-            os.remove(filepath)
+            error_msg = f"Error general durante la importación: {str(e)}"
+            logging.error(error_msg)
+            return jsonify({"error": error_msg}), 500
 
-    return jsonify({"error": "Formato de archivo no permitido. Solo se permiten archivos CSV."}), 400
+        finally:
+            if os.path.exists(filepath):
+                os.remove(filepath)
+                logging.info(f"Archivo temporal {filepath} eliminado")
+    else:
+        logging.error("Tipo de archivo no permitido")
+        return jsonify({"error": "Tipo de archivo no permitido"}), 400

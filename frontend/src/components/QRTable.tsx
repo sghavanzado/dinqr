@@ -1,7 +1,7 @@
 // QRTable.tsx
 
-import { FC, useState, useEffect } from 'react';
-import { DataGrid, GridRowParams, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
+import { FC, useState, useEffect, useMemo } from 'react';
+import { DataGrid, GridRowParams, GridColDef, GridRenderCellParams, GridPaginationModel } from '@mui/x-data-grid';
 import { TextField, Button, Box, CircularProgress, Typography, IconButton, Modal, Tooltip } from '@mui/material';
 import QrCodeIcon from '@mui/icons-material/QrCode';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -43,6 +43,16 @@ const QRTable: FC<QRTableProps> = ({ funcionarios }) => {
   const [contactCardOpen, setContactCardOpen] = useState(false);
   const [contactCardHtml, setContactCardHtml] = useState('');
 
+  const [paginationModelConQR, setPaginationModelConQR] = useState<GridPaginationModel>({
+    pageSize: 100,
+    page: 0,
+  });
+  
+  const [paginationModelSinQR, setPaginationModelSinQR] = useState<GridPaginationModel>({
+    pageSize: 100,
+    page: 0,
+  });
+ 
   useEffect(() => {
     setFuncionariosConQR(funcionarios);
   }, [funcionarios]);
@@ -175,8 +185,8 @@ const QRTable: FC<QRTableProps> = ({ funcionarios }) => {
     const headerBackgroundColor = '#F4CF0A'; // Amarelo do logo fornecido
     const htmlContent = `
       <div style="font-family: Arial, sans-serif; max-width: 400px; margin: auto; border: 1px solid #ccc; border-radius: 10px; overflow: hidden;">
-        <div style="background-color: ${headerBackgroundColor}; padding: 10px; display: flex; align-items: center; justify-content: center;">
-          <img src="${logoUrl}" alt="Sonangol Logo" style="height: 50px; max-width: 50px; object-fit: contain; margin-right: 10px;">
+        <div style="background-color: <span class="math-inline">\{headerBackgroundColor\}; padding\: 10px; display\: flex; align\-items\: center; justify\-content\: center;"\>
+<img src\="</span>{logoUrl}" alt="Sonangol Logo" style="height: 50px; max-width: 50px; object-fit: contain; margin-right: 10px;">
           <span style="font-size: 2rem; font-weight: bold; color: #000; font-family: 'Arial', sans-serif;">Sonangol</span>
         </div>
         <div style="background-color: #e6e6e6; padding: 5px; text-align: center; font-size: 0.9rem;">
@@ -188,8 +198,8 @@ const QRTable: FC<QRTableProps> = ({ funcionarios }) => {
           <p><strong>Função:</strong> ${funcionario.funcao || 'Não especificada'}</p>
           <p><strong>Área:</strong> ${funcionario.area || 'Não especificada'}</p>
           <p><strong>NIF:</strong> ${funcionario.nif || 'Não especificado'}</p>
-          <p><strong>Telefone:</strong> ${funcionario.telefone || 'Não especificado'}</p>
-          <p><strong>Unidad Org:</strong> ${funcionario.uo || 'Não especificado'}</p>
+          <p><strong>Telefone:</strong> ${funcionario.telefone || 'Não especificada'}</p>
+          <p><strong>Unidad Org:</strong> ${funcionario.uo || 'Não especificada'}</p>
         </div>
       </div>
     `;
@@ -347,7 +357,7 @@ const QRTable: FC<QRTableProps> = ({ funcionarios }) => {
     { field: 'id', headerName: 'SAP', width: 100 },
     { field: 'nome', headerName: 'Nome', width: 200 },
     { field: 'funcao', headerName: 'Função', width: 200 },
-    { field: 'Area', headerName: 'Área', width: 150 },
+    { field: 'area', headerName: 'Área', width: 150 },
     { field: 'nif', headerName: 'NIF', width: 200 },
     { field: 'telefone', headerName: 'Telefone', width: 150 },
     { field: 'uo', headerName: 'Unidad Organ', width: 150 },
@@ -402,16 +412,14 @@ const QRTable: FC<QRTableProps> = ({ funcionarios }) => {
           onChange={(e) => setFilterConQR(e.target.value)}
         />
         <DataGrid
-          rows={filteredFuncionariosConQR}
-          columns={columnsConQR}
-          initialState={{
-            pagination: {
-              paginationModel: { pageSize: 10 },
-            },
-          }}
-          pageSizeOptions={[10, 20, 50]}
-          autoHeight
-          disableRowSelectionOnClick
+              rows={filteredFuncionariosConQR}
+              columns={columnsConQR}
+              paginationModel={paginationModelConQR}
+              onPaginationModelChange={setPaginationModelConQR}
+              pageSizeOptions={[10, 20, 50, 100]}
+              paginationMode="client"
+              autoHeight
+              disableRowSelectionOnClick
         />
         <Button
           variant="contained"
@@ -447,21 +455,20 @@ const QRTable: FC<QRTableProps> = ({ funcionarios }) => {
             <CircularProgress />
           ) : (
             <>
-              <DataGrid
-                rows={filteredFuncionariosSinQR}
-                columns={columnsSinQR}
-                initialState={{
-                  pagination: {
-                    paginationModel: { pageSize: 10 },
-                  },
-                }}
-                paginationModel={{ page: 0, pageSize: 10 }}
-                pageSizeOptions={[10, 20, 50]}
-                autoHeight
-                disableRowSelectionOnClick
-                onRowClick={handleRowClickSinQR}
-                getRowClassName={(params) => (selectedIds.includes(params.row.id as number) ? 'Mui-selected' : '')}
-              />
+               <DataGrid
+                  rows={filteredFuncionariosSinQR}
+                  columns={columnsSinQR}
+                  paginationModel={paginationModelSinQR}
+                  onPaginationModelChange={setPaginationModelSinQR}
+                  pageSizeOptions={[10, 20, 50, 100]}
+                  paginationMode="client"
+                  autoHeight
+                  disableRowSelectionOnClick
+                  onRowClick={handleRowClickSinQR}
+                  getRowClassName={(params) => (selectedIds.includes(params.row.id as number) ? 'Mui-selected' : '')}
+                />    
+
+
               <Box sx={{ mt: 3, textAlign: 'right', display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
                 <Button
                   variant="contained"
@@ -536,10 +543,10 @@ const QRTable: FC<QRTableProps> = ({ funcionarios }) => {
           </Button>
         </Box>
       </Modal>
-      <Dialog 
-        open={contactCardOpen} 
-        onClose={handleCloseContactCard} 
-        maxWidth="xs" 
+      <Dialog
+        open={contactCardOpen}
+        onClose={handleCloseContactCard}
+        maxWidth="xs"
         fullWidth
       >
         <DialogTitle sx={{ textAlign: 'center' }}></DialogTitle>

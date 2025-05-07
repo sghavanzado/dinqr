@@ -136,7 +136,9 @@ def generar_vcard(datos):
         f"FN:{datos.get('nome', '')}",
         f"TITLE:{datos.get('funcao', '')}",
         f"DEPARTMENT:{datos.get('area', '')}",
-        f"TEL;TYPE=WORK,VOICE:{datos.get('telefone', '')}",        
+        f"ORG:{datos.get('uo', '')}",  # Adicionar unidad organizacional
+        f"TEL;TYPE=WORK,VOICE:{datos.get('telefone', '')}",
+        f"EMAIL:{datos.get('email', '')}",  # Adicionar email
         "END:VCARD"
     ]
     return "data:text/vcard;charset=utf-8," + "%0A".join(vcard_content)

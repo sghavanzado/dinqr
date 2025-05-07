@@ -85,7 +85,7 @@ def generar_qr(ids):
 
     resultados = []
     placeholders = ','.join(['?'] * len(ids))  # SQL Server usa ?
-    query = f"SELECT * FROM sonacard WHERE sap IN ({placeholders})"
+    query = f"SELECT sap, nome, funcao, area, nif, telefone, uo FROM sonacard WHERE sap IN ({placeholders})"
 
     with obtener_conexion_remota() as conn:
         cursor = conn.cursor()
@@ -117,7 +117,12 @@ def generar_qr(ids):
             """, (contacto.sap, contacto.nome, firma, archivo_qr))  # PostgreSQL usa %s
             conn.commit()
 
-            resultados.append({"sap": contacto.sap, "archivo": archivo_qr, "url": qr_url})
+            resultados.append({
+                "sap": contacto.sap,
+                "archivo": archivo_qr,
+                "url": qr_url,
+                "uo": contacto.uo  # Incluir el campo uo en los resultados
+            })
     return resultados
 
 def descargar_qr(contact_id):

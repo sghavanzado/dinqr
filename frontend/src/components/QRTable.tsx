@@ -14,6 +14,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import axiosInstance from '../api/axiosInstance';
 import Checkbox from '@mui/material/Checkbox';
+import { generateAllQR } from '../api/apiService'; // Import the new API service
 
 interface Funcionario {
   id: string;
@@ -22,6 +23,7 @@ interface Funcionario {
   area?: string;
   nif?: string;
   telefone?: string;
+  uo?: string; // Adicionar unidad organizacional
 }
 
 interface QRTableProps {
@@ -98,6 +100,21 @@ const QRTable: FC<QRTableProps> = ({ funcionarios }) => {
     }
   };
 
+  const handleGenerateAllQR = async () => {
+    setLoading(true);
+    try {
+      await generateAllQR(); // Use the new API service
+      alert('Códigos QR gerados para todos os funcionários com sucesso.');
+      fetchFuncionariosConQR();
+      fetchFuncionariosSinQR();
+    } catch (error) {
+      console.error('Error generating QR codes for all employees:', error);
+      alert('Erro ao gerar os códigos QR para todos os funcionários.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleDeleteQR = async (id: number) => {
     setLoading(true);
     try {
@@ -163,6 +180,7 @@ const QRTable: FC<QRTableProps> = ({ funcionarios }) => {
           <p><strong>SAP:</strong> ${funcionario.id}</p>
           <p><strong>Função:</strong> ${funcionario.funcao || 'Não especificada'}</p>
           <p><strong>Área:</strong> ${funcionario.area || 'Não especificada'}</p>
+          <p><strong>Unidad Org:</strong> ${funcionario.uo || 'Não especificada'}</p> <!-- Mostrar unidad organizacional -->
           <p><strong>NIF:</strong> ${funcionario.nif || 'Não especificado'}</p>
           <p><strong>Telefone:</strong> ${funcionario.telefone || 'Não especificado'}</p>
         </div>
@@ -362,7 +380,26 @@ const QRTable: FC<QRTableProps> = ({ funcionarios }) => {
                 onRowClick={handleRowClickSinQR}
                 getRowClassName={(params) => (selectedIds.includes(params.row.id as number) ? 'Mui-selected' : '')}
               />
-              <Box sx={{ mt: 3, textAlign: 'right' }}>
+              <Box sx={{ mt: 3, display: 'flex', justifyContent: 'space-between' }}>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={handleGenerateAllQR}
+                  startIcon={<QrCodeIcon />}
+                  sx={{
+                    fontSize: '0.9rem',
+                    padding: '6px 12px',
+                    borderRadius: '4px',
+                    textTransform: 'none',
+                    backgroundColor: '#808080',
+                    color: 'white',
+                    '&:hover': {
+                      backgroundColor: '#696969',
+                    },
+                  }}
+                >
+                  Gerar Todos
+                </Button>
                 <Button
                   variant="contained"
                   onClick={() => handleGenerateQR(selectedIds)}
@@ -380,7 +417,7 @@ const QRTable: FC<QRTableProps> = ({ funcionarios }) => {
                     },
                   }}
                 >
-                  Gerar
+                  Gerar Selecionados
                 </Button>
               </Box>
             </>

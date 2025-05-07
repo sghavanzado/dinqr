@@ -1778,3 +1778,51 @@ SystemExit: 1
 [2025-05-07 11:25:15 +0100] [47573] [ERROR] Connection in use: ('0.0.0.0', 9000)
 [2025-05-07 11:25:15 +0100] [47573] [ERROR] connection to ('0.0.0.0', 9000) failed: [Errno 48] Address already in use
 [2025-05-07 11:25:16 +0100] [47573] [ERROR] Can't connect to ('0.0.0.0', 9000)
+[2025-05-07 13:43:20 +0100] [49230] [INFO] Starting gunicorn 23.0.0
+[2025-05-07 13:43:20 +0100] [49230] [ERROR] Connection in use: ('0.0.0.0', 9000)
+[2025-05-07 13:43:20 +0100] [49230] [ERROR] connection to ('0.0.0.0', 9000) failed: [Errno 48] Address already in use
+[2025-05-07 13:43:21 +0100] [49230] [ERROR] Connection in use: ('0.0.0.0', 9000)
+[2025-05-07 13:43:21 +0100] [49230] [ERROR] connection to ('0.0.0.0', 9000) failed: [Errno 48] Address already in use
+[2025-05-07 13:43:22 +0100] [49230] [ERROR] Connection in use: ('0.0.0.0', 9000)
+[2025-05-07 13:43:22 +0100] [49230] [ERROR] connection to ('0.0.0.0', 9000) failed: [Errno 48] Address already in use
+[2025-05-07 13:43:23 +0100] [49230] [ERROR] Connection in use: ('0.0.0.0', 9000)
+[2025-05-07 13:43:23 +0100] [49230] [ERROR] connection to ('0.0.0.0', 9000) failed: [Errno 48] Address already in use
+[2025-05-07 13:43:24 +0100] [49230] [ERROR] Connection in use: ('0.0.0.0', 9000)
+[2025-05-07 13:43:24 +0100] [49230] [ERROR] connection to ('0.0.0.0', 9000) failed: [Errno 48] Address already in use
+[2025-05-07 13:43:25 +0100] [49230] [ERROR] Can't connect to ('0.0.0.0', 9000)
+[2025-05-07 13:47:41 +0100] [49294] [INFO] Starting gunicorn 23.0.0
+[2025-05-07 13:47:41 +0100] [49294] [ERROR] Connection in use: ('0.0.0.0', 9000)
+[2025-05-07 13:47:41 +0100] [49294] [ERROR] connection to ('0.0.0.0', 9000) failed: [Errno 48] Address already in use
+[2025-05-07 13:47:42 +0100] [49294] [ERROR] Connection in use: ('0.0.0.0', 9000)
+[2025-05-07 13:47:42 +0100] [49294] [ERROR] connection to ('0.0.0.0', 9000) failed: [Errno 48] Address already in use
+[2025-05-07 13:47:43 +0100] [49294] [ERROR] Connection in use: ('0.0.0.0', 9000)
+[2025-05-07 13:47:43 +0100] [49294] [ERROR] connection to ('0.0.0.0', 9000) failed: [Errno 48] Address already in use
+[2025-05-07 13:47:44 +0100] [49294] [ERROR] Connection in use: ('0.0.0.0', 9000)
+[2025-05-07 13:47:44 +0100] [49294] [ERROR] connection to ('0.0.0.0', 9000) failed: [Errno 48] Address already in use
+[2025-05-07 13:47:45 +0100] [49294] [ERROR] Connection in use: ('0.0.0.0', 9000)
+[2025-05-07 13:47:45 +0100] [49294] [ERROR] connection to ('0.0.0.0', 9000) failed: [Errno 48] Address already in use
+[2025-05-07 13:47:46 +0100] [49294] [ERROR] Can't connect to ('0.0.0.0', 9000)
+[2025-05-07 13:52:31 +0100] [49408] [INFO] Starting gunicorn 23.0.0
+[2025-05-07 13:52:31 +0100] [49408] [ERROR] Connection in use: ('0.0.0.0', 9000)
+[2025-05-07 13:52:31 +0100] [49408] [ERROR] connection to ('0.0.0.0', 9000) failed: [Errno 48] Address already in use
+[2025-05-07 13:52:32 +0100] [49408] [ERROR] Connection in use: ('0.0.0.0', 9000)
+[2025-05-07 13:52:32 +0100] [49408] [ERROR] connection to ('0.0.0.0', 9000) failed: [Errno 48] Address already in use
+[2025-05-07 13:52:33 +0100] [49408] [ERROR] Connection in use: ('0.0.0.0', 9000)
+[2025-05-07 13:52:33 +0100] [49408] [ERROR] connection to ('0.0.0.0', 9000) failed: [Errno 48] Address already in use
+[2025-05-07 13:52:34 +0100] [49408] [ERROR] Connection in use: ('0.0.0.0', 9000)
+[2025-05-07 13:52:34 +0100] [49408] [ERROR] connection to ('0.0.0.0', 9000) failed: [Errno 48] Address already in use
+[2025-05-07 13:52:35 +0100] [49408] [ERROR] Connection in use: ('0.0.0.0', 9000)
+[2025-05-07 13:52:35 +0100] [49408] [ERROR] connection to ('0.0.0.0', 9000) failed: [Errno 48] Address already in use
+[2025-05-07 13:52:36 +0100] [49408] [ERROR] Can't connect to ('0.0.0.0', 9000)
+[2025-05-07 13:55:26 +0100] [49452] [INFO] Starting gunicorn 23.0.0
+[2025-05-07 13:55:26 +0100] [49452] [ERROR] Connection in use: ('0.0.0.0', 9000)
+[2025-05-07 13:55:26 +0100] [49452] [ERROR] connection to ('0.0.0.0', 9000) failed: [Errno 48] Address already in use
+[2025-05-07 13:55:27 +0100] [49452] [ERROR] Connection in use: ('0.0.0.0', 9000)
+[2025-05-07 13:55:27 +0100] [49452] [ERROR] connection to ('0.0.0.0', 9000) failed: [Errno 48] Address already in use
+[2025-05-07 13:55:28 +0100] [49452] [ERROR] Connection in use: ('0.0.0.0', 9000)
+[2025-05-07 13:55:28 +0100] [49452] [ERROR] connection to ('0.0.0.0', 9000) failed: [Errno 48] Address already in use
+[2025-05-07 13:55:29 +0100] [49452] [ERROR] Connection in use: ('0.0.0.0', 9000)
+[2025-05-07 13:55:29 +0100] [49452] [ERROR] connection to ('0.0.0.0', 9000) failed: [Errno 48] Address already in use
+[2025-05-07 13:55:30 +0100] [49452] [ERROR] Connection in use: ('0.0.0.0', 9000)
+[2025-05-07 13:55:30 +0100] [49452] [ERROR] connection to ('0.0.0.0', 9000) failed: [Errno 48] Address already in use
+[2025-05-07 13:55:31 +0100] [49452] [ERROR] Can't connect to ('0.0.0.0', 9000)

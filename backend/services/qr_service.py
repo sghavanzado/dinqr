@@ -6,6 +6,7 @@ import hmac
 import hashlib
 from PIL import Image
 from vobject import vCard
+import logging
 
 def obtener_carpeta_salida():
     """Obtener la carpeta de salida desde la tabla settings de la base de datos local."""
@@ -152,39 +153,56 @@ def generar_qr(ids):
 
     resultados = []
     placeholders = ','.join(['?'] * len(ids))  # SQL Server usa ?
-    query = f"SELECT * FROM sonacard WHERE sap IN ({placeholders})"
+    query = f"SELECT sap, nome, funcao, area, nif, telefone, uo FROM sonacard WHERE sap IN ({placeholders})"
 
     with obtener_conexion_remota() as conn:
         cursor = conn.cursor()
-        cursor.execute(query, *ids)
+        cursor.execute(query, ids)
         contactos = cursor.fetchall()
 
     with obtener_conexion_local() as conn:
         cursor = conn.cursor()
         for contacto in contactos:
-            # Generar firma HMAC-SHA256
-            firma = generar_firma(contacto.nome)
+            try:
+                # Proveer valores por defecto para datos faltantes
+                sap = contacto.sap or "N/A"
+                nome = contacto.nome or "Desconocido"
+                funcao = contacto.funcao or "No especificada"
+                area = contacto.area or "No especificada"
+                nif = contacto.nif or "No especificado"
+                telefone = contacto.telefone or "No especificado"
+                uo = contacto.uo or "No especificada"
 
-            # Crear el código QR con la URL segura
-            qr = qrcode.QRCode(version=5, error_correction=qrcode.constants.ERROR_CORRECT_H, box_size=12, border=4)
-            qr_url = f"http://{server_domain}:{server_port}/contacto?sap={contacto.sap}&hash={firma}"
-            qr.add_data(qr_url)
-            qr.make(fit=True)
-            archivo_qr = os.path.join(output_folder, f"qr_{contacto.sap}.png")
-            qr.make_image(fill_color="black", back_color="white").save(archivo_qr)
+                # Generar firma HMAC-SHA256
+                firma = generar_firma(nome)
 
-            # Guardar datos en la tabla qr_codes
-            cursor.execute("""
-                INSERT INTO qr_codes (contact_id, nombre, firma, archivo_qr)
-                VALUES (%s, %s, %s, %s)
-                ON CONFLICT (contact_id) DO UPDATE SET
-                nombre = EXCLUDED.nombre,
-                firma = EXCLUDED.firma,
-                archivo_qr = EXCLUDED.archivo_qr
-            """, (contacto.sap, contacto.nome, firma, archivo_qr))  # PostgreSQL usa %s
-            conn.commit()
+                # Crear el código QR con la URL segura
+                qr = qrcode.QRCode(version=5, error_correction=qrcode.constants.ERROR_CORRECT_H, box_size=12, border=4)
+                qr_url = f"http://{server_domain}:{server_port}/contacto?sap={sap}&hash={firma}"
+                qr.add_data(qr_url)
+                qr.make(fit=True)
+                archivo_qr = os.path.join(output_folder, f"qr_{sap}.png")
+                qr.make_image(fill_color="black", back_color="white").save(archivo_qr)
 
-            resultados.append({"sap": contacto.sap, "archivo": archivo_qr, "url": qr_url})
+                # Guardar datos en la tabla qr_codes
+                cursor.execute("""
+                    INSERT INTO qr_codes (contact_id, nombre, firma, archivo_qr)
+                    VALUES (%s, %s, %s, %s)
+                    ON CONFLICT (contact_id) DO UPDATE SET
+                    nombre = EXCLUDED.nombre,
+                    firma = EXCLUDED.firma,
+                    archivo_qr = EXCLUDED.archivo_qr
+                """, (sap, nome, firma, archivo_qr))  # PostgreSQL usa %s
+                conn.commit()
+
+                resultados.append({
+                    "sap": sap,
+                    "archivo": archivo_qr,
+                    "url": qr_url,
+                    "uo": uo  # Incluir el campo uo en los resultados
+                })
+            except Exception as e:
+                logging.error(f"Error al procesar el contacto {contacto.sap}: {str(e)}")
     return resultados
 
 def descargar_qr(contact_id):

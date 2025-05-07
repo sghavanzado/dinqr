@@ -68,3 +68,8 @@ export const downloadMultipleQR = async (ids: number[]) => {
   const response = await axiosInstance.post('/qr/descargar-multiples', { ids }, { responseType: 'blob' });
   return response.data;
 };
+
+export const generateAllQR = async () => {
+  const response = await axiosInstance.post('/qr/generar-todos');
+  return response.data;
+};

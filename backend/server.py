@@ -171,6 +171,7 @@ def mostrar_contacto():
                     <p><strong>Área:</strong> {contacto.area or 'Não especificada'}</p>
                     <p><strong>NIF:</strong> {contacto.nif or 'Não especificado'}</p>
                     <p><strong>Telefone:</strong> {contacto.telefone or 'Não especificado'}</p>
+                    <p><strong>Email:</strong> {contacto.email or 'Não especificado'}</p>
                 </div>
                 <a href="/contacto/vcard?sap={id_contacto}&hash={hash_recebido}" class="import-button">
                     Importar Contacto
@@ -222,6 +223,7 @@ def descargar_vcard():
         TITLE:{contacto.funcao or ''}
         ORG:{contacto.area or ''}
         TEL;TYPE=WORK,VOICE:{contacto.telefone or ''}
+        EMAIL:{contacto.email or ''}
         END:VCARD
         """
 

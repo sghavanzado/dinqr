@@ -13039,3 +13039,268 @@ HINT:  Perhaps you meant to reference the column "excluded.nombre".
 2025-04-28 09:22:07,462 INFO 192.168.65.1 - - [28/Apr/2025 09:22:07] "OPTIONS /qr/eliminar/101 HTTP/1.1" 200 -
 2025-04-28 09:22:07,548 ERROR Excepción no controlada: [Errno 2] No such file or directory: '/Users/mcc/Documents/Develop/backup/Salida/qr_101.png'
 2025-04-28 09:22:07,551 INFO 192.168.65.1 - - [28/Apr/2025 09:22:07] "[35m[1mDELETE /qr/eliminar/101 HTTP/1.1[0m" 500 -
+2025-05-07 11:06:17,822 ERROR Error al conectar con Redis: Error 61 connecting to localhost:6379. Connection refused.
+2025-05-07 11:06:17,865 INFO Permissions and roles initialized successfully.
+2025-05-07 11:06:17,865 INFO Permisos inicializados correctamente
+2025-05-07 11:06:17,876 INFO Use Gunicorn to run this application in production.
+2025-05-07 11:06:17,876 INFO Example: gunicorn -w 4 -b 0.0.0.0:5000 server:app
+2025-05-07 11:06:17,876 INFO Starting the server using server_manager...
+2025-05-07 11:06:17,884 INFO Iniciando Gunicorn con el comando: gunicorn -w 4 -k sync -b 0.0.0.0:9000 --timeout 120 --graceful-timeout 120 --access-logfile logs/gunicorn_access.log --error-logfile logs/gunicorn_error.log server:app
+2025-05-07 11:06:22,890 INFO Servidor iniciado correctamente con PID: 47360
+2025-05-07 11:06:23,024 INFO [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.253.133:5000
+2025-05-07 11:06:23,025 INFO [33mPress CTRL+C to quit[0m
+2025-05-07 11:06:23,028 INFO  * Restarting with stat
+2025-05-07 11:06:23,821 ERROR Error al conectar con Redis: Error 61 connecting to localhost:6379. Connection refused.
+2025-05-07 11:06:23,867 INFO Permissions and roles initialized successfully.
+2025-05-07 11:06:23,868 INFO Permisos inicializados correctamente
+2025-05-07 11:06:23,879 INFO Use Gunicorn to run this application in production.
+2025-05-07 11:06:23,879 INFO Example: gunicorn -w 4 -b 0.0.0.0:5000 server:app
+2025-05-07 11:06:23,879 INFO Starting the server using server_manager...
+2025-05-07 11:06:23,887 INFO Iniciando Gunicorn con el comando: gunicorn -w 4 -k sync -b 0.0.0.0:9000 --timeout 120 --graceful-timeout 120 --access-logfile logs/gunicorn_access.log --error-logfile logs/gunicorn_error.log server:app
+2025-05-07 11:06:28,892 INFO Servidor iniciado correctamente con PID: 47366
+2025-05-07 11:06:28,928 WARNING  * Debugger is active!
+2025-05-07 11:06:28,939 INFO  * Debugger PIN: 249-684-588
+2025-05-07 11:17:45,739 INFO 127.0.0.1 - - [07/May/2025 11:17:45] "OPTIONS /auth/login HTTP/1.1" 200 -
+2025-05-07 11:17:45,868 INFO 127.0.0.1 - - [07/May/2025 11:17:45] "POST /auth/login HTTP/1.1" 200 -
+2025-05-07 11:17:46,085 INFO 127.0.0.1 - - [07/May/2025 11:17:46] "OPTIONS /users/profile HTTP/1.1" 200 -
+2025-05-07 11:17:46,093 INFO 127.0.0.1 - - [07/May/2025 11:17:46] "GET /users/profile HTTP/1.1" 200 -
+2025-05-07 11:17:46,339 INFO 127.0.0.1 - - [07/May/2025 11:17:46] "OPTIONS /qr/funcionarios HTTP/1.1" 200 -
+2025-05-07 11:17:46,340 INFO 127.0.0.1 - - [07/May/2025 11:17:46] "OPTIONS /qr/funcionarios/total HTTP/1.1" 200 -
+2025-05-07 11:17:46,341 INFO 127.0.0.1 - - [07/May/2025 11:17:46] "OPTIONS /qr/funcionarios/total HTTP/1.1" 200 -
+2025-05-07 11:17:46,342 INFO 127.0.0.1 - - [07/May/2025 11:17:46] "OPTIONS /qr/funcionarios HTTP/1.1" 200 -
+2025-05-07 11:17:46,475 INFO 127.0.0.1 - - [07/May/2025 11:17:46] "GET /qr/funcionarios/total HTTP/1.1" 200 -
+2025-05-07 11:17:46,485 INFO 127.0.0.1 - - [07/May/2025 11:17:46] "OPTIONS /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
+2025-05-07 11:17:46,490 INFO 127.0.0.1 - - [07/May/2025 11:17:46] "GET /qr/funcionarios/total HTTP/1.1" 200 -
+2025-05-07 11:17:46,500 INFO 127.0.0.1 - - [07/May/2025 11:17:46] "GET /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
+2025-05-07 11:17:46,524 INFO 127.0.0.1 - - [07/May/2025 11:17:46] "GET /qr/funcionarios HTTP/1.1" 200 -
+2025-05-07 11:17:46,547 INFO 127.0.0.1 - - [07/May/2025 11:17:46] "GET /qr/funcionarios HTTP/1.1" 200 -
+2025-05-07 11:17:46,586 INFO 127.0.0.1 - - [07/May/2025 11:17:46] "GET /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
+2025-05-07 11:17:56,687 INFO 127.0.0.1 - - [07/May/2025 11:17:56] "OPTIONS /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-05-07 11:17:56,688 INFO 127.0.0.1 - - [07/May/2025 11:17:56] "OPTIONS /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-05-07 11:17:56,759 INFO 127.0.0.1 - - [07/May/2025 11:17:56] "GET /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-05-07 11:17:56,777 INFO 127.0.0.1 - - [07/May/2025 11:17:56] "GET /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-05-07 11:18:08,212 INFO 127.0.0.1 - - [07/May/2025 11:18:08] "OPTIONS /qr/funcionarios-sin-qr HTTP/1.1" 200 -
+2025-05-07 11:18:08,453 INFO 127.0.0.1 - - [07/May/2025 11:18:08] "GET /qr/funcionarios-sin-qr HTTP/1.1" 200 -
+2025-05-07 11:18:56,327 INFO 127.0.0.1 - - [07/May/2025 11:18:56] "OPTIONS /qr/funcionarios/total HTTP/1.1" 200 -
+2025-05-07 11:18:56,327 INFO 127.0.0.1 - - [07/May/2025 11:18:56] "OPTIONS /qr/funcionarios HTTP/1.1" 200 -
+2025-05-07 11:18:56,328 INFO 127.0.0.1 - - [07/May/2025 11:18:56] "OPTIONS /qr/funcionarios HTTP/1.1" 200 -
+2025-05-07 11:18:56,330 INFO 127.0.0.1 - - [07/May/2025 11:18:56] "OPTIONS /qr/funcionarios/total HTTP/1.1" 200 -
+2025-05-07 11:18:56,413 INFO 127.0.0.1 - - [07/May/2025 11:18:56] "GET /qr/funcionarios/total HTTP/1.1" 200 -
+2025-05-07 11:18:56,417 INFO 127.0.0.1 - - [07/May/2025 11:18:56] "GET /qr/funcionarios HTTP/1.1" 200 -
+2025-05-07 11:18:56,423 INFO 127.0.0.1 - - [07/May/2025 11:18:56] "GET /qr/funcionarios/total HTTP/1.1" 200 -
+2025-05-07 11:18:56,479 INFO 127.0.0.1 - - [07/May/2025 11:18:56] "GET /qr/funcionarios HTTP/1.1" 200 -
+2025-05-07 11:18:56,555 INFO 127.0.0.1 - - [07/May/2025 11:18:56] "OPTIONS /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
+2025-05-07 11:18:56,560 INFO 127.0.0.1 - - [07/May/2025 11:18:56] "OPTIONS /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
+2025-05-07 11:18:56,565 INFO 127.0.0.1 - - [07/May/2025 11:18:56] "GET /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
+2025-05-07 11:18:56,665 INFO 127.0.0.1 - - [07/May/2025 11:18:56] "GET /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
+2025-05-07 11:19:03,531 INFO 127.0.0.1 - - [07/May/2025 11:19:03] "OPTIONS /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-05-07 11:19:03,531 INFO 127.0.0.1 - - [07/May/2025 11:19:03] "OPTIONS /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-05-07 11:19:03,590 INFO 127.0.0.1 - - [07/May/2025 11:19:03] "GET /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-05-07 11:19:03,611 INFO 127.0.0.1 - - [07/May/2025 11:19:03] "GET /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-05-07 11:19:16,106 INFO 127.0.0.1 - - [07/May/2025 11:19:16] "OPTIONS /qr/funcionarios-sin-qr HTTP/1.1" 200 -
+2025-05-07 11:19:16,280 INFO 127.0.0.1 - - [07/May/2025 11:19:16] "GET /qr/funcionarios-sin-qr HTTP/1.1" 200 -
+2025-05-07 11:19:21,767 INFO 127.0.0.1 - - [07/May/2025 11:19:21] "OPTIONS /qr/funcionarios HTTP/1.1" 200 -
+2025-05-07 11:19:21,767 INFO 127.0.0.1 - - [07/May/2025 11:19:21] "OPTIONS /qr/funcionarios HTTP/1.1" 200 -
+2025-05-07 11:19:21,767 INFO 127.0.0.1 - - [07/May/2025 11:19:21] "OPTIONS /qr/funcionarios/total HTTP/1.1" 200 -
+2025-05-07 11:19:21,768 INFO 127.0.0.1 - - [07/May/2025 11:19:21] "OPTIONS /qr/funcionarios/total HTTP/1.1" 200 -
+2025-05-07 11:19:21,845 INFO 127.0.0.1 - - [07/May/2025 11:19:21] "GET /qr/funcionarios/total HTTP/1.1" 200 -
+2025-05-07 11:19:21,848 INFO 127.0.0.1 - - [07/May/2025 11:19:21] "GET /qr/funcionarios HTTP/1.1" 200 -
+2025-05-07 11:19:21,857 INFO 127.0.0.1 - - [07/May/2025 11:19:21] "GET /qr/funcionarios/total HTTP/1.1" 200 -
+2025-05-07 11:19:21,862 INFO 127.0.0.1 - - [07/May/2025 11:19:21] "GET /qr/funcionarios HTTP/1.1" 200 -
+2025-05-07 11:19:21,869 INFO 127.0.0.1 - - [07/May/2025 11:19:21] "OPTIONS /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
+2025-05-07 11:19:21,875 INFO 127.0.0.1 - - [07/May/2025 11:19:21] "GET /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
+2025-05-07 11:19:22,005 INFO 127.0.0.1 - - [07/May/2025 11:19:22] "GET /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
+2025-05-07 11:19:27,008 INFO 127.0.0.1 - - [07/May/2025 11:19:27] "OPTIONS /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-05-07 11:19:27,009 INFO 127.0.0.1 - - [07/May/2025 11:19:27] "OPTIONS /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-05-07 11:19:27,075 INFO 127.0.0.1 - - [07/May/2025 11:19:27] "GET /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-05-07 11:19:27,111 INFO 127.0.0.1 - - [07/May/2025 11:19:27] "GET /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-05-07 11:19:37,619 INFO 127.0.0.1 - - [07/May/2025 11:19:37] "OPTIONS /qr/funcionarios-sin-qr HTTP/1.1" 200 -
+2025-05-07 11:19:37,799 INFO 127.0.0.1 - - [07/May/2025 11:19:37] "GET /qr/funcionarios-sin-qr HTTP/1.1" 200 -
+2025-05-07 11:19:52,549 INFO 127.0.0.1 - - [07/May/2025 11:19:52] "OPTIONS /qr/funcionarios HTTP/1.1" 200 -
+2025-05-07 11:19:52,551 INFO 127.0.0.1 - - [07/May/2025 11:19:52] "OPTIONS /qr/funcionarios/total HTTP/1.1" 200 -
+2025-05-07 11:19:52,553 INFO 127.0.0.1 - - [07/May/2025 11:19:52] "OPTIONS /qr/funcionarios HTTP/1.1" 200 -
+2025-05-07 11:19:52,556 INFO 127.0.0.1 - - [07/May/2025 11:19:52] "OPTIONS /qr/funcionarios/total HTTP/1.1" 200 -
+2025-05-07 11:19:52,617 INFO 127.0.0.1 - - [07/May/2025 11:19:52] "GET /qr/funcionarios/total HTTP/1.1" 200 -
+2025-05-07 11:19:52,620 INFO 127.0.0.1 - - [07/May/2025 11:19:52] "GET /qr/funcionarios HTTP/1.1" 200 -
+2025-05-07 11:19:52,630 INFO 127.0.0.1 - - [07/May/2025 11:19:52] "OPTIONS /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
+2025-05-07 11:19:52,636 INFO 127.0.0.1 - - [07/May/2025 11:19:52] "GET /qr/funcionarios/total HTTP/1.1" 200 -
+2025-05-07 11:19:52,647 INFO 127.0.0.1 - - [07/May/2025 11:19:52] "GET /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
+2025-05-07 11:19:52,738 INFO 127.0.0.1 - - [07/May/2025 11:19:52] "GET /qr/funcionarios HTTP/1.1" 200 -
+2025-05-07 11:19:52,744 INFO 127.0.0.1 - - [07/May/2025 11:19:52] "GET /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
+2025-05-07 11:25:09,555 INFO  * Detected change in '/Users/mcc/Documents/Develop/backup/dinqr/backend/routes/route_qrdata.py', reloading
+2025-05-07 11:25:09,904 INFO  * Restarting with stat
+2025-05-07 11:25:11,569 ERROR Error al conectar con Redis: Error 61 connecting to localhost:6379. Connection refused.
+2025-05-07 11:25:11,607 INFO Permissions and roles initialized successfully.
+2025-05-07 11:25:11,608 INFO Permisos inicializados correctamente
+2025-05-07 11:25:11,618 INFO Use Gunicorn to run this application in production.
+2025-05-07 11:25:11,618 INFO Example: gunicorn -w 4 -b 0.0.0.0:5000 server:app
+2025-05-07 11:25:11,618 INFO Starting the server using server_manager...
+2025-05-07 11:25:11,626 INFO Iniciando Gunicorn con el comando: gunicorn -w 4 -k sync -b 0.0.0.0:9000 --timeout 120 --graceful-timeout 120 --access-logfile logs/gunicorn_access.log --error-logfile logs/gunicorn_error.log server:app
+2025-05-07 11:25:16,632 INFO Servidor iniciado correctamente con PID: 47573
+2025-05-07 11:25:16,688 WARNING  * Debugger is active!
+2025-05-07 11:25:16,699 INFO  * Debugger PIN: 249-684-588
+2025-05-07 11:27:07,052 INFO 127.0.0.1 - - [07/May/2025 11:27:07] "OPTIONS /users/profile HTTP/1.1" 200 -
+2025-05-07 11:27:07,054 INFO 127.0.0.1 - - [07/May/2025 11:27:07] "OPTIONS /users/profile HTTP/1.1" 200 -
+2025-05-07 11:27:07,060 INFO 127.0.0.1 - - [07/May/2025 11:27:07] "[31m[1mGET /users/profile HTTP/1.1[0m" 401 -
+2025-05-07 11:27:07,065 INFO 127.0.0.1 - - [07/May/2025 11:27:07] "[31m[1mGET /users/profile HTTP/1.1[0m" 401 -
+2025-05-07 11:27:13,993 INFO 127.0.0.1 - - [07/May/2025 11:27:13] "OPTIONS /auth/login HTTP/1.1" 200 -
+2025-05-07 11:27:14,106 INFO 127.0.0.1 - - [07/May/2025 11:27:14] "POST /auth/login HTTP/1.1" 200 -
+2025-05-07 11:27:14,250 INFO 127.0.0.1 - - [07/May/2025 11:27:14] "OPTIONS /users/profile HTTP/1.1" 200 -
+2025-05-07 11:27:14,257 INFO 127.0.0.1 - - [07/May/2025 11:27:14] "GET /users/profile HTTP/1.1" 200 -
+2025-05-07 11:27:14,504 INFO 127.0.0.1 - - [07/May/2025 11:27:14] "OPTIONS /qr/funcionarios HTTP/1.1" 200 -
+2025-05-07 11:27:14,504 INFO 127.0.0.1 - - [07/May/2025 11:27:14] "OPTIONS /qr/funcionarios/total HTTP/1.1" 200 -
+2025-05-07 11:27:14,505 INFO 127.0.0.1 - - [07/May/2025 11:27:14] "OPTIONS /qr/funcionarios HTTP/1.1" 200 -
+2025-05-07 11:27:14,506 INFO 127.0.0.1 - - [07/May/2025 11:27:14] "OPTIONS /qr/funcionarios/total HTTP/1.1" 200 -
+2025-05-07 11:27:14,635 INFO 127.0.0.1 - - [07/May/2025 11:27:14] "GET /qr/funcionarios/total HTTP/1.1" 200 -
+2025-05-07 11:27:14,642 INFO 127.0.0.1 - - [07/May/2025 11:27:14] "OPTIONS /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
+2025-05-07 11:27:14,645 INFO 127.0.0.1 - - [07/May/2025 11:27:14] "GET /qr/funcionarios/total HTTP/1.1" 200 -
+2025-05-07 11:27:14,649 INFO 127.0.0.1 - - [07/May/2025 11:27:14] "GET /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
+2025-05-07 11:27:14,698 INFO 127.0.0.1 - - [07/May/2025 11:27:14] "GET /qr/funcionarios HTTP/1.1" 200 -
+2025-05-07 11:27:14,715 INFO 127.0.0.1 - - [07/May/2025 11:27:14] "GET /qr/funcionarios HTTP/1.1" 200 -
+2025-05-07 11:27:14,745 INFO 127.0.0.1 - - [07/May/2025 11:27:14] "GET /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
+2025-05-07 11:27:52,110 INFO 127.0.0.1 - - [07/May/2025 11:27:52] "OPTIONS /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-05-07 11:27:52,112 INFO 127.0.0.1 - - [07/May/2025 11:27:52] "OPTIONS /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-05-07 11:27:52,280 INFO 127.0.0.1 - - [07/May/2025 11:27:52] "GET /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-05-07 11:27:52,293 INFO 127.0.0.1 - - [07/May/2025 11:27:52] "GET /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-05-07 11:28:02,567 INFO 127.0.0.1 - - [07/May/2025 11:28:02] "OPTIONS /qr/funcionarios-sin-qr HTTP/1.1" 200 -
+2025-05-07 11:28:02,787 INFO 127.0.0.1 - - [07/May/2025 11:28:02] "GET /qr/funcionarios-sin-qr HTTP/1.1" 200 -
+2025-05-07 11:40:29,289 INFO 127.0.0.1 - - [07/May/2025 11:40:29] "OPTIONS /users/profile HTTP/1.1" 200 -
+2025-05-07 11:40:29,290 INFO 127.0.0.1 - - [07/May/2025 11:40:29] "OPTIONS /users/profile HTTP/1.1" 200 -
+2025-05-07 11:40:29,309 INFO 127.0.0.1 - - [07/May/2025 11:40:29] "GET /users/profile HTTP/1.1" 200 -
+2025-05-07 11:40:29,321 INFO 127.0.0.1 - - [07/May/2025 11:40:29] "GET /users/profile HTTP/1.1" 200 -
+2025-05-07 11:40:29,919 INFO 127.0.0.1 - - [07/May/2025 11:40:29] "OPTIONS /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-05-07 11:40:29,921 INFO 127.0.0.1 - - [07/May/2025 11:40:29] "OPTIONS /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-05-07 11:40:30,018 INFO 127.0.0.1 - - [07/May/2025 11:40:30] "GET /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-05-07 11:40:30,069 INFO 127.0.0.1 - - [07/May/2025 11:40:30] "GET /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-05-07 11:40:30,587 INFO 127.0.0.1 - - [07/May/2025 11:40:30] "OPTIONS /qr/funcionarios/total HTTP/1.1" 200 -
+2025-05-07 11:40:30,587 INFO 127.0.0.1 - - [07/May/2025 11:40:30] "OPTIONS /qr/funcionarios HTTP/1.1" 200 -
+2025-05-07 11:40:30,589 INFO 127.0.0.1 - - [07/May/2025 11:40:30] "OPTIONS /qr/funcionarios HTTP/1.1" 200 -
+2025-05-07 11:40:30,591 INFO 127.0.0.1 - - [07/May/2025 11:40:30] "OPTIONS /qr/funcionarios/total HTTP/1.1" 200 -
+2025-05-07 11:40:30,600 INFO 127.0.0.1 - - [07/May/2025 11:40:30] "GET /qr/funcionarios/total HTTP/1.1" 200 -
+2025-05-07 11:40:30,609 INFO 127.0.0.1 - - [07/May/2025 11:40:30] "GET /qr/funcionarios/total HTTP/1.1" 200 -
+2025-05-07 11:40:30,629 INFO 127.0.0.1 - - [07/May/2025 11:40:30] "OPTIONS /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
+2025-05-07 11:40:30,630 INFO 127.0.0.1 - - [07/May/2025 11:40:30] "OPTIONS /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
+2025-05-07 11:40:30,634 INFO 127.0.0.1 - - [07/May/2025 11:40:30] "GET /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
+2025-05-07 11:40:30,653 INFO 127.0.0.1 - - [07/May/2025 11:40:30] "GET /qr/funcionarios HTTP/1.1" 200 -
+2025-05-07 11:40:30,744 INFO 127.0.0.1 - - [07/May/2025 11:40:30] "GET /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
+2025-05-07 11:40:30,754 INFO 127.0.0.1 - - [07/May/2025 11:40:30] "GET /qr/funcionarios HTTP/1.1" 200 -
+2025-05-07 11:40:35,093 INFO 127.0.0.1 - - [07/May/2025 11:40:35] "OPTIONS /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-05-07 11:40:35,095 INFO 127.0.0.1 - - [07/May/2025 11:40:35] "OPTIONS /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-05-07 11:40:35,153 INFO 127.0.0.1 - - [07/May/2025 11:40:35] "GET /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-05-07 11:40:35,166 INFO 127.0.0.1 - - [07/May/2025 11:40:35] "GET /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-05-07 11:40:39,809 INFO 127.0.0.1 - - [07/May/2025 11:40:39] "OPTIONS /qr/funcionarios-sin-qr HTTP/1.1" 200 -
+2025-05-07 11:40:40,012 INFO 127.0.0.1 - - [07/May/2025 11:40:40] "GET /qr/funcionarios-sin-qr HTTP/1.1" 200 -
+2025-05-07 11:59:30,650 INFO 127.0.0.1 - - [07/May/2025 11:59:30] "OPTIONS /users/profile HTTP/1.1" 200 -
+2025-05-07 11:59:30,650 INFO 127.0.0.1 - - [07/May/2025 11:59:30] "OPTIONS /users/profile HTTP/1.1" 200 -
+2025-05-07 11:59:30,659 INFO 127.0.0.1 - - [07/May/2025 11:59:30] "GET /users/profile HTTP/1.1" 200 -
+2025-05-07 11:59:30,667 INFO 127.0.0.1 - - [07/May/2025 11:59:30] "GET /users/profile HTTP/1.1" 200 -
+2025-05-07 11:59:31,114 INFO 127.0.0.1 - - [07/May/2025 11:59:31] "OPTIONS /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-05-07 11:59:31,115 INFO 127.0.0.1 - - [07/May/2025 11:59:31] "OPTIONS /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-05-07 11:59:31,194 INFO 127.0.0.1 - - [07/May/2025 11:59:31] "GET /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-05-07 11:59:31,253 INFO 127.0.0.1 - - [07/May/2025 11:59:31] "GET /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-05-07 11:59:31,575 INFO 127.0.0.1 - - [07/May/2025 11:59:31] "OPTIONS /qr/funcionarios HTTP/1.1" 200 -
+2025-05-07 11:59:31,576 INFO 127.0.0.1 - - [07/May/2025 11:59:31] "OPTIONS /qr/funcionarios HTTP/1.1" 200 -
+2025-05-07 11:59:31,577 INFO 127.0.0.1 - - [07/May/2025 11:59:31] "OPTIONS /qr/funcionarios/total HTTP/1.1" 200 -
+2025-05-07 11:59:31,577 INFO 127.0.0.1 - - [07/May/2025 11:59:31] "OPTIONS /qr/funcionarios/total HTTP/1.1" 200 -
+2025-05-07 11:59:31,591 INFO 127.0.0.1 - - [07/May/2025 11:59:31] "GET /qr/funcionarios/total HTTP/1.1" 200 -
+2025-05-07 11:59:31,615 INFO 127.0.0.1 - - [07/May/2025 11:59:31] "OPTIONS /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
+2025-05-07 11:59:31,621 INFO 127.0.0.1 - - [07/May/2025 11:59:31] "GET /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
+2025-05-07 11:59:31,625 INFO 127.0.0.1 - - [07/May/2025 11:59:31] "GET /qr/funcionarios/total HTTP/1.1" 200 -
+2025-05-07 11:59:31,642 INFO 127.0.0.1 - - [07/May/2025 11:59:31] "GET /qr/funcionarios HTTP/1.1" 200 -
+2025-05-07 11:59:31,779 INFO 127.0.0.1 - - [07/May/2025 11:59:31] "GET /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
+2025-05-07 11:59:31,790 INFO 127.0.0.1 - - [07/May/2025 11:59:31] "GET /qr/funcionarios HTTP/1.1" 200 -
+2025-05-07 11:59:35,545 INFO 127.0.0.1 - - [07/May/2025 11:59:35] "GET /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-05-07 11:59:35,583 INFO 127.0.0.1 - - [07/May/2025 11:59:35] "GET /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-05-07 11:59:37,815 INFO 127.0.0.1 - - [07/May/2025 11:59:37] "OPTIONS /qr/funcionarios-sin-qr HTTP/1.1" 200 -
+2025-05-07 11:59:37,974 INFO 127.0.0.1 - - [07/May/2025 11:59:37] "GET /qr/funcionarios-sin-qr HTTP/1.1" 200 -
+2025-05-07 12:40:50,891 INFO 127.0.0.1 - - [07/May/2025 12:40:50] "OPTIONS /users/profile HTTP/1.1" 200 -
+2025-05-07 12:40:50,892 INFO 127.0.0.1 - - [07/May/2025 12:40:50] "OPTIONS /users/profile HTTP/1.1" 200 -
+2025-05-07 12:40:50,896 INFO 127.0.0.1 - - [07/May/2025 12:40:50] "[31m[1mGET /users/profile HTTP/1.1[0m" 401 -
+2025-05-07 12:40:50,900 INFO 127.0.0.1 - - [07/May/2025 12:40:50] "[31m[1mGET /users/profile HTTP/1.1[0m" 401 -
+2025-05-07 12:43:44,019 INFO 127.0.0.1 - - [07/May/2025 12:43:44] "OPTIONS /auth/login HTTP/1.1" 200 -
+2025-05-07 12:43:44,162 INFO 127.0.0.1 - - [07/May/2025 12:43:44] "POST /auth/login HTTP/1.1" 200 -
+2025-05-07 12:43:44,321 INFO 127.0.0.1 - - [07/May/2025 12:43:44] "OPTIONS /users/profile HTTP/1.1" 200 -
+2025-05-07 12:43:44,336 INFO 127.0.0.1 - - [07/May/2025 12:43:44] "GET /users/profile HTTP/1.1" 200 -
+2025-05-07 12:43:44,557 INFO 127.0.0.1 - - [07/May/2025 12:43:44] "OPTIONS /qr/funcionarios HTTP/1.1" 200 -
+2025-05-07 12:43:44,558 INFO 127.0.0.1 - - [07/May/2025 12:43:44] "OPTIONS /qr/funcionarios HTTP/1.1" 200 -
+2025-05-07 12:43:44,558 INFO 127.0.0.1 - - [07/May/2025 12:43:44] "OPTIONS /qr/funcionarios/total HTTP/1.1" 200 -
+2025-05-07 12:43:44,559 INFO 127.0.0.1 - - [07/May/2025 12:43:44] "OPTIONS /qr/funcionarios/total HTTP/1.1" 200 -
+2025-05-07 12:43:44,631 INFO 127.0.0.1 - - [07/May/2025 12:43:44] "GET /qr/funcionarios/total HTTP/1.1" 200 -
+2025-05-07 12:43:44,634 INFO 127.0.0.1 - - [07/May/2025 12:43:44] "GET /qr/funcionarios HTTP/1.1" 200 -
+2025-05-07 12:43:44,651 INFO 127.0.0.1 - - [07/May/2025 12:43:44] "GET /qr/funcionarios/total HTTP/1.1" 200 -
+2025-05-07 12:43:44,663 INFO 127.0.0.1 - - [07/May/2025 12:43:44] "GET /qr/funcionarios HTTP/1.1" 200 -
+2025-05-07 12:43:44,663 INFO 127.0.0.1 - - [07/May/2025 12:43:44] "OPTIONS /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
+2025-05-07 12:43:44,667 INFO 127.0.0.1 - - [07/May/2025 12:43:44] "GET /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
+2025-05-07 12:43:44,787 INFO 127.0.0.1 - - [07/May/2025 12:43:44] "GET /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
+2025-05-07 12:43:49,543 INFO 127.0.0.1 - - [07/May/2025 12:43:49] "OPTIONS /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-05-07 12:43:49,545 INFO 127.0.0.1 - - [07/May/2025 12:43:49] "OPTIONS /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-05-07 12:43:49,611 INFO 127.0.0.1 - - [07/May/2025 12:43:49] "GET /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-05-07 12:43:49,623 INFO 127.0.0.1 - - [07/May/2025 12:43:49] "GET /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-05-07 12:43:52,117 INFO 127.0.0.1 - - [07/May/2025 12:43:52] "OPTIONS /qr/funcionarios-sin-qr HTTP/1.1" 200 -
+2025-05-07 12:43:52,291 INFO 127.0.0.1 - - [07/May/2025 12:43:52] "GET /qr/funcionarios-sin-qr HTTP/1.1" 200 -
+2025-05-07 13:04:43,688 INFO 127.0.0.1 - - [07/May/2025 13:04:43] "OPTIONS /users/profile HTTP/1.1" 200 -
+2025-05-07 13:04:43,691 INFO 127.0.0.1 - - [07/May/2025 13:04:43] "OPTIONS /users/profile HTTP/1.1" 200 -
+2025-05-07 13:04:43,695 INFO 127.0.0.1 - - [07/May/2025 13:04:43] "GET /users/profile HTTP/1.1" 200 -
+2025-05-07 13:04:43,700 INFO 127.0.0.1 - - [07/May/2025 13:04:43] "GET /users/profile HTTP/1.1" 200 -
+2025-05-07 13:04:44,452 INFO 127.0.0.1 - - [07/May/2025 13:04:44] "OPTIONS /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-05-07 13:04:44,453 INFO 127.0.0.1 - - [07/May/2025 13:04:44] "OPTIONS /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-05-07 13:04:44,523 INFO 127.0.0.1 - - [07/May/2025 13:04:44] "GET /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-05-07 13:04:44,535 INFO 127.0.0.1 - - [07/May/2025 13:04:44] "GET /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-05-07 13:04:45,257 INFO 127.0.0.1 - - [07/May/2025 13:04:45] "OPTIONS /qr/funcionarios HTTP/1.1" 200 -
+2025-05-07 13:04:45,258 INFO 127.0.0.1 - - [07/May/2025 13:04:45] "OPTIONS /qr/funcionarios/total HTTP/1.1" 200 -
+2025-05-07 13:04:45,260 INFO 127.0.0.1 - - [07/May/2025 13:04:45] "OPTIONS /qr/funcionarios HTTP/1.1" 200 -
+2025-05-07 13:04:45,263 INFO 127.0.0.1 - - [07/May/2025 13:04:45] "OPTIONS /qr/funcionarios/total HTTP/1.1" 200 -
+2025-05-07 13:04:45,321 INFO 127.0.0.1 - - [07/May/2025 13:04:45] "GET /qr/funcionarios/total HTTP/1.1" 200 -
+2025-05-07 13:04:45,334 INFO 127.0.0.1 - - [07/May/2025 13:04:45] "OPTIONS /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
+2025-05-07 13:04:45,336 INFO 127.0.0.1 - - [07/May/2025 13:04:45] "GET /qr/funcionarios HTTP/1.1" 200 -
+2025-05-07 13:04:45,341 INFO 127.0.0.1 - - [07/May/2025 13:04:45] "GET /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
+2025-05-07 13:04:45,343 INFO 127.0.0.1 - - [07/May/2025 13:04:45] "GET /qr/funcionarios/total HTTP/1.1" 200 -
+2025-05-07 13:04:45,484 INFO 127.0.0.1 - - [07/May/2025 13:04:45] "GET /qr/funcionarios HTTP/1.1" 200 -
+2025-05-07 13:04:45,528 INFO 127.0.0.1 - - [07/May/2025 13:04:45] "GET /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
+2025-05-07 13:17:21,333 INFO 127.0.0.1 - - [07/May/2025 13:17:21] "OPTIONS /users/profile HTTP/1.1" 200 -
+2025-05-07 13:17:21,336 INFO 127.0.0.1 - - [07/May/2025 13:17:21] "OPTIONS /users/profile HTTP/1.1" 200 -
+2025-05-07 13:17:21,353 INFO 127.0.0.1 - - [07/May/2025 13:17:21] "GET /users/profile HTTP/1.1" 200 -
+2025-05-07 13:17:21,358 INFO 127.0.0.1 - - [07/May/2025 13:17:21] "GET /users/profile HTTP/1.1" 200 -
+2025-05-07 13:17:21,853 INFO 127.0.0.1 - - [07/May/2025 13:17:21] "OPTIONS /qr/funcionarios/total HTTP/1.1" 200 -
+2025-05-07 13:17:21,857 INFO 127.0.0.1 - - [07/May/2025 13:17:21] "OPTIONS /qr/funcionarios HTTP/1.1" 200 -
+2025-05-07 13:17:21,857 INFO 127.0.0.1 - - [07/May/2025 13:17:21] "OPTIONS /qr/funcionarios HTTP/1.1" 200 -
+2025-05-07 13:17:21,860 INFO 127.0.0.1 - - [07/May/2025 13:17:21] "OPTIONS /qr/funcionarios/total HTTP/1.1" 200 -
+2025-05-07 13:17:21,930 INFO 127.0.0.1 - - [07/May/2025 13:17:21] "GET /qr/funcionarios/total HTTP/1.1" 200 -
+2025-05-07 13:17:21,939 INFO 127.0.0.1 - - [07/May/2025 13:17:21] "GET /qr/funcionarios/total HTTP/1.1" 200 -
+2025-05-07 13:17:21,988 INFO 127.0.0.1 - - [07/May/2025 13:17:21] "GET /qr/funcionarios HTTP/1.1" 200 -
+2025-05-07 13:17:21,998 INFO 127.0.0.1 - - [07/May/2025 13:17:21] "GET /qr/funcionarios HTTP/1.1" 200 -
+2025-05-07 13:17:22,023 INFO 127.0.0.1 - - [07/May/2025 13:17:22] "OPTIONS /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
+2025-05-07 13:17:22,102 INFO 127.0.0.1 - - [07/May/2025 13:17:22] "GET /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
+2025-05-07 13:17:22,188 INFO 127.0.0.1 - - [07/May/2025 13:17:22] "GET /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
+2025-05-07 13:18:16,124 INFO 127.0.0.1 - - [07/May/2025 13:18:16] "OPTIONS /users/profile HTTP/1.1" 200 -
+2025-05-07 13:18:16,125 INFO 127.0.0.1 - - [07/May/2025 13:18:16] "OPTIONS /users/profile HTTP/1.1" 200 -
+2025-05-07 13:18:16,133 INFO 127.0.0.1 - - [07/May/2025 13:18:16] "GET /users/profile HTTP/1.1" 200 -
+2025-05-07 13:18:16,144 INFO 127.0.0.1 - - [07/May/2025 13:18:16] "GET /users/profile HTTP/1.1" 200 -
+2025-05-07 13:20:07,416 INFO 127.0.0.1 - - [07/May/2025 13:20:07] "OPTIONS /users/profile HTTP/1.1" 200 -
+2025-05-07 13:20:07,417 INFO 127.0.0.1 - - [07/May/2025 13:20:07] "OPTIONS /users/profile HTTP/1.1" 200 -
+2025-05-07 13:20:07,426 INFO 127.0.0.1 - - [07/May/2025 13:20:07] "GET /users/profile HTTP/1.1" 200 -
+2025-05-07 13:20:07,442 INFO 127.0.0.1 - - [07/May/2025 13:20:07] "GET /users/profile HTTP/1.1" 200 -
+2025-05-07 13:20:08,179 INFO 127.0.0.1 - - [07/May/2025 13:20:08] "OPTIONS /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-05-07 13:20:08,179 INFO 127.0.0.1 - - [07/May/2025 13:20:08] "OPTIONS /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-05-07 13:20:08,360 INFO 127.0.0.1 - - [07/May/2025 13:20:08] "GET /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-05-07 13:20:08,381 INFO 127.0.0.1 - - [07/May/2025 13:20:08] "GET /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-05-07 13:20:09,345 INFO 127.0.0.1 - - [07/May/2025 13:20:09] "OPTIONS /qr/funcionarios/total HTTP/1.1" 200 -
+2025-05-07 13:20:09,346 INFO 127.0.0.1 - - [07/May/2025 13:20:09] "OPTIONS /qr/funcionarios HTTP/1.1" 200 -
+2025-05-07 13:20:09,349 INFO 127.0.0.1 - - [07/May/2025 13:20:09] "OPTIONS /qr/funcionarios HTTP/1.1" 200 -
+2025-05-07 13:20:09,351 INFO 127.0.0.1 - - [07/May/2025 13:20:09] "OPTIONS /qr/funcionarios/total HTTP/1.1" 200 -
+2025-05-07 13:20:09,423 INFO 127.0.0.1 - - [07/May/2025 13:20:09] "GET /qr/funcionarios/total HTTP/1.1" 200 -
+2025-05-07 13:20:09,432 INFO 127.0.0.1 - - [07/May/2025 13:20:09] "OPTIONS /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
+2025-05-07 13:20:09,436 INFO 127.0.0.1 - - [07/May/2025 13:20:09] "GET /qr/funcionarios HTTP/1.1" 200 -
+2025-05-07 13:20:09,436 INFO 127.0.0.1 - - [07/May/2025 13:20:09] "GET /qr/funcionarios/total HTTP/1.1" 200 -
+2025-05-07 13:20:09,437 INFO 127.0.0.1 - - [07/May/2025 13:20:09] "GET /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
+2025-05-07 13:20:09,453 INFO 127.0.0.1 - - [07/May/2025 13:20:09] "GET /qr/funcionarios HTTP/1.1" 200 -
+2025-05-07 13:20:10,085 INFO 127.0.0.1 - - [07/May/2025 13:20:10] "GET /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
+2025-05-07 13:20:17,246 INFO 127.0.0.1 - - [07/May/2025 13:20:17] "OPTIONS /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-05-07 13:20:17,247 INFO 127.0.0.1 - - [07/May/2025 13:20:17] "OPTIONS /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-05-07 13:20:17,322 INFO 127.0.0.1 - - [07/May/2025 13:20:17] "GET /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-05-07 13:20:17,338 INFO 127.0.0.1 - - [07/May/2025 13:20:17] "GET /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
+2025-05-07 13:20:23,207 INFO 127.0.0.1 - - [07/May/2025 13:20:23] "OPTIONS /qr/funcionarios-sin-qr HTTP/1.1" 200 -
+2025-05-07 13:20:23,391 INFO 127.0.0.1 - - [07/May/2025 13:20:23] "GET /qr/funcionarios-sin-qr HTTP/1.1" 200 -

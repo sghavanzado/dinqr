@@ -15,6 +15,9 @@ from models.user import initialize_permissions
 from routes import auth_routes, user_routes, qr_routes
 from routes.settings_routes import settings_bp
 from routes.health_check import health_bp
+from server_manager import iniciar_servidor, detener_servidor, logger
+import redis  # Import Redis
+import signal  # Import signal to handle termination signals
 
 def create_app():
     app = Flask(__name__, static_folder='static')
@@ -22,31 +25,31 @@ def create_app():
 
     Swagger(app)
 
-    # Seguridad HTTP
-    Talisman(
-        app,
-        content_security_policy=None,
-        force_https=False,
-        strict_transport_security=False,
-        frame_options='DENY'
-    )
+ 
+    # Conexión a Redis
+    try:
+        r = redis.Redis(host='localhost', port=6379, db=0)
+        r.ping()  # Verificar conexión a Redis
+        app.logger.info("Conexión a Redis establecida correctamente.")
+    except redis.ConnectionError as e:
+        app.logger.error(f"Error al conectar con Redis: {str(e)}")
+        r = None  # Establecer Redis como None si no está disponible
 
     # Rate limit
     limiter = Limiter(
-    key_func=get_remote_address,
-    app=app,
-    storage_uri=Config.RATELIMIT_STORAGE_URL,
-    default_limits=[Config.RATELIMIT_DEFAULT]
-)
+        get_remote_address,
+        storage_uri="redis://localhost:6379" if r else "memory://",  # Usar memoria si Redis no está disponible
+        app=app,
+    )
 
 
     # CORS
     CORS(app,
-         resources={r"/*": {"origins": "*"}},  # Permitir peticiones desde cualquier origen
+         resources={r"/*": {"origins": Config.CORS_ORIGINS}},  # Permitir peticiones desde las IPs especificadas en Config.CORS_ORIGINS
          supports_credentials=Config.CORS_SUPPORTS_CREDENTIALS,
          expose_headers=Config.CORS_EXPOSE_HEADERS)
 
-    # Logging
+    # Loggin
     if not app.debug:
         if not os.path.exists('logs'):
             os.mkdir('logs')
@@ -140,6 +143,29 @@ def create_app():
 
     return app
 
+def handle_exit_signal(signum, frame):
+    """Handle termination signals to stop the server gracefully."""
+    logger.info("Signal received, stopping the server...")
+    detener_servidor()
+    logger.info("Application terminated.")
+    exit(0)
+
 if __name__ == '__main__':
+    # Register signal handlers for graceful shutdown
+    signal.signal(signal.SIGINT, handle_exit_signal)  # Handle Ctrl+C
+    signal.signal(signal.SIGTERM, handle_exit_signal)  # Handle termination signals
+
     app = create_app()
-    app.run(host=Config.HOST, port=Config.PORT, debug=Config.DEBUG, ssl_context=None)
+    logger.info("Use Gunicorn to run this application in production.")
+    logger.info("Example: gunicorn -w 4 -b 0.0.0.0:5000 server:app")
+
+    # Start the server in server_manager
+    try:
+        logger.info("Starting the server using server_manager...")
+        iniciar_servidor()
+    except Exception as e:
+        logger.error(f"Failed to start the server: {str(e)}")
+        exit(1)
+
+    # Run the Flask application
+    app.run(host='0.0.0.0', port=Config.PORT, debug=Config.DEBUG, ssl_context=None)  # Escuchar en todas las IPs

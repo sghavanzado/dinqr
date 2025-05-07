@@ -3,6 +3,7 @@ from flask import Blueprint, request, jsonify, send_file, abort
 from marshmallow import Schema, fields, ValidationError
 from services.qr_service import (
     generar_qr,
+    generar_qr_estatico,
     listar_funcionarios,
     eliminar_qr,
     descargar_qr,
@@ -12,6 +13,14 @@ from services.qr_service import (
 )
 from utils.db_utils import obtener_conexion_remota, obtener_conexion_local, liberar_conexion_local
 import logging
+import csv
+from werkzeug.utils import secure_filename
+import os
+
+ALLOWED_EXTENSIONS = {'csv'}
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 qr_bp = Blueprint('qr', __name__)
 
@@ -48,7 +57,7 @@ def listar_funcionarios():
         with obtener_conexion_remota() as conn:
             cursor = conn.cursor()
             query = """
-                SELECT sap, nome, funcao, area, nif, telefone
+                SELECT sap, nome, funcao, area, nif, telefone, email, uo
                 FROM sonacard
                 WHERE sap IN ({})
                 AND nome LIKE ?
@@ -67,6 +76,8 @@ def listar_funcionarios():
                 "area": funcionario.area,
                 "nif": funcionario.nif,
                 "telefone": funcionario.telefone,
+                "email": funcionario.email,
+                "uo": funcionario.uo,
                 "qrGenerated": True  # Todos los funcionarios en esta lista tienen QR
             }
             for funcionario in funcionarios
@@ -97,7 +108,7 @@ def listar_funcionarios_sin_qr():
             cursor = conn.cursor()
             if qr_generated_ids:
                 query = """
-                    SELECT sap, nome, funcao, area, nif, telefone
+                    SELECT sap, nome, funcao, area, nif, telefone, email, uo
                     FROM sonacard
                     WHERE sap NOT IN ({})
                 """.format(",".join("?" for _ in qr_generated_ids))
@@ -105,7 +116,7 @@ def listar_funcionarios_sin_qr():
             else:
                 # Si no hay IDs en qr_generated_ids, devolver todos los funcionarios
                 query = """
-                    SELECT sap, nome, funcao, area, nif, telefone
+                    SELECT sap, nome, funcao, area, nif, telefone, email, uo
                     FROM sonacard
                 """
                 cursor.execute(query)
@@ -119,6 +130,8 @@ def listar_funcionarios_sin_qr():
                 "area": funcionario.area,
                 "nif": funcionario.nif,
                 "telefone": funcionario.telefone,
+                "email": funcionario.email,
+                "uo": funcionario.uo,
             }
             for funcionario in funcionarios
         ]
@@ -140,6 +153,19 @@ def generar_codigos_qr():
         return jsonify({"error": e.messages}), 400
     except Exception as e:
         logging.error(f"Error al generar códigos QR: {str(e)}")
+        return jsonify({"error": "Error interno del servidor"}), 500
+
+@qr_bp.route('/generar-estatico', methods=['POST'])
+def generar_codigos_qr_estaticos():
+    """Generar códigos QR estáticos para funcionarios."""
+    try:
+        data = QRRequestSchema().load(request.json)
+        ids = data['ids']
+        return jsonify(generar_qr_estatico(ids))
+    except ValidationError as e:
+        return jsonify({"error": e.messages}), 400
+    except Exception as e:
+        logging.error(f"Error al generar códigos QR estáticos: {str(e)}")
         return jsonify({"error": "Error interno del servidor"}), 500
 
 @qr_bp.route('/descargar/<int:contact_id>', methods=['GET'])
@@ -177,3 +203,117 @@ def obtener_total_funcionarios_con_qr_endpoint():
     except Exception as e:
         logging.error(f"Error al obtener el total de funcionarios con QR: {str(e)}")
         return jsonify({"error": "Error interno del servidor"}), 500
+    
+    def allowed_file(filename):
+     """Verifica si la extensión del archivo está permitida."""
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() == 'csv'
+
+@qr_bp.route('/importar-funcionarios', methods=['POST'])
+def importar_funcionarios():
+    """Importar funcionarios desde un archivo CSV a la base de datos externa."""
+    logging.basicConfig(filename='import.log', level=logging.INFO,
+                       format='%(asctime)s - %(levelname)s - %(message)s')
+    
+    if 'file' not in request.files:
+        logging.error("No se encontró el archivo")
+        return jsonify({"error": "No se encontró el archivo."}), 400
+
+    file = request.files['file']
+    if file.filename == '':
+        logging.error("No se seleccionó ningún archivo")
+        return jsonify({"error": "No se seleccionó ningún archivo."}), 400
+
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        filepath = os.path.join('uploads', filename)
+        os.makedirs('uploads', exist_ok=True)
+        file.save(filepath)
+
+        usuarios_importados = 0
+        errores = 0
+        errores_detalle = []
+
+        try:
+            for encoding in ['utf-8', 'latin-1', 'cp1252']:
+                try:
+                    with open(filepath, 'r', encoding=encoding) as csvfile:
+                        reader = csv.DictReader(csvfile)
+                        rows = [row for row in reader]
+                    logging.info(f"Archivo leído correctamente con codificación: {encoding}")
+                    break
+                except UnicodeDecodeError:
+                    logging.warning(f"Error al leer con codificación: {encoding}. Intentando con otra codificación.")
+            else:
+                logging.error("No se pudo decodificar el archivo con las codificaciones intentadas")
+                return jsonify({"error": "Error al leer el archivo CSV. Problema de codificación."}), 400
+
+            with obtener_conexion_remota() as conn:
+                cursor = conn.cursor()
+                for row in rows:
+                    try:
+                        # Primero, intentamos actualizar la fila si existe
+                        cursor.execute("""
+                            UPDATE sonacard
+                            SET nome = ?, funcao = ?, area = ?, nif = ?, telefone = ?, email = ?, uo = ?
+                            WHERE sap = ?
+                        """, (
+                            row['nome'],
+                            row['funcao'],
+                            row['area'],
+                            row['nif'],
+                            row['telefone'],
+                            row['email'],
+                            row['uo'],
+                            row['sap']
+                        ))
+
+                        # Si no se actualizó ninguna fila, insertamos una nueva
+                        if cursor.rowcount == 0:
+                            cursor.execute("""
+                                INSERT INTO sonacard (nome, funcao, area, nif, telefone, email, uo, sap)
+                                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                            """, (
+                                row['nome'],
+                                row['funcao'],
+                                row['area'],
+                                row['nif'],
+                                row['telefone'],
+                                row['email'],
+                                row['uo'],
+                                row['sap']
+                            ))
+                        usuarios_importados += 1
+                        logging.info(f"Usuario importado/actualizado exitosamente: {row['nome']} (SAP: {row['sap']})")
+                    except Exception as e:
+                        errores += 1
+                        error_detalle = f"Error al procesar usuario {row.get('nome', 'desconocido')} (SAP: {row.get('sap', 'desconocido')}): {str(e)}"
+                        errores_detalle.append(error_detalle)
+                        logging.error(error_detalle)
+
+                conn.commit()
+                logging.info(f"Importación completada. Total usuarios importados: {usuarios_importados}, Errores: {errores}")
+                
+                if errores > 0:
+                    logging.info("Detalle de errores:")
+                    for error in errores_detalle:
+                        logging.info(error)
+
+                return jsonify({
+                    "mensaje": "Importación completada",
+                    "usuarios_importados": usuarios_importados,
+                    "errores": errores,
+                    "errores_detalle": errores_detalle
+                })
+
+        except Exception as e:
+            error_msg = f"Error general durante la importación: {str(e)}"
+            logging.error(error_msg)
+            return jsonify({"error": error_msg}), 500
+
+        finally:
+            if os.path.exists(filepath):
+                os.remove(filepath)
+                logging.info(f"Archivo temporal {filepath} eliminado")
+    else:
+        logging.error("Tipo de archivo no permitido")
+        return jsonify({"error": "Tipo de archivo no permitido"}), 400

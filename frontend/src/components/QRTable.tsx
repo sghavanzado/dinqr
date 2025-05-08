@@ -42,6 +42,7 @@ const QRTable: FC<QRTableProps> = ({ funcionarios }) => {
   const [contactCardOpen, setContactCardOpen] = useState(false);
   const [contactCardHtml, setContactCardHtml] = useState('');
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 }); // Track pagination state
+  const [paginationModelConQR, setPaginationModelConQR] = useState({ page: 0, pageSize: 10 }); // Track pagination state for "Funcionários com QR"
 
   useEffect(() => {
     setFuncionariosConQR(funcionarios);
@@ -53,6 +54,11 @@ const QRTable: FC<QRTableProps> = ({ funcionarios }) => {
 
   const filteredFuncionariosSinQR = funcionariosSinQR.filter((funcionario) =>
     funcionario.nome.toLowerCase().includes(filterSinQR.toLowerCase())
+  );
+
+  const paginatedFuncionariosConQR = filteredFuncionariosConQR.slice(
+    paginationModelConQR.page * paginationModelConQR.pageSize,
+    (paginationModelConQR.page + 1) * paginationModelConQR.pageSize
   );
 
   const fetchFuncionariosConQR = async () => {
@@ -223,7 +229,7 @@ const QRTable: FC<QRTableProps> = ({ funcionarios }) => {
 
     if (checked) {
       // Select all IDs currently visible on the current page
-      const allIds = visibleRows.map((funcionario) => Number(funcionario.id));
+      const allIds = visibleRows.map((funcionario) => funcionario.id as number);
       setSelectedIds((prevIds) => Array.from(new Set([...prevIds, ...allIds]))); // Avoid duplicates
     } else {
       // Deselect all IDs currently visible on the current page
@@ -242,6 +248,10 @@ const QRTable: FC<QRTableProps> = ({ funcionarios }) => {
 
   const handlePaginationChange = (model: { page: number; pageSize: number }) => {
     setPaginationModel(model); // Update pagination state
+  };
+
+  const handlePaginationChangeConQR = (model: { page: number; pageSize: number }) => {
+    setPaginationModelConQR(model); // Update pagination state for "Funcionários com QR"
   };
 
   const columnsConQR = [
@@ -364,16 +374,12 @@ const QRTable: FC<QRTableProps> = ({ funcionarios }) => {
           onChange={(e) => setFilterConQR(e.target.value)}
         />
         <DataGrid
-          rows={filteredFuncionariosConQR}
+          rows={paginatedFuncionariosConQR} // Use paginated rows
           columns={columnsConQR}
-          initialState={{
-            pagination: {
-              paginationModel: { pageSize: 10 },
-            },
-          }}
           pageSizeOptions={[10, 20, 50, 100]} // Enable pagination with these options
           autoHeight
           disableRowSelectionOnClick
+          onPaginationModelChange={(model) => handlePaginationChangeConQR(model)} // Track pagination changes
         />
         <Button
           variant="contained"

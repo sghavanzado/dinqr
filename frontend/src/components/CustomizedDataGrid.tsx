@@ -18,6 +18,7 @@ export default function CustomizedDataGrid() {
   const [qrImage, setQrImage] = useState('');
   const [contactCardOpen, setContactCardOpen] = useState(false);
   const [contactCardHtml, setContactCardHtml] = useState('');
+  const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 }); // Track pagination state
 
   useEffect(() => {
     fetchFuncionariosConQR();
@@ -126,7 +127,11 @@ export default function CustomizedDataGrid() {
     setQrModalOpen(false);
     setQrImage('');
   };
-  
+
+  const handlePaginationChange = (model: { page: number; pageSize: number }) => {
+    setPaginationModel(model); // Update pagination state
+  };
+
   const columnsConQR: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 100 },
     { field: 'nome', headerName: 'Nome', width: 150 },
@@ -166,6 +171,11 @@ export default function CustomizedDataGrid() {
     funcionario?.nome?.toLowerCase().includes(filterConQR.toLowerCase())
   );
 
+  const paginatedFuncionariosConQR = filteredFuncionariosConQR.slice(
+    paginationModel.page * paginationModel.pageSize,
+    (paginationModel.page + 1) * paginationModel.pageSize
+  );
+
   return (
     <Box>
       <Typography variant="h6" gutterBottom>
@@ -182,43 +192,15 @@ export default function CustomizedDataGrid() {
       </Box>
       <DataGrid
         checkboxSelection
-        rows={filteredFuncionariosConQR}
+        rows={paginatedFuncionariosConQR} // Use paginated rows
         columns={columnsConQR}
+        pageSizeOptions={[10, 20, 50, 100]} // Enable pagination with these options
+        autoHeight
+        disableRowSelectionOnClick
+        onPaginationModelChange={(model) => handlePaginationChange(model)} // Track pagination changes
         getRowClassName={(params) =>
           params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
         }
-        initialState={{
-          pagination: { paginationModel: { pageSize: 20 } },
-        }}
-        pageSizeOptions={[10, 20, 50]}
-        disableColumnResize
-        density="compact"
-        slotProps={{
-          filterPanel: {
-            filterFormProps: {
-              logicOperatorInputProps: {
-                variant: 'outlined',
-                size: 'small',
-              },
-              columnInputProps: {
-                variant: 'outlined',
-                size: 'small',
-                sx: { mt: 'auto' },
-              },
-              operatorInputProps: {
-                variant: 'outlined',
-                size: 'small',
-                sx: { mt: 'auto' },
-              },
-              valueInputProps: {
-                InputComponentProps: {
-                  variant: 'outlined',
-                  size: 'small',
-                },
-              },
-            },
-          },
-        }}
       />
       <Modal
         open={qrModalOpen}

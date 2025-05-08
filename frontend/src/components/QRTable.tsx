@@ -14,16 +14,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import axiosInstance from '../api/axiosInstance';
 import Checkbox from '@mui/material/Checkbox';
-
-interface Funcionario {
-  id: string;
-  nome: string;
-  funcao?: string;
-  area?: string;
-  nif?: string;
-  telefone?: string;
-  uo?: string; // Adicionar unidad organizacional
-}
+import { Funcionario } from '../types/Funcionario'; // Import the shared type
 
 interface QRTableProps {
   funcionarios: Funcionario[];
@@ -299,20 +290,20 @@ const QRTable: FC<QRTableProps> = ({ funcionarios }) => {
   const columnsSinQR: GridColDef[] = [
     {
       field: 'selection',
-      headerName: (
+      renderHeader: () => ( // Use `renderHeader` instead of `headerName`
         <Checkbox
           checked={
             filteredFuncionariosSinQR
               .slice(paginationModel.page * paginationModel.pageSize, (paginationModel.page + 1) * paginationModel.pageSize)
-              .every((funcionario) => selectedIds.includes(Number(funcionario.id)))
+              .every((funcionario) => selectedIds.includes(funcionario.id))
           }
           indeterminate={
             filteredFuncionariosSinQR
               .slice(paginationModel.page * paginationModel.pageSize, (paginationModel.page + 1) * paginationModel.pageSize)
-              .some((funcionario) => selectedIds.includes(Number(funcionario.id))) &&
+              .some((funcionario) => selectedIds.includes(funcionario.id)) &&
             !filteredFuncionariosSinQR
               .slice(paginationModel.page * paginationModel.pageSize, (paginationModel.page + 1) * paginationModel.pageSize)
-              .every((funcionario) => selectedIds.includes(Number(funcionario.id)))
+              .every((funcionario) => selectedIds.includes(funcionario.id))
           }
           onChange={(event) => handleSelectAll(event.target.checked)}
           sx={{
@@ -324,10 +315,10 @@ const QRTable: FC<QRTableProps> = ({ funcionarios }) => {
       width: 70, // Ensure sufficient width for the checkbox
       renderCell: (params) => (
         <Checkbox
-          checked={selectedIds.includes(params.row.id as number)} // Sync with `selectedIds`
+          checked={selectedIds.includes(params.row.id)} // Sync with `selectedIds`
           onChange={(event) => {
             event.stopPropagation();
-            handleRowCheckboxChange(params.row.id as number, event.target.checked);
+            handleRowCheckboxChange(params.row.id, event.target.checked);
           }}
           sx={{
             padding: 0, // Remove extra padding

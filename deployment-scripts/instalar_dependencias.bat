@@ -230,12 +230,22 @@ echo ====================================
 echo   FASE 7: IIS Y COMPONENTES WEB
 echo ====================================
 
-echo [PASO 1] Verificando IIS...
-%windir%\system32\inetsrv\appcmd.exe list site >nul 2>&1
+echo.
+echo ====================================
+echo   FASE 7: IIS Y COMPONENTES WEB
+echo ====================================
+
+echo [PASO 1] Configurando características de IIS...
+echo [INFO] Ejecutando configuración automatizada de IIS...
+
+:: Usar el script PowerShell para configurar IIS completamente
+powershell -ExecutionPolicy Bypass -File "%SCRIPT_DIR%configurar_iis_features.ps1" -Force
+
 if errorlevel 1 (
-    echo [INFO] Habilitando IIS...
+    echo [WARNING] Error en configuración automatizada, intentando método básico...
     
-    :: Habilitar IIS usando DISM
+    :: Método alternativo básico usando DISM
+    echo [INFO] Habilitando IIS con características básicas...
     dism /online /enable-feature /featurename:IIS-WebServerRole /all >nul
     dism /online /enable-feature /featurename:IIS-WebServer /all >nul
     dism /online /enable-feature /featurename:IIS-CommonHttpFeatures /all >nul
@@ -249,10 +259,24 @@ if errorlevel 1 (
     dism /online /enable-feature /featurename:IIS-ISAPIExtensions /all >nul
     dism /online /enable-feature /featurename:IIS-ISAPIFilter /all >nul
     dism /online /enable-feature /featurename:IIS-ManagementConsole /all >nul
+    dism /online /enable-feature /featurename:IIS-NetFxExtensibility45 /all >nul
+    dism /online /enable-feature /featurename:IIS-ASPNET45 /all >nul
+    dism /online /enable-feature /featurename:IIS-HttpCompressionStatic /all >nul
+    dism /online /enable-feature /featurename:IIS-HttpCompressionDynamic /all >nul
     
-    echo [OK] IIS habilitado (puede requerir reinicio)
+    echo [OK] IIS habilitado con características básicas
 ) else (
-    echo [OK] IIS ya está disponible
+    echo [OK] IIS configurado exitosamente con todas las características
+)
+
+:: Verificar que IIS esté funcionando
+echo [INFO] Verificando instalación de IIS...
+%windir%\system32\inetsrv\appcmd.exe list site >nul 2>&1
+if errorlevel 1 (
+    echo [ERROR] IIS no está funcionando correctamente
+    echo [INFO] Puede ser necesario reiniciar el sistema
+) else (
+    echo [OK] IIS está funcionando correctamente
 )
 
 echo.

@@ -60,10 +60,123 @@ DINQR es un sistema que permite:
 
 ### 🔧 Instalación de Componentes
 
-#### 1. Habilitar IIS
+#### 1. Habilitar IIS y Características Necesarias
+
+**Método 1: Via PowerShell (Recomendado)**
 ```powershell
 # Ejecutar como Administrador
 Enable-WindowsOptionalFeature -Online -FeatureName IIS-WebServerRole, IIS-WebServer, IIS-CommonHttpFeatures, IIS-HttpErrors, IIS-HttpLogging, IIS-RequestFiltering, IIS-StaticContent, IIS-DefaultDocument, IIS-DirectoryBrowsing, IIS-ASPNET45
+
+# Características adicionales para DINQR
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-NetFxExtensibility45, IIS-ISAPIExtensions, IIS-ISAPIFilter, IIS-CGI, IIS-ApplicationDevelopment, IIS-ApplicationInit, IIS-WebSockets, IIS-HttpCompressionStatic, IIS-HttpCompressionDynamic, IIS-Security, IIS-RequestFiltering, IIS-BasicAuthentication, IIS-WindowsAuthentication, IIS-DigestAuthentication, IIS-ClientCertificateMappingAuthentication, IIS-IISCertificateMappingAuthentication, IIS-URLAuthorization, IIS-IPSecurity, IIS-HttpRedirect, IIS-HttpTracing, IIS-CustomLogging, IIS-LoggingLibraries, IIS-ODBC, IIS-ManagementConsole, IIS-IIS6ManagementCompatibility, IIS-Metabase, IIS-WMICompatibility, IIS-LegacySnapIn, IIS-LegacyScripts, IIS-FTPServer, IIS-FTPSvc, IIS-FTPExtensibility
+```
+
+**Método 2: Via Panel de Control**
+1. Abrir **Panel de Control** > **Programas** > **Activar o desactivar las características de Windows**
+2. Expandir **Internet Information Services**
+3. Habilitar las siguientes características:
+
+**📋 Roles y Servicios Críticos para DINQR:**
+
+### **Servicios Web (IIS)**
+```
+✅ Internet Information Services
+├── ✅ Servicio World Wide Web
+│   ├── ✅ Características HTTP comunes
+│   │   ├── ✅ Documento predeterminado
+│   │   ├── ✅ Examen de directorios
+│   │   ├── ✅ Errores HTTP
+│   │   ├── ✅ Redirección HTTP
+│   │   └── ✅ Contenido estático
+│   ├── ✅ Desarrollo de aplicaciones
+│   │   ├── ✅ Extensibilidad de .NET 4.8
+│   │   ├── ✅ ASP.NET 4.8
+│   │   ├── ✅ CGI
+│   │   ├── ✅ Extensiones ISAPI
+│   │   ├── ✅ Filtros ISAPI
+│   │   ├── ✅ Includes del lado del servidor
+│   │   └── ✅ WebSockets Protocol
+│   ├── ✅ Estado y diagnóstico
+│   │   ├── ✅ Registro HTTP
+│   │   ├── ✅ Registro personalizado
+│   │   ├── ✅ Herramientas de registro
+│   │   ├── ✅ Seguimiento de solicitudes con errores
+│   │   └── ✅ Monitor de ODBC
+│   ├── ✅ Seguridad
+│   │   ├── ✅ Filtrado de solicitudes
+│   │   ├── ✅ Autenticación básica
+│   │   ├── ✅ Autenticación de Windows
+│   │   ├── ✅ Autenticación implícita
+│   │   ├── ✅ Restricciones de IP y dominios
+│   │   └── ✅ Autorización de URL
+│   └── ✅ Rendimiento
+│       ├── ✅ Compresión de contenido estático
+│       └── ✅ Compresión de contenido dinámico
+└── ✅ Herramientas de administración web
+    ├── ✅ Consola de administración de IIS
+    ├── ✅ Scripts y herramientas de administración de IIS 6
+    ├── ✅ Compatibilidad con la administración de IIS 6
+    └── ✅ Servicio de administración
+```
+
+**Método 3: Script Automatizado (Incluido en deployment-scripts)**
+```cmd
+# Los scripts de automatización ya incluyen esta configuración
+cd C:\dinqr\deployment-scripts\
+instalar_dependencias.bat
+```
+
+### **Características Específicas para DINQR:**
+
+#### **Para Proxy Reverso (API Backend)**
+```powershell
+# Instalar Application Request Routing (ARR)
+# Descargar desde: https://www.iis.net/downloads/microsoft/application-request-routing
+# O usar el script automatizado que lo descarga automáticamente
+```
+
+#### **Para Soporte de Python/Flask**
+```powershell
+# CGI es necesario para ejecutar Python scripts
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-CGI
+
+# Para FastCGI (alternativa más eficiente)
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-ApplicationDevelopment
+```
+
+#### **Para Compresión y Performance**
+```powershell
+# Compresión para mejorar rendimiento
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-HttpCompressionStatic
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-HttpCompressionDynamic
+```
+
+#### **Para Logging y Monitoreo**
+```powershell
+# Logging avanzado para debugging
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-HttpLogging
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-CustomLogging
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-LoggingLibraries
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-HttpTracing
+```
+
+### **Verificación de Instalación:**
+```cmd
+# Verificar que IIS está instalado y funcionando
+iisreset /status
+
+# Verificar características habilitadas
+dism /online /get-features | findstr IIS
+
+# Verificar sitio por defecto
+%windir%\system32\inetsrv\appcmd.exe list sites
+```
+
+### **Configuración Post-Instalación:**
+```cmd
+# Habilitar características adicionales si es necesario
+%windir%\system32\inetsrv\appcmd.exe unlock config -section:system.webServer/handlers
+%windir%\system32\inetsrv\appcmd.exe unlock config -section:system.webServer/modules
 ```
 
 #### 2. Instalar PostgreSQL
@@ -695,19 +808,3 @@ Después de la instalación automatizada:
 - **Documentación**: http://localhost:8080/api/apidocs
 
 ### 🔧 Resolución de Problemas Comunes
-
-```cmd
-# Si hay errores durante la instalación
-monitoreo_salud.bat
-
-# Para reiniciar servicios
-reiniciar_servicios.bat
-
-# Para ver logs detallados
-logs_aplicacion.bat
-
-# Para generar reporte del sistema
-generar_documentacion.bat
-```
-
-**⚠️ Nota**: Para instalación manual paso a paso, consulta las secciones siguientes.

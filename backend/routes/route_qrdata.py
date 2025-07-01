@@ -67,7 +67,7 @@ with obtener_conexion() as conn:
                 "nif": row.nif,
                 "telefone": row.telefone,
                 "email": row.email,  # Adicionar email
-                "uo": row.uo
+                "unineg": row.unineg
             }
         }
 
@@ -138,7 +138,7 @@ def generar_vcard(datos):
         f"FN:{datos.get('nome', '')}",
         f"TITLE:{datos.get('funcao', '')}",
         f"DEPARTMENT:{datos.get('area', '')}",
-        f"ORG:{datos.get('uo', '')}",
+        f"ORG:{datos.get('unineg', '')}",
         f"TEL;TYPE=WORK,VOICE:{datos.get('telefone', '')}",
         f"EMAIL:{datos.get('email', '')}",  # Adicionar email
         "END:VCARD"

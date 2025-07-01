@@ -182,7 +182,7 @@ const QRTable: FC<QRTableProps> = ({ funcionarios }) => {
           <p><strong>SAP:</strong> ${funcionario.id}</p>
           <p><strong>Função:</strong> ${funcionario.funcao || 'Não especificada'}</p>
           <p><strong>Área:</strong> ${funcionario.area || 'Não especificada'}</p>
-          <p><strong>Unidad Org:</strong> ${funcionario.uo || 'Não especificada'}</p> <!-- Mostrar unidad organizacional -->
+          <p><strong>U.Neg:</strong> ${funcionario.unineg || 'Não especificada'}</p> <!-- Mostrar unidad organizacional -->
           <p><strong>NIF:</strong> ${funcionario.nif || 'Não especificado'}</p>
           <p><strong>Telefone:</strong> ${funcionario.telefone || 'Não especificado'}</p>
         </div>

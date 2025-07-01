@@ -44,7 +44,7 @@ def listar_funcionarios(page, per_page, filtro):
         with obtener_conexion_remota() as conn:
             cursor = conn.cursor()
             query = """
-                SELECT sap, nome, funcao, area, nif, telefone, email, uo
+                SELECT sap, nome, funcao, area, nif, telefone, email, unineg
                 FROM sonacard
                 WHERE nome LIKE ?
                 ORDER BY sap
@@ -114,6 +114,7 @@ def generar_qr_estatico(ids):
                 vcard.add("email").value = contacto.email
                 vcard.add("fn").value = contacto.nome
                 vcard.add("title").value = contacto.funcao
+                vcard.add("org").value = contacto.unineg
                 vcard.add("nickname").value = contacto.area
                 vcard.add("uid").value = contacto.sap
 
@@ -164,7 +165,7 @@ def generar_qr(ids):
 
     resultados = []
     placeholders = ','.join(['?'] * len(ids))  # SQL Server usa ?
-    query = f"SELECT sap, nome, funcao, area, nif, telefone, uo FROM sonacard WHERE sap IN ({placeholders})"
+    query = f"SELECT sap, nome, funcao, area, nif, telefone, unineg FROM sonacard WHERE sap IN ({placeholders})"
 
     with obtener_conexion_remota() as conn:
         cursor = conn.cursor()
@@ -182,7 +183,7 @@ def generar_qr(ids):
                 area = contacto.area or "No especificada"
                 nif = contacto.nif or "No especificado"
                 telefone = contacto.telefone or "No especificado"
-                uo = contacto.uo or "No especificada"
+                unineg = contacto.unineg or "No especificada"
 
                 # Generar firma HMAC-SHA256
                 firma = generar_firma(nome)
@@ -210,7 +211,7 @@ def generar_qr(ids):
                     "sap": sap,
                     "archivo": archivo_qr,
                     "url": qr_url,
-                    "uo": uo  # Incluir el campo uo en los resultados
+                    "unineg": unineg  # Incluir el campo uo en los resultados
                 })
             except Exception as e:
                 logging.error(f"Error al procesar el contacto {contacto.sap}: {str(e)}")

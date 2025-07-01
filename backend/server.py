@@ -169,6 +169,7 @@ def mostrar_contacto():
                     <p><strong>SAP:</strong> {contacto.sap or 'Não especificado'}</p>
                     <p><strong>Função:</strong> {contacto.funcao or 'Não especificada'}</p>
                     <p><strong>Área:</strong> {contacto.area or 'Não especificada'}</p>
+                    <p><strong>U.Neg:</strong> {contacto.unineg or 'Não especificada'}</p>
                     <p><strong>NIF:</strong> {contacto.nif or 'Não especificado'}</p>
                     <p><strong>Telefone:</strong> {contacto.telefone or 'Não especificado'}</p>
                     <p><strong>Email:</strong> {contacto.email or 'Não especificado'}</p>
@@ -221,7 +222,8 @@ def descargar_vcard():
         VERSION:3.0
         FN:{contacto.nome}
         TITLE:{contacto.funcao or ''}
-        ORG:{contacto.area or ''}
+        NIKENAME:{contacto.area or ''}
+        ORG:{contacto.unineg or ''}
         TEL;TYPE=WORK,VOICE:{contacto.telefone or ''}
         EMAIL:{contacto.email or ''}
         END:VCARD

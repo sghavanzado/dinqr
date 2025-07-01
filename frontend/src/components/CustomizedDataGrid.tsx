@@ -88,7 +88,7 @@ export default function CustomizedDataGrid() {
     area?: string;
     nif?: string;
     telefone?: string;
-    uo?: string;
+    unineg?: string;
     email?: string;
   }) => {
     const logoUrl = '/static/images/sonangol-logo.png'; // Ruta estática para o logo fornecido
@@ -109,7 +109,7 @@ export default function CustomizedDataGrid() {
           <p><strong>Área:</strong> ${funcionario.area || 'Não especificada'}</p>
           <p><strong>NIF:</strong> ${funcionario.nif || 'Não especificado'}</p>
           <p><strong>Telefone:</strong> ${funcionario.telefone || 'Não especificado'}</p>
-          <p><strong>Unidad Org:</strong> ${funcionario.uo || 'Não especificado'}</p>
+          <p><strong>Unidad Org:</strong> ${funcionario.unineg || 'Não especificado'}</p>
           <p><strong>Email:</strong> ${funcionario.email || 'Não especificado'}</p>
         </div>
       </div>
@@ -139,7 +139,7 @@ export default function CustomizedDataGrid() {
     { field: 'area', headerName: 'Área', width: 150 },
     { field: 'nif', headerName: 'NIF', width: 150 },
     { field: 'telefone', headerName: 'Telefone', width: 150 },
-    { field: 'uo', headerName: 'Unidad Organ', width: 150 },
+    { field: 'unineg', headerName: 'Unidad Organ', width: 150 },
     { field: 'email', headerName: 'Email', width: 200 },
     {
       field: 'actions',

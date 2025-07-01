@@ -65,7 +65,7 @@ def listar_funcionarios():
                 cursor = conn.cursor()
                 placeholders = ",".join("?" for _ in qr_generated_ids)  # Crear placeholders dinámicos
                 query = f"""
-                    SELECT sap, nome, funcao, area, nif, telefone, email, uo
+                    SELECT sap, nome, funcao, area, nif, telefone, email, unineg
                     FROM sonacard
                     WHERE sap IN ({placeholders})
                     AND nome LIKE ?
@@ -91,7 +91,7 @@ def listar_funcionarios():
                     "nif": funcionario[4],
                     "telefone": funcionario[5],
                     "email": funcionario[6],
-                    "uo": funcionario[7],
+                    "unineg": funcionario[7],
                     "qrGenerated": True
                 }
                 for funcionario in funcionarios
@@ -126,7 +126,7 @@ def listar_funcionarios_sin_qr():
             if qr_generated_ids:
                 placeholders = ",".join("?" for _ in qr_generated_ids)
                 query = f"""
-                    SELECT sap, nome, funcao, area, nif, telefone, email, uo
+                    SELECT sap, nome, funcao, area, nif, telefone, email, unineg
                     FROM sonacard
                     WHERE sap NOT IN ({placeholders})
                 """
@@ -135,7 +135,7 @@ def listar_funcionarios_sin_qr():
             else:
                 # Si no hay IDs en qr_generated_ids, devolver todos los funcionarios
                 query = """
-                    SELECT sap, nome, funcao, area, nif, telefone, email, uo
+                    SELECT sap, nome, funcao, area, nif, telefone, email, unineg
                     FROM sonacard
                 """
                 cursor.execute(query)
@@ -150,7 +150,7 @@ def listar_funcionarios_sin_qr():
                 "nif": funcionario[4],
                 "telefone": funcionario[5],
                 "email": funcionario[6],
-                "uo": funcionario[7],
+                "unineg": funcionario[7],
             }
             for funcionario in funcionarios
         ]

@@ -1,13 +1,47 @@
 # Scripts de Despliegue para DINQR en Windows Server
 
-Esta carpeta contiene todos los scripts necesarios para automatizar el despliegue de la aplicación DINQR en Windows Server con IIS y PostgreSQL.
+Esta carpeta contiene todos los scripts necesarios para automatizar el despliegue de la aplicación DINQR en Windows Server con dos opciones de deployment:
 
-## 📁 Contenido de Scripts
+1. **🆕 WAITRESS + IIS** (Recomendado para nuevas instalaciones)
+2. **🔧 Gunicorn + IIS** (Para compatibilidad con instalaciones existentes)
 
-### 🎯 Scripts Principales
-- `instalar_completo.bat` - **INSTALACIÓN AUTOMATIZADA COMPLETA** (Recomendado)
+## 🚀 Opción 1: Deployment con Waitress + IIS (RECOMENDADO)
+
+### ⭐ Scripts Principales para Waitress
+- `instalar_waitress_iis.bat` - **INSTALACIÓN AUTOMATIZADA COMPLETA CON WAITRESS**
+- `servicio_dinqr.bat` - **GESTIÓN DEL SERVICIO DE WINDOWS**
+- `monitoreo_waitress.bat` - **MONITOREO ESPECÍFICO PARA WAITRESS**
+- `backup_waitress.bat` - **BACKUP Y RESTAURACIÓN COMPLETA**
+
+### � Arquitectura Waitress + IIS
+```
+Cliente ↔ IIS (Puerto 80/443) ↔ Waitress (Puerto 5000) ↔ Flask App
+```
+
+**Ventajas del deployment con Waitress:**
+- ✅ **Nativo para Windows** - Mejor rendimiento y estabilidad
+- ✅ **Servicio de Windows** - Inicio automático y gestión nativa
+- ✅ **Sin dependencias externas** - No requiere Gunicorn ni configuraciones complejas
+- ✅ **Mejor manejo de memoria** - Optimizado para Windows Server
+- ✅ **SSL/TLS nativo** - Soporte completo para HTTPS
+- ✅ **Logs estructurados** - Integración con Event Viewer de Windows
+
+## 🔧 Opción 2: Deployment Tradicional (Compatibilidad)
+
+### 🎯 Scripts Principales Tradicionales
+- `instalar_completo.bat` - **INSTALACIÓN AUTOMATIZADA COMPLETA** (Gunicorn)
 - `desinstalar.bat` - Desinstalación completa del sistema
 - `actualizar.bat` - Actualización automatizada del sistema
+
+### 🔧 Scripts de Troubleshooting
+- `solucionar_powershell.bat` - **SOLUCIONADOR AUTOMÁTICO** de problemas PowerShell
+- `configurar_powershell.ps1` - Configura ExecutionPolicy de PowerShell
+- `configurar_iis_features.ps1` - Habilita características de IIS (PowerShell)
+
+### 📋 Configuración Manual de IIS
+- `configurar_iis_manual.ps1` - **GUÍA COMPLETA PASO A PASO** para configurar IIS manualmente
+- `configurar_iis_dism.bat` - Configuración IIS usando comandos DISM (CMD)
+- `comandos_iis_copiar_pegar.txt` - **ARCHIVO DE TEXTO** con comandos para copiar/pegar
 
 ### 🔧 Scripts de Compilación
 - `compilar_backend.bat` - Compila y prepara el backend Flask
@@ -30,17 +64,94 @@ Esta carpeta contiene todos los scripts necesarios para automatizar el despliegu
 
 ### 🎯 Scripts de Operación y Mantenimiento
 - `verificar_sistema.bat` - Verifica prerrequisitos del sistema
-- `monitoreo_salud.bat` - Monitoreo completo de salud del sistema
+- `verificacion_final.bat` - **VERIFICACIÓN COMPLETA POST-INSTALACIÓN**
+- `monitoreo_salud.bat` - Monitoreo completo de salud del sistema (Gunicorn)
 - `reiniciar_servicios.bat` - Reinicia todos los servicios de DINQR
-- `backup_aplicacion.bat` - Crea backup de la aplicación
+- `backup_aplicacion.bat` - Crea backup de la aplicación (tradicional)
 - `logs_aplicacion.bat` - Monitorea logs en tiempo real
-- `logs_aplicacion.bat` - Muestra logs en tiempo real
 
 ## 🚀 Uso Rápido
 
-## 🚀 Orden de Ejecución Recomendado
+## 🆕 NUEVO: Instalación con Waitress + IIS (RECOMENDADO)
 
-### Para Instalación Nueva (RECOMENDADO):
+### Para Nueva Instalación con Waitress:
+```cmd
+# 1. Instalación automatizada completa (FÁCIL Y RÁPIDO)
+instalar_waitress_iis.bat
+
+# 2. Verificar el estado del sistema
+monitoreo_waitress.bat
+
+# 3. Configurar backup automático
+backup_waitress.bat schedule
+```
+
+### Gestión del Servicio DINQR:
+```cmd
+# Controlar el servicio de Windows
+servicio_dinqr.bat install    # Instalar servicio
+servicio_dinqr.bat start      # Iniciar servicio
+servicio_dinqr.bat stop       # Detener servicio
+servicio_dinqr.bat restart    # Reiniciar servicio
+servicio_dinqr.bat status     # Ver estado
+servicio_dinqr.bat debug      # Ejecutar en modo debug
+servicio_dinqr.bat logs       # Ver logs del servicio
+```
+
+### Monitoreo y Mantenimiento Waitress:
+```cmd
+# Monitoreo en tiempo real
+monitoreo_waitress.bat -watch
+
+# Reporte detallado del sistema
+monitoreo_waitress.bat -report
+
+# Backup completo
+backup_waitress.bat create
+
+# Backup solo configuración
+backup_waitress.bat create-config
+
+# Listar backups disponibles
+backup_waitress.bat list
+
+# Restaurar desde backup
+backup_waitress.bat restore [archivo_backup]
+```
+
+### Solución de Problemas Waitress:
+```cmd
+# Diagnóstico completo
+solucionador_waitress.bat
+
+# Reparación automática
+solucionador_waitress.bat -auto
+
+# Problemas específicos
+solucionador_waitress.bat -service     # Solo servicio
+solucionador_waitress.bat -iis         # Solo IIS
+solucionador_waitress.bat -network     # Solo red
+solucionador_waitress.bat -permissions # Solo permisos
+```
+
+### Migración de Gunicorn a Waitress:
+```cmd
+# Verificar compatibilidad antes de migrar
+migrar_gunicorn_waitress.bat -check
+
+# Crear backup de seguridad
+migrar_gunicorn_waitress.bat -backup
+
+# Ejecutar migración completa
+migrar_gunicorn_waitress.bat
+
+# Revertir migración si es necesario
+migrar_gunicorn_waitress.bat -rollback
+```
+
+## 🔧 Instalación Tradicional (Gunicorn)
+
+### Para Instalación Nueva (Tradicional):
 ```cmd
 # Opción 1: Instalación automatizada completa (Más fácil)
 instalar_completo.bat
@@ -53,6 +164,9 @@ configurar_ambiente.bat
 compilar_todo.bat
 migrar_base_datos.bat
 desplegar_iis.bat
+
+# Verificación final (IMPORTANTE)
+verificacion_final.bat
 ```
 
 ### Para Operaciones Específicas:
@@ -60,7 +174,7 @@ desplegar_iis.bat
 # Actualizar aplicación existente
 actualizar.bat
 
-# Monitoreo de salud
+# Monitoreo de salud (Gunicorn)
 monitoreo_salud.bat
 
 # Reiniciar servicios
@@ -203,6 +317,80 @@ verificar_sistema.bat
 - `backend/logs/` - Logs de aplicación
 - `%WINDIR%\System32\LogFiles\W3SVC1\` - Logs de IIS
 
+## 🔧 Solución de Problemas Comunes
+
+### ❌ Error: "Scripts PowerShell No Pueden Ejecutarse"
+
+**Síntoma**: `configurar_iis.ps1 cannot be loaded because running scripts is disabled`
+
+**Solución RÁPIDA**:
+```cmd
+# Ejecutar solucionador automático
+solucionar_powershell.bat
+```
+
+**Soluciones Manuales**:
+```powershell
+# Método 1: Cambiar ExecutionPolicy
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+
+# Método 2: Ejecutar con Bypass
+PowerShell -ExecutionPolicy Bypass -File configurar_iis_features.ps1
+
+# Método 3: Desbloquear archivo
+Unblock-File -Path "configurar_iis_features.ps1"
+```
+
+### ❌ Error: "IIS No Se Instala Correctamente"
+
+**Síntomas**: Error en instalación de características de IIS
+
+**Solución AUTOMÁTICA**:
+```cmd
+# Verificar prerrequisitos
+verificar_sistema.bat
+
+# Instalar dependencias completas
+instalar_dependencias.bat
+```
+
+**Solución MANUAL**:
+```cmd
+# Opción 1: Script PowerShell paso a paso
+configurar_iis_manual.ps1
+
+# Opción 2: Solo comandos DISM (CMD)
+configurar_iis_dism.bat
+
+# Opción 3: Copiar/pegar desde archivo de texto
+# Abrir: comandos_iis_copiar_pegar.txt
+# Copiar comandos en PowerShell o CMD
+```
+
+**Configuración Manual Completa**:
+Si los scripts automáticos fallan completamente:
+1. Abrir `comandos_iis_copiar_pegar.txt`
+2. Copiar sección por sección en PowerShell/CMD
+3. Verificar que cada comando se ejecute sin errores
+4. Continuar con la siguiente sección
+5. Al final ejecutar verificación
+
+### ❌ Error: "Base de Datos No Se Conecta"
+
+**Síntomas**: Error de conexión a PostgreSQL
+
+**Solución**:
+```cmd
+# Verificar PostgreSQL
+configurar_postgresql.bat
+
+# Verificar configuración
+verificar_sistema.bat
+
+# Revisar variables de entorno
+configurar_ambiente.bat
+```
+
 ## 📞 Soporte y Mantenimiento
 
 ### Para Problemas Comunes
@@ -224,3 +412,47 @@ verificar_sistema.bat
 ---
 
 **Nota**: Todos los scripts están diseñados para Windows Server y requieren permisos de administrador. Revisa y personaliza las configuraciones según tu entorno específico antes de la ejecución.
+
+## 📊 Comparación de Métodos de Deployment
+
+| Característica | Waitress + IIS (🆕 Recomendado) | Gunicorn + IIS (🔧 Tradicional) |
+|---------------|--------------------------------|--------------------------------|
+| **Compatibilidad Windows** | ✅ Nativo para Windows | ⚠️ Originalmente para Linux |
+| **Rendimiento** | ✅ Optimizado para Windows | ⚠️ Bueno, pero no optimizado |
+| **Facilidad de instalación** | ✅ 1 comando: `instalar_waitress_iis.bat` | ⚠️ Múltiples pasos manuales |
+| **Servicio de Windows** | ✅ Integración nativa completa | ⚠️ Requiere configuración adicional |
+| **Mantenimiento** | ✅ Scripts especializados incluidos | ⚠️ Herramientas genéricas |
+| **Logs** | ✅ Event Viewer + archivos | ✅ Solo archivos |
+| **Monitoreo** | ✅ `monitoreo_waitress.bat` | ✅ `monitoreo_salud.bat` |
+| **Backup/Restore** | ✅ `backup_waitress.bat` completo | ✅ `backup_aplicacion.bat` básico |
+| **Solución de problemas** | ✅ `solucionador_waitress.bat` | ⚠️ Manual |
+| **Migración** | ✅ `migrar_gunicorn_waitress.bat` | N/A |
+| **Memoria utilizada** | ✅ Menor uso de memoria | ⚠️ Mayor uso de memoria |
+| **Estabilidad Windows** | ✅ Muy estable | ⚠️ Puede tener problemas ocasionales |
+| **SSL/HTTPS** | ✅ Soporte nativo completo | ✅ Soporte funcional |
+| **Escalabilidad** | ✅ Excelente en Windows | ✅ Buena |
+
+## 🎯 Recomendaciones de Uso
+
+### ✅ Usar Waitress + IIS cuando:
+- **Nueva instalación** en Windows Server
+- Se requiere **máximo rendimiento** en Windows
+- Se necesita **integración nativa** con Windows Services
+- Se busca **facilidad de mantenimiento** a largo plazo
+- Equipo de IT prefiere **herramientas nativas de Windows**
+- Se requiere **monitoreo avanzado** con Event Viewer
+- Se necesita **recuperación automática** ante fallos
+
+### ⚠️ Mantener Gunicorn + IIS cuando:
+- **Instalación existente** funcionando correctamente
+- Equipo familiarizado con el **setup actual**
+- **Restricciones de tiempo** para migración
+- Aplicación tiene **dependencias específicas** de Gunicorn
+- **Ambiente híbrido** (Linux + Windows) donde se requiere consistencia
+
+### 🔄 Migrar de Gunicorn a Waitress cuando:
+- Se experimenten **problemas de estabilidad** con Gunicorn
+- Se requiera **mejor rendimiento** en Windows
+- Se necesiten **herramientas de monitoreo avanzadas**
+- Se busque **simplificar el mantenimiento**
+- Se planee **escalamiento** futuro

@@ -1,0 +1,108 @@
+# =============================================================================
+# DINQR - Configuración de Producción para Windows Server
+# =============================================================================
+# IMPORTANTE: Renombre este archivo a .env y ajuste los valores según su entorno
+
+# =============================================================================
+# CONFIGURACIÓN DE BASE DE DATOS
+# =============================================================================
+# PostgreSQL en Windows Server
+DATABASE_URL=postgresql://dinqr_user:PASSWORD_SEGURA@localhost:5432/dinqr_db
+
+# =============================================================================
+# CONFIGURACIÓN DE SEGURIDAD
+# =============================================================================
+# CRÍTICO: Genere una clave secreta única y segura
+# Puede usar: python -c "import secrets; print(secrets.token_hex(32))"
+SECRET_KEY=GENERE_UNA_CLAVE_SECRETA_UNICA_AQUI
+
+# JWT para autenticación de tokens
+JWT_SECRET_KEY=GENERE_UNA_CLAVE_JWT_UNICA_AQUI
+
+# =============================================================================
+# CONFIGURACIÓN DE ENTORNO
+# =============================================================================
+FLASK_ENV=production
+DEBUG=false
+
+# =============================================================================
+# CONFIGURACIÓN DE SESIONES SEGURAS
+# =============================================================================
+SESSION_COOKIE_SECURE=true
+SESSION_COOKIE_HTTPONLY=true
+SESSION_COOKIE_SAMESITE=Lax
+
+# =============================================================================
+# CONFIGURACIÓN HTTPS (Recomendado en producción)
+# =============================================================================
+ENABLE_HTTPS=true
+
+# =============================================================================
+# CONFIGURACIÓN DE RATE LIMITING (SIN REDIS)
+# =============================================================================
+# Usando memoria en lugar de Redis para simplicidad
+RATELIMIT_STORAGE_URL=memory://
+
+# Comentado: Redis no es necesario para este despliegue
+# REDIS_URL=redis://localhost:6379/0
+
+# =============================================================================
+# CONFIGURACIÓN DE ARCHIVOS Y UPLOADS
+# =============================================================================
+# Directorio para archivos subidos (relativo al directorio de la aplicación)
+UPLOAD_FOLDER=uploads
+MAX_CONTENT_LENGTH=16777216
+
+# =============================================================================
+# CONFIGURACIÓN DE LOGGING
+# =============================================================================
+LOG_LEVEL=INFO
+LOG_FILE=logs/app.log
+
+# =============================================================================
+# CONFIGURACIÓN DE CORREO (Opcional - para notificaciones)
+# =============================================================================
+# MAIL_SERVER=smtp.gmail.com
+# MAIL_PORT=587
+# MAIL_USE_TLS=true
+# MAIL_USE_SSL=false
+# MAIL_USERNAME=su_email@gmail.com
+# MAIL_PASSWORD=su_password_de_aplicacion
+# MAIL_DEFAULT_SENDER=su_email@gmail.com
+
+# =============================================================================
+# CONFIGURACIÓN DE CORS (Para frontend)
+# =============================================================================
+CORS_ORIGINS=http://localhost,https://su-dominio.com
+
+# =============================================================================
+# CONFIGURACIÓN ESPECÍFICA DE WINDOWS/WAITRESS
+# =============================================================================
+# Puerto para Waitress (usado internamente, IIS hace proxy)
+WAITRESS_PORT=5000
+WAITRESS_HOST=127.0.0.1
+WAITRESS_THREADS=4
+
+# =============================================================================
+# CONFIGURACIÓN DE ADMINISTRADOR INICIAL
+# =============================================================================
+# Credenciales del administrador inicial (cambiar después del primer login)
+ADMIN_EMAIL=admin@dinqr.local
+ADMIN_PASSWORD=AdminPass123!
+ADMIN_FIRSTNAME=Administrador
+ADMIN_LASTNAME=Sistema
+
+# =============================================================================
+# CONFIGURACIÓN DE TIMEZONE
+# =============================================================================
+TIMEZONE=America/Bogota
+
+# =============================================================================
+# NOTAS IMPORTANTES PARA PRODUCCIÓN
+# =============================================================================
+# 1. Cambie todas las contraseñas y claves secretas
+# 2. Use HTTPS en producción (certificado SSL válido)
+# 3. Configure firewall para bloquear acceso directo al puerto 5000
+# 4. Configure backup automático de la base de datos
+# 5. Monitoree los logs regularmente
+# 6. Mantenga el sistema actualizado

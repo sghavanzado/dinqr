@@ -1,0 +1,167 @@
+====================================
+COMANDOS POWERSHELL PARA CONFIGURAR IIS MANUALMENTE
+====================================
+
+INSTRUCCIONES:
+1. Abrir PowerShell como Administrador
+2. Copiar y pegar cada sección por separado
+3. Esperar a que termine cada comando
+4. Verificar que no haya errores
+
+====================================
+SECCIÓN 1: CARACTERÍSTICAS BÁSICAS
+====================================
+
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-WebServerRole -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-WebServer -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-CommonHttpFeatures -All
+
+====================================
+SECCIÓN 2: CARACTERÍSTICAS HTTP
+====================================
+
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-DefaultDocument -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-DirectoryBrowsing -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-StaticContent -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-HttpErrors -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-HttpRedirect -All
+
+====================================
+SECCIÓN 3: DESARROLLO DE APLICACIONES
+====================================
+
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-NetFxExtensibility45 -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-ASPNET45 -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-CGI -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-ISAPIExtensions -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-ISAPIFilter -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-ApplicationDevelopment -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-ApplicationInit -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-WebSockets -All
+
+====================================
+SECCIÓN 4: SEGURIDAD
+====================================
+
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-RequestFiltering -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-Security -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-BasicAuthentication -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-WindowsAuthentication -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-DigestAuthentication -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-ClientCertificateMappingAuthentication -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-IISCertificateMappingAuthentication -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-URLAuthorization -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-IPSecurity -All
+
+====================================
+SECCIÓN 5: RENDIMIENTO
+====================================
+
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-HttpCompressionStatic -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-HttpCompressionDynamic -All
+
+====================================
+SECCIÓN 6: LOGGING Y MONITOREO
+====================================
+
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-HttpLogging -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-CustomLogging -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-LoggingLibraries -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-HttpTracing -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-ODBC -All
+
+====================================
+SECCIÓN 7: HERRAMIENTAS DE ADMINISTRACIÓN
+====================================
+
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-ManagementConsole -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-ManagementService -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-IIS6ManagementCompatibility -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-Metabase -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-WMICompatibility -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-LegacySnapIn -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-LegacyScripts -All
+
+====================================
+SECCIÓN 8: CONFIGURACIÓN AVANZADA
+====================================
+
+& "$env:windir\system32\inetsrv\appcmd.exe" unlock config -section:system.webServer/handlers
+& "$env:windir\system32\inetsrv\appcmd.exe" unlock config -section:system.webServer/modules
+& "$env:windir\system32\inetsrv\appcmd.exe" unlock config -section:system.webServer/httpCompression
+& "$env:windir\system32\inetsrv\appcmd.exe" unlock config -section:system.webServer/urlCompression
+
+====================================
+SECCIÓN 9: VERIFICACIÓN
+====================================
+
+& "$env:windir\system32\inetsrv\appcmd.exe" list sites
+Get-Service -Name W3SVC
+Get-WindowsOptionalFeature -Online | Where-Object {$_.FeatureName -like "IIS-*" -and $_.State -eq "Enabled"}
+
+====================================
+COMANDOS DISM ALTERNATIVOS (CMD)
+====================================
+
+Si PowerShell está bloqueado, usar estos en CMD como Administrador:
+
+dism /online /enable-feature /featurename:IIS-WebServerRole /all
+dism /online /enable-feature /featurename:IIS-WebServer /all
+dism /online /enable-feature /featurename:IIS-CommonHttpFeatures /all
+dism /online /enable-feature /featurename:IIS-DefaultDocument /all
+dism /online /enable-feature /featurename:IIS-DirectoryBrowsing /all
+dism /online /enable-feature /featurename:IIS-StaticContent /all
+dism /online /enable-feature /featurename:IIS-HttpErrors /all
+dism /online /enable-feature /featurename:IIS-HttpRedirect /all
+dism /online /enable-feature /featurename:IIS-HttpLogging /all
+dism /online /enable-feature /featurename:IIS-NetFxExtensibility45 /all
+dism /online /enable-feature /featurename:IIS-ASPNET45 /all
+dism /online /enable-feature /featurename:IIS-CGI /all
+dism /online /enable-feature /featurename:IIS-ISAPIExtensions /all
+dism /online /enable-feature /featurename:IIS-ISAPIFilter /all
+dism /online /enable-feature /featurename:IIS-ApplicationDevelopment /all
+dism /online /enable-feature /featurename:IIS-ApplicationInit /all
+dism /online /enable-feature /featurename:IIS-WebSockets /all
+dism /online /enable-feature /featurename:IIS-RequestFiltering /all
+dism /online /enable-feature /featurename:IIS-Security /all
+dism /online /enable-feature /featurename:IIS-BasicAuthentication /all
+dism /online /enable-feature /featurename:IIS-WindowsAuthentication /all
+dism /online /enable-feature /featurename:IIS-DigestAuthentication /all
+dism /online /enable-feature /featurename:IIS-URLAuthorization /all
+dism /online /enable-feature /featurename:IIS-IPSecurity /all
+dism /online /enable-feature /featurename:IIS-HttpCompressionStatic /all
+dism /online /enable-feature /featurename:IIS-HttpCompressionDynamic /all
+dism /online /enable-feature /featurename:IIS-CustomLogging /all
+dism /online /enable-feature /featurename:IIS-LoggingLibraries /all
+dism /online /enable-feature /featurename:IIS-HttpTracing /all
+dism /online /enable-feature /featurename:IIS-ODBC /all
+dism /online /enable-feature /featurename:IIS-ManagementConsole /all
+dism /online /enable-feature /featurename:IIS-IIS6ManagementCompatibility /all
+dism /online /enable-feature /featurename:IIS-Metabase /all
+dism /online /enable-feature /featurename:IIS-WMICompatibility /all
+
+====================================
+CONFIGURACIÓN POST-IIS
+====================================
+
+"%windir%\system32\inetsrv\appcmd.exe" unlock config -section:system.webServer/handlers
+"%windir%\system32\inetsrv\appcmd.exe" unlock config -section:system.webServer/modules
+"%windir%\system32\inetsrv\appcmd.exe" unlock config -section:system.webServer/httpCompression
+
+====================================
+VERIFICAR INSTALACIÓN
+====================================
+
+"%windir%\system32\inetsrv\appcmd.exe" list sites
+iisreset /status
+
+====================================
+NOTAS IMPORTANTES
+====================================
+
+1. Ejecutar todos los comandos como Administrador
+2. Esperar a que termine cada comando antes del siguiente
+3. Si algún comando falla, continuar con el siguiente
+4. Reiniciar el sistema si es necesario
+5. Después instalar Application Request Routing (ARR):
+   https://www.iis.net/downloads/microsoft/application-request-routing

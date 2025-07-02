@@ -236,13 +236,44 @@ echo   FASE 7: IIS Y COMPONENTES WEB
 echo ====================================
 
 echo [PASO 1] Configurando características de IIS...
-echo [INFO] Ejecutando configuración automatizada de IIS...
+echo [INFO] Intentando configuración automatizada de IIS...
 
-:: Usar el script PowerShell para configurar IIS completamente
-powershell -ExecutionPolicy Bypass -File "%SCRIPT_DIR%configurar_iis_features.ps1" -Force
+:: Método 1: Intentar con Bypass policy
+echo [INFO] Método 1: PowerShell con ExecutionPolicy Bypass...
+powershell -ExecutionPolicy Bypass -File "%SCRIPT_DIR%configurar_iis_features.ps1" -Force 2>nul
+if errorlevel 0 if not errorlevel 1 (
+    echo [OK] IIS configurado exitosamente con PowerShell (Bypass)
+    goto :IIS_CONFIGURED
+)
 
-if errorlevel 1 (
-    echo [WARNING] Error en configuración automatizada, intentando método básico...
+:: Método 2: Intentar con RemoteSigned
+echo [INFO] Método 2: PowerShell con ExecutionPolicy RemoteSigned...
+powershell -ExecutionPolicy RemoteSigned -File "%SCRIPT_DIR%configurar_iis_features.ps1" -Force 2>nul
+if errorlevel 0 if not errorlevel 1 (
+    echo [OK] IIS configurado exitosamente con PowerShell (RemoteSigned)
+    goto :IIS_CONFIGURED
+)
+
+:: Método 3: Intentar desbloquear archivo y ejecutar
+echo [INFO] Método 3: Desbloqueando archivo PowerShell...
+powershell -Command "Unblock-File -Path '%SCRIPT_DIR%configurar_iis_features.ps1'" 2>nul
+powershell -ExecutionPolicy RemoteSigned -File "%SCRIPT_DIR%configurar_iis_features.ps1" -Force 2>nul
+if errorlevel 0 if not errorlevel 1 (
+    echo [OK] IIS configurado exitosamente con PowerShell (archivo desbloqueado)
+    goto :IIS_CONFIGURED
+)
+
+:: Método 4: Fallback a DISM
+echo [ERROR] No se pudo ejecutar configuracion PowerShell
+echo [ERROR] Esto puede deberse a politicas de seguridad de PowerShell
+echo.
+echo [SOLUCION] Ejecuta: solucionar_powershell.bat
+echo            para resolver problemas de ExecutionPolicy
+echo.
+echo [INFO] Continuando con configuracion basica via DISM...
+
+:DISM_FALLBACK
+    echo [WARNING] Error en configuración automatizada, usando método básico...
     
     :: Método alternativo básico usando DISM
     echo [INFO] Habilitando IIS con características básicas...
@@ -265,9 +296,8 @@ if errorlevel 1 (
     dism /online /enable-feature /featurename:IIS-HttpCompressionDynamic /all >nul
     
     echo [OK] IIS habilitado con características básicas
-) else (
-    echo [OK] IIS configurado exitosamente con todas las características
-)
+
+:IIS_CONFIGURED
 
 :: Verificar que IIS esté funcionando
 echo [INFO] Verificando instalación de IIS...

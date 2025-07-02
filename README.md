@@ -691,8 +691,18 @@ taskmgr  # Windows
 sudo systemctl status postgresql  # Linux
 net start postgresql-x64-14       # Windows
 
-# Verificar conectividad
-psql -U postgres -h localhost -p 5432 -d localdb
+# Verificar configuración de pg_hba.conf
+# Ubicación típica: C:\Program Files\PostgreSQL\13\data\pg_hba.conf
+# Agregar línea: host all all 127.0.0.1/32 md5
+
+# Reiniciar PostgreSQL
+net stop postgresql-x64-13
+net start postgresql-x64-13
+
+# Verificar variables de entorno
+echo %DATABASE_URL%
+echo %DB_HOST%
+echo %DB_PORT%
 ```
 
 #### 2. Error de Módulos Python
@@ -808,3 +818,165 @@ Después de la instalación automatizada:
 - **Documentación**: http://localhost:8080/api/apidocs
 
 ### 🔧 Resolución de Problemas Comunes
+
+#### 1. **Error de Scripts PowerShell No Firmados**
+
+**Síntoma**: `configurar_iis.ps1 cannot be loaded because running scripts is disabled on this system` o `is not digitally signed`
+
+**Causa**: Windows bloquea la ejecución de scripts PowerShell no firmados por seguridad.
+
+**✅ Solución AUTOMÁTICA: Script Solucionador**
+```cmd
+# Ejecutar script automático de solución
+cd deployment-scripts
+solucionar_powershell.bat
+```
+
+Este script intentará múltiples métodos para resolver el problema automáticamente.
+
+**✅ Solución 1: Cambiar ExecutionPolicy Temporalmente (RECOMENDADO)**
+```powershell
+# Abrir PowerShell como Administrador
+# Verificar política actual
+Get-ExecutionPolicy
+
+# Cambiar temporalmente para permitir scripts locales
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+
+# O para permitir todos los scripts (menos seguro)
+Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope CurrentUser
+
+# Ejecutar el script
+.\configurar_iis.ps1
+
+# IMPORTANTE: Restaurar política original después
+Set-ExecutionPolicy -ExecutionPolicy Restricted -Scope CurrentUser
+```
+
+**✅ Solución 2: Ejecutar Script con Bypass (Una sola vez)**
+```powershell
+# Ejecutar sin cambiar la política global
+PowerShell -ExecutionPolicy Bypass -File "C:\dinqr\deployment-scripts\configurar_iis.ps1"
+```
+
+**✅ Solución 3: Desbloquear Archivo**
+```powershell
+# Si el archivo fue descargado de internet
+Unblock-File -Path "C:\dinqr\deployment-scripts\configurar_iis.ps1"
+
+# Luego cambiar execution policy temporalmente
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
+.\configurar_iis.ps1
+```
+
+**✅ Solución 4: Configuración Manual Completa**
+```cmd
+# Si todos los métodos automáticos fallan, usar archivos manuales:
+
+# Opción A: Script PowerShell guiado paso a paso
+deployment-scripts\configurar_iis_manual.ps1
+
+# Opción B: Solo comandos DISM en CMD
+deployment-scripts\configurar_iis_dism.bat
+
+# Opción C: Archivo de texto para copiar/pegar
+# Abrir: deployment-scripts\comandos_iis_copiar_pegar.txt
+# Copiar comandos sección por sección
+```
+
+Estos archivos contienen todas las instrucciones necesarias para configurar IIS manualmente cuando los scripts automáticos no funcionan.
+
+**✅ Solución 5: Ejecutar Comandos DISM Manualmente**
+Si los scripts PowerShell no funcionan, ejecutar los comandos DISM manualmente:
+```cmd
+# Abrir CMD como Administrador
+dism /online /enable-feature /featurename:IIS-WebServerRole
+dism /online /enable-feature /featurename:IIS-WebServer
+dism /online /enable-feature /featurename:IIS-CommonHttpFeatures
+dism /online /enable-feature /featurename:IIS-HttpErrors
+dism /online /enable-feature /featurename:IIS-HttpLogging
+dism /online /enable-feature /featurename:IIS-RequestFiltering
+dism /online /enable-feature /featurename:IIS-StaticContent
+dism /online /enable-feature /featurename:IIS-DefaultDocument
+dism /online /enable-feature /featurename:IIS-DirectoryBrowsing
+dism /online /enable-feature /featurename:IIS-NetFxExtensibility45
+dism /online /enable-feature /featurename:IIS-ISAPIExtensions
+dism /online /enable-feature /featurename:IIS-ISAPIFilter
+dism /online /enable-feature /featurename:IIS-CGI
+dism /online /enable-feature /featurename:IIS-ManagementConsole
+```
+
+#### 2. **Error de Permisos en IIS**
+
+**Síntoma**: Error de acceso negado en carpetas o aplicaciones IIS
+
+**Soluciones**:
+```cmd
+# 1. Verificar permisos de IIS_IUSRS
+icacls "C:\dinqr" /grant "IIS_IUSRS:(OI)(CI)F" /T
+
+# 2. Verificar Application Pool Identity
+# IIS Manager > Application Pools > DefaultAppPool > Advanced Settings
+# Process Model > Identity = ApplicationPoolIdentity
+
+# 3. Dar permisos específicos a carpetas de la aplicación
+icacls "C:\dinqr\backend" /grant "IIS_IUSRS:(OI)(CI)M" /T
+icacls "C:\dinqr\frontend\dist" /grant "IIS_IUSRS:(OI)(CI)R" /T
+```
+
+### 🔧 Herramientas de Diagnóstico Automático
+
+#### **Script Solucionador General**
+```cmd
+# Para problemas PowerShell específicamente
+deployment-scripts\solucionar_powershell.bat
+
+# Para verificación completa del sistema
+deployment-scripts\verificar_sistema.bat
+
+# Para monitoreo de salud en tiempo real
+deployment-scripts\monitoreo_salud.bat
+```
+
+#### **Logs y Monitoreo**
+```cmd
+# Ver todos los logs en tiempo real
+deployment-scripts\logs_aplicacion.bat
+
+# Backup antes de cambios importantes
+deployment-scripts\backup_aplicacion.bat
+
+# Reiniciar todos los servicios
+deployment-scripts\reiniciar_servicios.bat
+```
+`````
+``````
+This is the description of what the code block changes:
+<changeDescription>
+Adding reference to manual IIS configuration files in the main README troubleshooting section
+</changeDescription>
+
+This is the code block that represents the suggested code change:
+````markdown
+**✅ Solución 4: Configuración Manual Completa**
+```cmd
+# Si todos los métodos automáticos fallan, usar archivos manuales:
+
+# Opción A: Script PowerShell guiado paso a paso
+deployment-scripts\configurar_iis_manual.ps1
+
+# Opción B: Solo comandos DISM en CMD
+deployment-scripts\configurar_iis_dism.bat
+
+# Opción C: Archivo de texto para copiar/pegar
+# Abrir: deployment-scripts\comandos_iis_copiar_pegar.txt
+# Copiar comandos sección por sección
+```
+
+Estos archivos contienen todas las instrucciones necesarias para configurar IIS manualmente cuando los scripts automáticos no funcionan.
+
+#### 2. **Error de Permisos en IIS**
+````
+<userPrompt>
+Provide the fully rewritten file, incorporating the suggested code change. You must produce the complete file.
+</userPrompt>

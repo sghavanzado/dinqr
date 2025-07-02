@@ -47,6 +47,24 @@ RATELIMIT_STORAGE_URL=memory://
 # REDIS_URL=redis://localhost:6379/0
 
 # =============================================================================
+# CONFIGURACIÓN DE BASE DE DATOS
+# =============================================================================
+
+# Base de datos PostgreSQL (Local) - Para configuración y usuarios del sistema
+DATABASE_URL=postgresql://postgres:postgr3s@localhost:5432/localdb
+LOCAL_DB_NAME=localdb
+LOCAL_DB_USER=postgres
+LOCAL_DB_PASSWORD=postgr3s
+LOCAL_DB_HOST=localhost
+LOCAL_DB_PORT=5432
+
+# Base de datos SQL Server (Remota) - Para datos de empleados (vista sonacard)
+DB_SERVER=10.7.74.80
+DB_NAME=empresadb
+DB_USERNAME=sonacarduser
+DB_PASSWORD=Angola2025
+
+# =============================================================================
 # CONFIGURACIÓN DE ARCHIVOS Y UPLOADS
 # =============================================================================
 # Directorio para archivos subidos (relativo al directorio de la aplicación)

@@ -20,9 +20,9 @@ DINQR es un sistema que permite:
 - **Base de datos remota**: SQL Server (para datos de empleados)
 - **Autenticación**: JWT con Flask-JWT-Extended
 - **ORM**: SQLAlchemy con Alembic para migraciones
-- **Cache**: Redis (opcional)
+- **Rate Limiting**: Memoria local (sin Redis)
 - **Documentación**: Swagger/Flasgger
-- **Servidor**: Gunicorn con supervisión
+- **Servidor**: Waitress para Windows Server
 
 ### Frontend (React + TypeScript)
 - **Framework**: React 19.0.0 con TypeScript
@@ -41,7 +41,7 @@ DINQR es un sistema que permite:
 - `audit_log`: Log de auditoría
 
 #### SQL Server (Remoto)
-- `sonacard`: Datos de empleados externos
+- `sonacard`: Vista con datos de empleados externos (servidor 10.7.74.80)
 
 ---
 
@@ -234,10 +234,10 @@ LOCAL_DB_HOST=localhost
 LOCAL_DB_PORT=5432
 
 # Base de datos SQL Server (remota)
-DB_SERVER=192.168.253.5
+DB_SERVER=10.7.74.80
 DB_NAME=empresadb
-DB_USERNAME=sa
-DB_PASSWORD=Global2020
+DB_USERNAME=sonacarduser
+DB_PASSWORD=Angola2025
 
 # Configuración del servidor
 HOST=0.0.0.0
@@ -248,8 +248,8 @@ FLASK_ENV=production
 # CORS
 CORS_ORIGINS=http://localhost:3000,http://localhost:8080,http://tu-dominio.com
 
-# Redis (opcional)
-REDIS_URL=redis://localhost:6379/0
+# Rate Limiting (usando memoria local)
+RATELIMIT_STORAGE_URL=memory://
 
 # Logging
 LOG_LEVEL=INFO

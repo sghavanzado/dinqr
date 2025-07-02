@@ -46,10 +46,7 @@ def create_app(config_class=None):
     }
     Swagger(app, config=swagger_config)
 
-    # Setup Redis connection with fallback
-    redis_client = setup_redis_connection(app)
-    
-    # Configure Rate Limiting
+    # Configure Rate Limiting (Memory only - No Redis)
     limiter = Limiter(
         get_remote_address,
         storage_uri=app.config.get('RATELIMIT_STORAGE_URL', 'memory://'),
@@ -196,25 +193,6 @@ def ensure_directories(app):
     
     for directory in directories:
         directory.mkdir(parents=True, exist_ok=True)
-
-def setup_redis_connection(app):
-    """Setup Redis connection with fallback to memory"""
-    try:
-        import redis
-        redis_url = app.config.get('RATELIMIT_STORAGE_URL', '')
-        
-        if redis_url and redis_url.startswith('redis://'):
-            r = redis.from_url(redis_url)
-            r.ping()  # Test connection
-            app.logger.info("Redis connection established successfully")
-            return r
-        else:
-            app.logger.info("Redis not configured, using memory storage for rate limiting")
-            return None
-            
-    except Exception as e:
-        app.logger.warning(f"Failed to connect to Redis: {str(e)}. Using memory storage.")
-        return None
 
 def setup_logging(app):
     """Setup comprehensive logging for production"""

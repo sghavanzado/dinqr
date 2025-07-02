@@ -1,0 +1,34 @@
+[
+  {
+    "invoice_number": "INV001",
+    "issue_date": "2023-10-01",
+    "client_id": 1,
+    "total_amount": 2000.00,
+    "items": [
+      {
+        "description": "Laptop",
+        "quantity": 2,
+        "unit_price": 1200.00
+      },
+      {
+        "description": "Smartphone",
+        "quantity": 1,
+        "unit_price": 800.00
+      }
+    ]
+  },
+  {
+    "invoice_number": "INV002",
+    "issue_date": "2023-10-02",
+    "client_id": 2,
+    "total_amount": 1500.00,
+    "items": [
+      {
+        "description": "Tablet",
+        "quantity": 3,
+        "unit_price": 500.00
+      }
+    ]
+  },
+  // ...8 more invoices...
+]

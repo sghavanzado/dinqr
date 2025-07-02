@@ -1,0 +1,3 @@
+[console_scripts]
+dinqr-server = waitress_server:main
+dinqr-service = windows_service:main

@@ -13,10 +13,13 @@ services:
       FLASK_SECRET_KEY: your_secret_key_here
       DATABASE_URL: postgresql://postgres:postgr3s@db:5432/localdb
       CORS_ORIGINS: http://localhost:5173,http://localhost:8000
-      REDIS_URL: redis://redis:6379/0
+      RATELIMIT_STORAGE_URL: memory://
+      DB_SERVER: 10.7.74.80
+      DB_NAME: empresadb
+      DB_USERNAME: sonacarduser
+      DB_PASSWORD: Angola2025
     depends_on:
       - db
-      - redis
     volumes:
       - ./backend:/app
       - "${HOME}/Documents/salida:/app/salida"
@@ -48,14 +51,6 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    networks:
-      - qrcode-network
-
-  redis:
-    image: redis:alpine
-    container_name: dinqr-redis
-    ports:
-      - "6379:6379"
     networks:
       - qrcode-network
 

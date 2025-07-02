@@ -1,0 +1,70 @@
+{
+  "customers": [
+    {
+      "name": "John Doe",
+      "nif": "123456789",
+      "address": "123 Main St",
+      "city": "New York",
+      "state": "NY",
+      "country": "USA",
+      "phone": "123-456-7890",
+      "email": "john.doe@example.com",
+      "contact_first_name": "John",
+      "contact_last_name": "Doe",
+      "contact_email": "john.doe@example.com",
+      "contact_phone_number": "123-456-7890",
+      "payment_terms": "Net 30",
+      "bank_name": "Bank of America",
+      "iban_number": "US12345678901234567890"
+    },
+    // ...9 more clients...
+  ],
+  "suppliers": [
+    {
+      "name": "ABC Supplies",
+      "nif": "111222333",
+      "address": "789 Maple Ave",
+      "phone": "111-222-3333",
+      "contact_first_name": "Alice",
+      "contact_last_name": "Brown",
+      "contact_email": "alice.brown@abc.com",
+      "contact_phone_number": "111-222-3333",
+      "bank_name": "Wells Fargo",
+      "iban_number": "US11122233344455566677",
+      "payment_terms": "Net 45"
+    },
+    // ...9 more suppliers...
+  ],
+  "products": [
+    {
+      "sku": "P001",
+      "name": "Laptop",
+      "price": 1200.00,
+      "unit": "pcs",
+      "category": "Electronics",
+      "stock": 50
+    },
+    // ...9 more products...
+  ],
+  "invoices": [
+    {
+      "invoice_number": "INV001",
+      "issue_date": "2023-10-01",
+      "client_id": 1,
+      "total_amount": 2000.00,
+      "items": [
+        {
+          "description": "Laptop",
+          "quantity": 2,
+          "unit_price": 1200.00
+        },
+        {
+          "description": "Smartphone",
+          "quantity": 1,
+          "unit_price": 800.00
+        }
+      ]
+    },
+    // ...9 more invoices...
+  ]
+}

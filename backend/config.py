@@ -29,10 +29,10 @@ class Config:
     
     # Base de datos remota (SQL Server)
     DB_CONFIG = {
-        'server': os.environ.get('DB_SERVER', '192.168.253.5'),
+        'server': os.environ.get('DB_SERVER', '10.7.74.80'),
         'database': os.environ.get('DB_NAME', 'empresadb'),
-        'username': os.environ.get('DB_USERNAME', 'sa'),
-        'password': os.environ.get('DB_PASSWORD', 'Global2020')
+        'username': os.environ.get('DB_USERNAME', 'sonacarduser'),
+        'password': os.environ.get('DB_PASSWORD', 'Angola2025')
     }
     
     # Base de datos local (PostgreSQL)

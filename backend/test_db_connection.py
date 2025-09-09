@@ -15,9 +15,9 @@ try:
     logging.basicConfig(level=logging.INFO)
     
     print("🔗 Probando conexión a SQL Server...")
-    print(f"   Servidor: {os.environ.get('DB_SERVER', '10.7.74.80')}")
+    print(f"   Servidor: {os.environ.get('DB_SERVER', 'localhost')}")
     print(f"   Base de datos: {os.environ.get('DB_NAME', 'empresadb')}")
-    print(f"   Usuario: {os.environ.get('DB_USERNAME', 'sonacarduser')}")
+    print(f"   Usuario: {os.environ.get('DB_USERNAME', 'sa')}")
     print("")
     
     # Intentar conectar
@@ -62,10 +62,10 @@ except ImportError as e:
 except ConnectionError as e:
     print(f"❌ Error de conexión: {e}")
     print("\n🔧 Posibles soluciones:")
-    print("   1. Verificar que el servidor 10.7.74.80 esté accesible")
-    print("   2. Verificar credenciales: sonacarduser / Angola2025")
+    print("   1. Verificar que el servidor localhost esté accesible")
+    print("   2. Verificar credenciales: sa / Global2020")
     print("   3. Verificar que la base de datos 'empresadb' existe")
-    print("   4. Verificar que ODBC Driver 18 for SQL Server esté instalado")
+    print("   4. Verificar que SQL Server esté instalado")
     print("   5. Verificar conectividad de red al puerto 1433")
     
 except Exception as e:

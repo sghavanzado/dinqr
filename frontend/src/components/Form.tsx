@@ -4,9 +4,9 @@ import {
   Box,
   InputAdornment,
   TextField,
-  Typography,
-  TextFieldProps
+  Typography
 } from '@mui/material';
+import type { TextFieldProps } from '@mui/material';
 
 // Contenedor de grupo de formulario
 export const FormGroup = styled(Box)(({ theme }) => ({
@@ -41,7 +41,9 @@ export const IconWrapper = styled(InputAdornment)(({ theme }) => ({
 export const StyledTextField = styled(TextField)<TextFieldProps>(
   ({ theme }) => ({
     '& .MuiOutlinedInput-root': {
-      borderRadius: theme.shape.borderRadius * 0.5,
+      borderRadius: typeof theme.shape.borderRadius === 'number'
+        ? theme.shape.borderRadius * 0.5
+        : 4, // fallback if borderRadius is a string
       transition: theme.transitions.create('all', {
         duration: theme.transitions.duration.shortest
       }),

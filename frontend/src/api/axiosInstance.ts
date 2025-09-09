@@ -1,6 +1,7 @@
 // axiosInstance.ts
 
-import axios, { AxiosError, AxiosInstance, AxiosResponse, InternalAxiosRequestConfig, AxiosRequestConfig } from 'axios';
+import axios, { AxiosError} from 'axios';
+import type { AxiosInstance, AxiosResponse, InternalAxiosRequestConfig, AxiosRequestConfig} from 'axios';
 
 // Interfaces for token types
 interface TokenResponse {

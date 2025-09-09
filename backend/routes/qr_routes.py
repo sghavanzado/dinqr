@@ -259,3 +259,72 @@ def generar_todos_codigos_qr():
     finally:
         if conn_remota:
             conn_remota.close()  # Asegurar que la conexión remota se cierre correctamente
+
+@qr_bp.route('/funcionarios-com-qr', methods=['GET'])
+def listar_funcionarios_com_qr():
+    """Listado de funcionarios que SÍ tienen un código QR generado (sin paginación backend)."""
+    try:
+        # Consultar IDs de funcionarios con QR en la base de datos local
+        conn_local = None
+        try:
+            conn_local = obtener_conexion_local()
+            cursor = conn_local.cursor()
+            cursor.execute("SELECT contact_id FROM qr_codes")
+            qr_generated_ids = [row[0] for row in cursor.fetchall()]
+            logging.info(f"IDs de funcionarios con QR obtenidos: {qr_generated_ids}")
+        except Exception as e:
+            logging.error(f"Error al consultar IDs de funcionarios con QR en la base de datos local: {str(e)}")
+            return jsonify({"error": "Error interno del servidor"}), 500
+        finally:
+            if conn_local:
+                liberar_conexion_local(conn_local)
+
+        # Si no hay IDs en qr_generated_ids, devolver lista vacía
+        if not qr_generated_ids:
+            logging.info("No se encontraron IDs de funcionarios con QR en la base de datos local.")
+            return jsonify([])
+
+        # Consultar funcionarios desde la base de datos remota que SÍ tienen QR
+        try:
+            with obtener_conexion_remota() as conn:
+                cursor = conn.cursor()
+                placeholders = ",".join("?" for _ in qr_generated_ids)
+                query = f"""
+                    SELECT sap, nome, funcao, area, nif, telefone, email, unineg
+                    FROM sonacard
+                    WHERE sap IN ({placeholders})
+                    ORDER BY sap
+                """
+                logging.info(f"Ejecutando consulta SQL para funcionarios COM QR: {query}")
+                cursor.execute(query, tuple(qr_generated_ids))
+                funcionarios = cursor.fetchall()
+                logging.info(f"Funcionarios con QR obtenidos: {len(funcionarios)} registros")
+        except Exception as e:
+            logging.error(f"Error al consultar funcionarios con QR desde la base de datos remota: {str(e)}")
+            return jsonify({"error": "Error interno del servidor"}), 500
+
+        # Procesar datos
+        try:
+            result = [
+                {
+                    "id": funcionario[0],
+                    "nome": funcionario[1],
+                    "funcao": funcionario[2],
+                    "area": funcionario[3],
+                    "nif": funcionario[4],
+                    "telefone": funcionario[5],
+                    "email": funcionario[6],
+                    "unineg": funcionario[7],
+                    "qrGenerated": True
+                }
+                for funcionario in funcionarios
+            ]
+        except Exception as e:
+            logging.error(f"Error al procesar los datos de funcionarios con QR: {str(e)}")
+            return jsonify({"error": "Error interno del servidor"}), 500
+
+        return jsonify(result)
+
+    except Exception as e:
+        logging.error(f"Error inesperado al listar funcionarios com QR: {str(e)}")
+        return jsonify({"error": "Error interno del servidor"}), 500

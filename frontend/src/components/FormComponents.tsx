@@ -1,5 +1,5 @@
 import { FormLabel, Stack, Typography } from '@mui/material';
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
 export const FormGroup = ({ children }: { children: ReactNode }) => (
   <Stack spacing={1} sx={{ width: '100%' }}>{children}</Stack>

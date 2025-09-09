@@ -6,9 +6,6 @@ from flask import Flask, jsonify, request
 from utils.db_utils import obtener_conexion_local  # Import database utility
 import psutil
 
-# Importar la aplicación Flask desde server.py
-from server import app
-
 # Configure logging
 if not os.path.exists('logs'):
     os.mkdir('logs')
@@ -57,54 +54,49 @@ def obtener_domain_servidor():
         raise
 
 def iniciar_servidor():
-    """Start the Gunicorn server."""
+    """Start the Waitress server."""
     global server_process
     try:
         if server_process is None or server_process.poll() is not None:
             ip = obtener_domain_servidor()
             port = obtener_puerto_servidor()
 
-            # Construir el comando de Gunicorn
-            gunicorn_command = [
-                "gunicorn",
-                "-w", os.environ.get("GUNICORN_WORKERS", "4"),  # Número de trabajadores
-                "-k", os.environ.get("GUNICORN_WORKER_CLASS", "sync"),  # Tipo de worker
-                "-b", "0.0.0.0:9000",  # Escuchar en todas las IPs y puerto 9000
-                "--timeout", os.environ.get("GUNICORN_TIMEOUT", "120"),  # Tiempo de espera
-                "--graceful-timeout", os.environ.get("GUNICORN_GRACEFUL_TIMEOUT", "120"),
-                "--access-logfile", "logs/gunicorn_access.log",
-                "--error-logfile", "logs/gunicorn_error.log",
-                "server:app"  # Nombre del módulo y la aplicación Flask
+
+
+            # Detectar automáticamente el ejecutable del entorno virtual activo
+            import sys
+            venv_python = sys.executable
+            waitress_command = [
+                venv_python, "-m", "waitress", "--host", ip, "--port", str(port), "server:app"
             ]
 
-            # Registrar el comando en los logs
-            logger.info(f"Iniciando Gunicorn con el comando: {' '.join(gunicorn_command)}")
+            logger.info(f"Iniciando Waitress con el comando: {' '.join(waitress_command)}")
 
-            # Iniciar el proceso de Gunicorn
             server_process = subprocess.Popen(
-                gunicorn_command,
+                waitress_command,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 text=True
             )
 
-            # Verificar si el proceso se inició correctamente
-            stdout, stderr = server_process.communicate(timeout=5)
-            if server_process.returncode is not None and server_process.returncode != 0:
-                logger.error(f"Error al iniciar Gunicorn: {stderr.strip()}")
-                raise RuntimeError(f"Error al iniciar Gunicorn: {stderr.strip()}")
+            # Esperar unos segundos para verificar si el proceso se inicia correctamente
+            try:
+                stdout, stderr = server_process.communicate(timeout=5)
+                if server_process.returncode is not None and server_process.returncode != 0:
+                    logger.error(f"Error al iniciar Waitress: {stderr.strip()}")
+                    raise RuntimeError(f"Error al iniciar Waitress: {stderr.strip()}")
+            except subprocess.TimeoutExpired:
+                logger.info(f"Servidor iniciado correctamente con PID: {server_process.pid}")
 
             logger.info(f"Servidor {ip} iniciado en el puerto {port} con PID: {server_process.pid}")
         else:
             logger.warning("El servidor ya está en ejecución.")
-    except subprocess.TimeoutExpired:
-        logger.info(f"Servidor iniciado correctamente con PID: {server_process.pid}")
     except Exception as e:
         logger.error(f"Error al iniciar el servidor: {str(e)}")
         raise
 
 def detener_servidor():
-    """Stop the Gunicorn server."""
+    """Stop the Waitress server."""
     global server_process
     try:
         if server_process and server_process.poll() is None:
@@ -146,45 +138,11 @@ def status_servidor():
         logger.error(f"Erro ao consultar o estado do servidor: {str(e)}")
         raise RuntimeError("Erro ao consultar o estado do servidor.")
 
-@app.before_request
-def log_request_info():
-    """Registrar información de cada solicitud entrante."""
-    logger.info(f"Solicitud: {request.method} {request.path} desde {request.remote_addr}")
-
-@app.after_request
-def log_response_info(response):
-    """Registrar información de la respuesta de cada solicitud."""
-    logger.info(f"Respuesta: {response.status_code} para {request.method} {request.path}")
-    return response
-
-@app.route('/server/start', methods=['POST'])
-def api_iniciar_servidor():
-    iniciar_servidor()
-    return jsonify({"message": "Servidor iniciado."}), 200
-
-@app.route('/server/stop', methods=['POST'])
-def api_detener_servidor():
-    detener_servidor()
-    return jsonify({"message": "Servidor detenido."}), 200
-
-@app.route('/server/exit', methods=['POST'])
-def api_salir():
-    detener_servidor()
-    return jsonify({"message": "Gestor del servidor cerrado."}), 200
-
-@app.route('/server/status', methods=['GET'])
-def server_status():
-    """Consultar el estado del servidor."""
-    global server_process
-    if server_process and server_process.poll() is None:
-        return jsonify({"status": "running", "pid": server_process.pid}), 200
-    return jsonify({"status": "stopped"}), 200
-
 if __name__ == '__main__':
     try:
         ip = obtener_domain_servidor()  # Obtener la IP desde la base de datos
         port = obtener_puerto_servidor()  # Obtener el puerto desde la base de datos
-        logger.info("Use Gunicorn to run this application in production.")
-        logger.info(f"Example: gunicorn -w 4 -b {ip}:{port} server:app")
+        logger.info("Use Waitress to run this application in producción.")
+        logger.info(f"Example: python -m waitress --host {ip} --port {port} server:app")
     except Exception as e:
         logger.error(f"Error al obtener el puerto del servidor: {str(e)}")

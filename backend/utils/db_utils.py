@@ -10,7 +10,7 @@ pg_connection_pool = pg_pool.SimpleConnectionPool(
     dbname=os.environ.get('LOCAL_DB_NAME', 'localdb'),
     user=os.environ.get('LOCAL_DB_USER', 'postgres'),
     password=os.environ.get('LOCAL_DB_PASSWORD', 'postgr3s'),
-    host=os.environ.get('LOCAL_DB_HOST', 'localhost'),
+    host=os.environ.get('LOCAL_DB_HOST', '192.168.253.133'),
     port=os.environ.get('LOCAL_DB_PORT', 5432)
 )
 
@@ -50,11 +50,11 @@ def obtener_conexion_remota():
     """Obtener una conexión a SQL Server."""
     try:
         return pyodbc.connect(
-            f"DRIVER={{ODBC Driver 18 for SQL Server}};"
-            f"SERVER={os.environ.get('DB_SERVER', '10.7.74.80')};"
+            f"DRIVER={{SQL Server}};"
+            f"SERVER={os.environ.get('DB_SERVER', 'localhost')};"
             f"DATABASE={os.environ.get('DB_NAME', 'empresadb')};"
-            f"UID={os.environ.get('DB_USERNAME', 'sonacarduser')};"
-            f"PWD={os.environ.get('DB_PASSWORD', 'Angola2025')};"
+            f"UID={os.environ.get('DB_USERNAME', 'sa')};"
+            f"PWD={os.environ.get('DB_PASSWORD', 'Global2020')};"
             f"TrustServerCertificate=yes",
             timeout=10  # Timeout in seconds
         )

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { DataGrid, GridRowsProp, GridColDef } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
+import type { GridRowsProp, GridColDef } from '@mui/x-data-grid';
 import { TextField, Button, Box, CircularProgress, Typography, IconButton, Modal } from '@mui/material';
 import QrCodeIcon from '@mui/icons-material/QrCode';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -106,7 +107,7 @@ export default function CustomizedDataGrid() {
         <p><strong>Nome:</strong> ${funcionario.nome}</p>
           <p><strong>SAP:</strong> ${funcionario.id}</p>
           <p><strong>Função:</strong> ${funcionario.funcao || 'Não especificada'}</p>
-          <p><strong>Área:</strong> ${funcionario.area || 'Não especificada'}</p>
+          <p><strong>Direção:</strong> ${funcionario.area || 'Não especificada'}</p>
           <p><strong>NIF:</strong> ${funcionario.nif || 'Não especificado'}</p>
           <p><strong>Telefone:</strong> ${funcionario.telefone || 'Não especificado'}</p>
           <p><strong>Unidad Org:</strong> ${funcionario.unineg || 'Não especificado'}</p>

@@ -1,3 +1,5 @@
+
+import React from 'react';
 import { useState, useEffect } from 'react';
 
 // Extend the Window interface to include electronAPI
@@ -27,9 +29,11 @@ interface Settings {
   username: string;
   password: string;
   database: string;
+  tabela: string;
   outputFolder: string;
   serverDomain: string;
   serverPort: string;
+  qrdomain: string; // Dominio QR para mostrar en el código QR
 }
 
 const defaultSettings: Settings = {
@@ -37,9 +41,11 @@ const defaultSettings: Settings = {
   username: '',
   password: '',
   database: '',
+  tabela: '',
   outputFolder: '',
   serverDomain: 'example.com',
   serverPort: '80', // Porta padrão para HTTP
+  qrdomain: '',
 };
 
 const SettingsPage = () => {
@@ -48,9 +54,11 @@ const SettingsPage = () => {
     username: defaultSettings.username,
     password: defaultSettings.password,
     database: defaultSettings.database,
+    tabela: defaultSettings.tabela,
     outputFolder: defaultSettings.outputFolder,
     serverDomain: defaultSettings.serverDomain,
     serverPort: defaultSettings.serverPort,
+    qrdomain: defaultSettings.qrdomain,
   });
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
@@ -67,9 +75,11 @@ const SettingsPage = () => {
           username: fetchedSettings.username || '',
           password: fetchedSettings.password || '',
           database: fetchedSettings.database || '',
+          tabela: fetchedSettings.tabela || '',
           outputFolder: fetchedSettings.outputFolder || '',
           serverDomain: fetchedSettings.serverDomain || defaultSettings.serverDomain,
           serverPort: fetchedSettings.serverPort || defaultSettings.serverPort,
+          qrdomain: fetchedSettings.qrdomain || '',
         });
       } catch {
         setSnackbarMessage('Erro ao carregar as configurações.');
@@ -81,9 +91,9 @@ const SettingsPage = () => {
   }, []);
 
   const handleSave = async () => {
-    const { server, username, password, database, outputFolder, serverDomain, serverPort } = settings;
+    const { server, username, password, database, tabela, outputFolder, serverDomain, serverPort, qrdomain } = settings;
 
-    if (!server || !username || !password || !database || !outputFolder || !serverDomain || !serverPort) {
+    if (!server || !username || !password || !database || !tabela || !outputFolder || !serverDomain || !serverPort || !qrdomain) {
       setSnackbarMessage('Por favor, preencha todos os campos.');
       setSnackbarSeverity('error');
       setSnackbarOpen(true);
@@ -128,62 +138,63 @@ const SettingsPage = () => {
         Configurações
       </Typography>
       <Grid container spacing={3}>
-       
-          <TextField
-            label="Servidor (IP ou Nome)"
-            fullWidth
-            value={settings.server}
-            onChange={(e) => setSettings({ ...settings, server: e.target.value })}
-          />
+        <TextField
+          label="Servidor (IP ou Nome)"
+          fullWidth
+          value={settings.server}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSettings({ ...settings, server: e.target.value })}
+        />
+        <TextField
+          label="Utilizador"
+          fullWidth
+          value={settings.username}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSettings({ ...settings, username: e.target.value })}
+        />
+        <TextField
+          label="Palavra-passe"
+          type="password"
+          fullWidth
+          value={settings.password}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSettings({ ...settings, password: e.target.value })}
+        />
+        <TextField
+          label="Nome da Base de Dados"
+          fullWidth
+          value={settings.database}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSettings({ ...settings, database: e.target.value })}
+        />
+        <TextField
+          label="Tabela"
+          fullWidth
+          value={settings.tabela}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSettings({ ...settings, tabela: e.target.value })}
+        />
         
         
-          <TextField
-            label="Utilizador"
-            fullWidth
-            value={settings.username}
-            onChange={(e) => setSettings({ ...settings, username: e.target.value })}
-          />
-        
-        
-          <TextField
-            label="Palavra-passe"
-            type="password"
-            fullWidth
-            value={settings.password}
-            onChange={(e) => setSettings({ ...settings, password: e.target.value })}
-          />
-       
-        
-          <TextField
-            label="Nome da Base de Dados"
-            fullWidth
-            value={settings.database}
-            onChange={(e) => setSettings({ ...settings, database: e.target.value })}
-          />
-        
-        
-          <TextField
-            label="Pasta de Saída para os Códigos QR"
-            fullWidth
-            value={settings.outputFolder}
-            onChange={(e) => setSettings({ ...settings, outputFolder: e.target.value })}
-          />
-        
-        
-          <TextField
-            label="Domínio ou IP do servidor"
-            fullWidth
-            value={settings.serverDomain}
-            onChange={(e) => setSettings({ ...settings, serverDomain: e.target.value })}
-          />
-        
-       
-          <TextField
-            label="Porta do servidor"
-            fullWidth
-            value={settings.serverPort}
-            onChange={(e) => setSettings({ ...settings, serverPort: e.target.value })}
-          />
+        <TextField
+          label="Pasta de Saída para os Códigos QR"
+          fullWidth
+          value={settings.outputFolder}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSettings({ ...settings, outputFolder: e.target.value })}
+        />
+        <TextField
+          label="Domínio ou IP do servido"
+          fullWidth
+          value={settings.serverDomain}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSettings({ ...settings, serverDomain: e.target.value })}
+        />
+        <TextField
+          label="Dominio QR (mostrado en el código QR)"
+          fullWidth
+          value={settings.qrdomain}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSettings({ ...settings, qrdomain: e.target.value })}
+        />
+        <TextField
+          label="Porta do servidor"
+          fullWidth
+          value={settings.serverPort}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSettings({ ...settings, serverPort: e.target.value })}
+        />
         
         
           <Button

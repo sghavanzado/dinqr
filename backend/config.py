@@ -23,21 +23,21 @@ class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or os.urandom(32).hex()
     
     # Configuración de SQLAlchemy
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'postgresql://postgres:postgr3s@localhost:5432/localdb'
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'postgresql://postgres:postgr3s@192.168.253.133:5432/localdb'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ECHO = False
     
     # Base de datos remota (SQL Server)
     DB_CONFIG = {
-        'server': os.environ.get('DB_SERVER', '10.7.74.80'),
+        'server': os.environ.get('DB_SERVER', 'localhost'),
         'database': os.environ.get('DB_NAME', 'empresadb'),
-        'username': os.environ.get('DB_USERNAME', 'sonacarduser'),
-        'password': os.environ.get('DB_PASSWORD', 'Angola2025')
+        'username': os.environ.get('DB_USERNAME', 'sa'),
+        'password': os.environ.get('DB_PASSWORD', 'Global2020')
     }
     
     # Base de datos local (PostgreSQL)
     LOCAL_DB_CONFIG = {
-        'host': os.environ.get('LOCAL_DB_HOST', 'localhost'),
+        'host': os.environ.get('LOCAL_DB_HOST', '192.168.253.133'),
         'port': os.environ.get('LOCAL_DB_PORT', '5432'),
         'database': os.environ.get('LOCAL_DB_NAME', 'localdb'),
         'user': os.environ.get('LOCAL_DB_USER', 'postgres'),
@@ -45,7 +45,8 @@ class Config:
     }
     
     # Configuración CORS
-    CORS_ORIGINS = os.environ.get('CORS_ORIGINS', 'http://localhost:3000,http://localhost:8080').split(',')
+    _CORS_ORIGINS_RAW = os.environ.get('CORS_ORIGINS', 'https://localhost,https://localhost:443,https://127.0.0.1,https://localhost:9000,https://127.0.0.1:9000')
+    CORS_ORIGINS = [o.strip() for o in _CORS_ORIGINS_RAW.split(',') if o.strip()]
     CORS_SUPPORTS_CREDENTIALS = True
     CORS_EXPOSE_HEADERS = ['Content-Type', 'X-Total-Count', 'X-Requested-With', 'Authorization'] 
     
@@ -110,7 +111,7 @@ class Config:
         """Establece una conexión con la base de datos SQL Server"""
         try:
             return pyodbc.connect(
-                f"DRIVER={{ODBC Driver 18 for SQL Server}};"
+                f"DRIVER={{SQL Server}};"
                 f"SERVER={Config.DB_CONFIG['server']};"
                 f"DATABASE={Config.DB_CONFIG['database']};"
                 f"UID={Config.DB_CONFIG['username']};"

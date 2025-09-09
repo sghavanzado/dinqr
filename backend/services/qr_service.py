@@ -1,3 +1,12 @@
+def obtener_tabela():
+    """Obtener el nombre de la tabla a consultar en la base de datos remota (campo 'tabela' en settings)."""
+    with obtener_conexion_local() as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT value FROM settings WHERE key = %s", ('tabela',))
+        result = cursor.fetchone()
+        if not result:
+            raise ValueError("No se encontró la configuración 'tabela' en la tabla settings.")
+        return result[0]
 from utils.db_utils import obtener_conexion_remota, obtener_conexion_local
 import qrcode
 import os
@@ -28,6 +37,16 @@ def obtener_server_domain():
             raise ValueError("No se encontró la configuración 'serverDomain' en la tabla settings.")
         return result[0]
 
+def obtener_qr_domain():
+    """Obtener el dominio/ip que se mostrará en el QR (qrdomain)."""
+    with obtener_conexion_local() as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT value FROM settings WHERE key = %s", ('qrdomain',))
+        result = cursor.fetchone()
+        if not result:
+            raise ValueError("No se encontró la configuración 'qrdomain' en la tabla settings.")
+        return result[0]
+
 def obtener_server_port():
     """Obtener port servidor Web."""
     with obtener_conexion_local() as conn:
@@ -41,11 +60,12 @@ def obtener_server_port():
 def listar_funcionarios(page, per_page, filtro):
     """Listar funcionarios desde la base de datos remota."""
     try:
+        tabela = obtener_tabela()
         with obtener_conexion_remota() as conn:
             cursor = conn.cursor()
-            query = """
+            query = f"""
                 SELECT sap, nome, funcao, area, nif, telefone, email, unineg
-                FROM sonacard
+                FROM {tabela}
                 WHERE nome LIKE ?
                 ORDER BY sap
                 OFFSET ? ROWS FETCH NEXT ? ROWS ONLY
@@ -60,9 +80,10 @@ def listar_funcionarios(page, per_page, filtro):
 
 def obtener_total_funcionarios():
     """Obtener la cantidad total de funcionarios desde la base de datos remota."""
+    tabela = obtener_tabela()
     with obtener_conexion_remota() as conn:
         cursor = conn.cursor()
-        cursor.execute("SELECT COUNT(*) FROM sonacard")  # Contar todos los registros en la tabla sonacard
+        cursor.execute(f"SELECT COUNT(*) FROM {tabela}")  # Contar todos los registros en la tabla definida
         result = cursor.fetchone()
         if not result:
             raise ValueError("No se pudo obtener la cantidad total de funcionarios.")
@@ -79,9 +100,9 @@ def obtener_total_funcionarios_con_qr():
         return result[0]
 
 def generar_firma(nome):
-    """Generar HMAC-SHA256 basado en el nombre del contacto."""
-    secret_key = b'secret_key'  # Cambiar por una clave segura
-    return hmac.new(secret_key, nome.encode('utf-8'), hashlib.sha256).hexdigest()
+    """Generar HMAC-SHA256 igual que el backend (clave = sha256(nombre), mensaje = nombre)."""
+    key = hashlib.sha256(nome.encode()).digest()
+    return hmac.new(key, nome.encode(), hashlib.sha256).hexdigest()
 
 def generar_qr_estatico(ids):
     """Generar códigos QR estáticos para una lista de IDs."""
@@ -96,8 +117,9 @@ def generar_qr_estatico(ids):
         os.makedirs(output_folder, exist_ok=True)
 
     resultados = []
+    tabela = obtener_tabela()
     placeholders = ','.join(['?'] * len(ids))  # SQL Server usa ?
-    query = f"SELECT * FROM sonacard WHERE sap IN ({placeholders})"
+    query = f"SELECT * FROM {tabela} WHERE sap IN ({placeholders})"
 
     with obtener_conexion_remota() as conn:
         cursor = conn.cursor()
@@ -156,7 +178,10 @@ def generar_qr(ids):
 
     # Obtener configuraciones desde la base de datos
     output_folder = obtener_carpeta_salida()
-    server_domain = obtener_server_domain()
+    try:
+        server_domain = obtener_qr_domain()
+    except Exception:
+        server_domain = obtener_server_domain()
     server_port = obtener_server_port()
 
     # Crear la carpeta de salida si no existe
@@ -164,8 +189,9 @@ def generar_qr(ids):
         os.makedirs(output_folder, exist_ok=True)
 
     resultados = []
+    tabela = obtener_tabela()
     placeholders = ','.join(['?'] * len(ids))  # SQL Server usa ?
-    query = f"SELECT sap, nome, funcao, area, nif, telefone, unineg FROM sonacard WHERE sap IN ({placeholders})"
+    query = f"SELECT sap, nome, funcao, area, nif, telefone, unineg FROM {tabela} WHERE sap IN ({placeholders})"
 
     with obtener_conexion_remota() as conn:
         cursor = conn.cursor()
@@ -188,9 +214,9 @@ def generar_qr(ids):
                 # Generar firma HMAC-SHA256
                 firma = generar_firma(nome)
 
-                # Crear el código QR con la URL segura
+                # Crear el código QR con la URL segura (solo 'hash' en la URL)
                 qr = qrcode.QRCode(version=5, error_correction=qrcode.constants.ERROR_CORRECT_H, box_size=12, border=4)
-                qr_url = f"http://{server_domain}:{server_port}/contacto?sap={sap}&hash={firma}"
+                qr_url = f"https://{server_domain}:{server_port}/contacto?sap={sap}&hash={firma}"
                 qr.add_data(qr_url)
                 qr.make(fit=True)
                 archivo_qr = os.path.join(output_folder, f"qr_{sap}.png")

@@ -26,7 +26,11 @@ def allowed_file(filename):
 def get_settings():
     """Retrieve all settings."""
     settings = Settings.query.all()
-    return jsonify({setting.key: setting.value for setting in settings})
+    # Si no existe el campo qrdomain, lo agregamos al resultado como vacío
+    result = {setting.key: setting.value for setting in settings}
+    if 'qrdomain' not in result:
+        result['qrdomain'] = ''
+    return jsonify(result)
 
 @settings_bp.route('/', methods=['POST'])
 def save_settings():
@@ -37,7 +41,16 @@ def save_settings():
         if setting:
             setting.value = value
         else:
-            new_setting = Settings(key=key, value=value)
+            # Si es qrdomain y no existe, asignar id=8 si está libre
+            if key == 'qrdomain':
+                # Buscar si el id 8 está libre
+                id8 = Settings.query.filter_by(id=8).first()
+                if not id8:
+                    new_setting = Settings(id=8, key=key, value=value)
+                else:
+                    new_setting = Settings(key=key, value=value)
+            else:
+                new_setting = Settings(key=key, value=value)
             db.session.add(new_setting)
     db.session.commit()
     return jsonify({"message": "Settings saved successfully."})

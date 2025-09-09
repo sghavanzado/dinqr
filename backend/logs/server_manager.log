@@ -1,0 +1,18 @@
+2025-09-08 15:21:51,309 INFO: Conexión liberada al pool. Activas: 3, Inactivas: 197
+2025-09-08 15:21:51,318 INFO: Ejecutando consulta SQL para funcionarios COM QR: 
+                    SELECT sap, nome, funcao, area, nif, telefone, email, unineg
+                    FROM sonacard
+                    WHERE sap IN (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+                    ORDER BY sap
+                
+2025-09-08 15:21:51,488 INFO: Funcionarios con QR obtenidos: 149 registros
+2025-09-08 15:21:51,553 INFO: Petición: GET /qr/funcionarios/total-con-qr desde 127.0.0.1 - args: {} - json: None
+2025-09-08 15:21:51,561 INFO: Conexión obtenida del pool. Activas: 4, Inactivas: 196
+2025-09-08 15:21:51,564 INFO: Conexión liberada al pool. Activas: 3, Inactivas: 197
+2025-09-08 15:21:51,587 INFO: 127.0.0.1 - - [08/Sep/2025 15:21:51] "GET /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
+2025-09-08 15:21:51,594 INFO: 127.0.0.1 - - [08/Sep/2025 15:21:51] "GET /qr/funcionarios-com-qr HTTP/1.1" 200 -
+2025-09-08 15:21:58,438 INFO: Petición: OPTIONS /qr/descargar/102 desde 127.0.0.1 - args: {} - json: None
+2025-09-08 15:21:58,456 INFO: 127.0.0.1 - - [08/Sep/2025 15:21:58] "OPTIONS /qr/descargar/102 HTTP/1.1" 200 -
+2025-09-08 15:21:58,462 INFO: Petición: GET /qr/descargar/102 desde 127.0.0.1 - args: {} - json: None
+2025-09-08 15:21:58,466 INFO: Conexión obtenida del pool. Activas: 4, Inactivas: 196
+2025-09-08 15:21:58,588 INFO: 127.0.0.1 - - [08/Sep/2025 15:21:58] "GET /qr/descargar/102 HTTP/1.1" 200 -

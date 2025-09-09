@@ -19,6 +19,9 @@ from routes.health_check import health_bp
 def create_app(config_class=None):
     """Application factory pattern for creating Flask app"""
     app = Flask(__name__, static_folder='static')
+    # Importar y registrar blueprint de contacto/qrdata
+    from routes.route_qrdata import qrdata_bp
+    app.register_blueprint(qrdata_bp)
     
     # Use provided config or default
     if config_class:
@@ -55,8 +58,14 @@ def create_app(config_class=None):
     )
 
     # Configure CORS
+    cors_origins = app.config.get('CORS_ORIGINS', [])
+    if not cors_origins:
+        cors_origins = ['*']  # Permitir todos los orígenes si la lista está vacía (solo desarrollo)
+        app.logger.warning('CORS_ORIGINS está vacío, permitiendo todos los orígenes (solo desarrollo)')
+    else:
+        app.logger.info(f'Orígenes CORS permitidos: {cors_origins}')
     CORS(app,
-         resources={r"/*": {"origins": app.config.get('CORS_ORIGINS', [])}},
+         resources={r"/*": {"origins": cors_origins}},
          supports_credentials=app.config.get('CORS_SUPPORTS_CREDENTIALS', True),
          expose_headers=app.config.get('CORS_EXPOSE_HEADERS', []))
 
@@ -119,7 +128,12 @@ def create_app(config_class=None):
     @app.before_request
     def before_all():
         g.request_id = str(uuid.uuid4())
-        
+        # Log de todas las peticiones entrantes
+        try:
+            app.logger.info(f"Petición: {request.method} {request.path} desde {request.remote_addr} - args: {dict(request.args)} - json: {request.get_json(silent=True)}")
+        except Exception as e:
+            app.logger.warning(f"No se pudo registrar el cuerpo JSON de la petición: {e}")
+
         # Handle CORS preflight requests
         if request.method == "OPTIONS":
             origin = request.headers.get("Origin")
@@ -239,6 +253,12 @@ def setup_logging(app):
 
 # Application instance for WSGI servers
 application = create_app()
+
+# Lista todas las rutas registradas para depuración
+print("=== RUTAS REGISTRADAS ===")
+for rule in application.url_map.iter_rules():
+    print(f"[ROUTE] {rule}")
+print("=========================")
 
 if __name__ == '__main__':
     # This section is only for development/testing

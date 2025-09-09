@@ -41,7 +41,7 @@ DINQR es un sistema que permite:
 - `audit_log`: Log de auditoría
 
 #### SQL Server (Remoto)
-- `sonacard`: Vista con datos de empleados externos (servidor 10.7.74.80)
+- `sonacard`: Vista con datos de empleados externos (servidor localhost)
 
 ---
 
@@ -234,10 +234,10 @@ LOCAL_DB_HOST=localhost
 LOCAL_DB_PORT=5432
 
 # Base de datos SQL Server (remota)
-DB_SERVER=10.7.74.80
+DB_SERVER=localhost
 DB_NAME=empresadb
-DB_USERNAME=sonacarduser
-DB_PASSWORD=Angola2025
+DB_USERNAME=sa
+DB_PASSWORD=Global2020
 
 # Configuración del servidor
 HOST=0.0.0.0
@@ -357,6 +357,20 @@ Configurar proxy en `web.config`:
     </system.webServer>
 </configuration>
 ```
+
+#### 3.1 Permitir variables de servidor para proxy reverso (IIS)
+Si usas reglas de proxy que establecen variables como `HTTP_X_FORWARDED_PROTO` o `HTTP_X_FORWARDED_PORT`, debes agregarlas a la lista de variables permitidas en IIS:
+
+1. Abre **Administrador de IIS**.
+2. Selecciona tu sitio web.
+3. Haz doble clic en **URL Rewrite**.
+4. En el panel derecho, haz clic en **“View Server Variables”**.
+5. Haz clic en **“Add...”** y agrega:
+   - `HTTP_X_FORWARDED_PROTO`
+   - `HTTP_X_FORWARDED_PORT` (si la usas)
+6. Aplica los cambios y reinicia el sitio IIS.
+
+Esto es necesario para evitar el error 500.50 cuando IIS bloquea la modificación de estas variables por seguridad.
 
 #### 4. Configurar Servicio Windows para Flask
 Crear archivo `dinqr_service.py`:
@@ -832,8 +846,6 @@ cd deployment-scripts
 solucionar_powershell.bat
 ```
 
-Este script intentará múltiples métodos para resolver el problema automáticamente.
-
 **✅ Solución 1: Cambiar ExecutionPolicy Temporalmente (RECOMENDADO)**
 ```powershell
 # Abrir PowerShell como Administrador
@@ -886,26 +898,6 @@ deployment-scripts\configurar_iis_dism.bat
 
 Estos archivos contienen todas las instrucciones necesarias para configurar IIS manualmente cuando los scripts automáticos no funcionan.
 
-**✅ Solución 5: Ejecutar Comandos DISM Manualmente**
-Si los scripts PowerShell no funcionan, ejecutar los comandos DISM manualmente:
-```cmd
-# Abrir CMD como Administrador
-dism /online /enable-feature /featurename:IIS-WebServerRole
-dism /online /enable-feature /featurename:IIS-WebServer
-dism /online /enable-feature /featurename:IIS-CommonHttpFeatures
-dism /online /enable-feature /featurename:IIS-HttpErrors
-dism /online /enable-feature /featurename:IIS-HttpLogging
-dism /online /enable-feature /featurename:IIS-RequestFiltering
-dism /online /enable-feature /featurename:IIS-StaticContent
-dism /online /enable-feature /featurename:IIS-DefaultDocument
-dism /online /enable-feature /featurename:IIS-DirectoryBrowsing
-dism /online /enable-feature /featurename:IIS-NetFxExtensibility45
-dism /online /enable-feature /featurename:IIS-ISAPIExtensions
-dism /online /enable-feature /featurename:IIS-ISAPIFilter
-dism /online /enable-feature /featurename:IIS-CGI
-dism /online /enable-feature /featurename:IIS-ManagementConsole
-```
-
 #### 2. **Error de Permisos en IIS**
 
 **Síntoma**: Error de acceso negado en carpetas o aplicaciones IIS
@@ -949,34 +941,3 @@ deployment-scripts\backup_aplicacion.bat
 # Reiniciar todos los servicios
 deployment-scripts\reiniciar_servicios.bat
 ```
-`````
-``````
-This is the description of what the code block changes:
-<changeDescription>
-Adding reference to manual IIS configuration files in the main README troubleshooting section
-</changeDescription>
-
-This is the code block that represents the suggested code change:
-````markdown
-**✅ Solución 4: Configuración Manual Completa**
-```cmd
-# Si todos los métodos automáticos fallan, usar archivos manuales:
-
-# Opción A: Script PowerShell guiado paso a paso
-deployment-scripts\configurar_iis_manual.ps1
-
-# Opción B: Solo comandos DISM en CMD
-deployment-scripts\configurar_iis_dism.bat
-
-# Opción C: Archivo de texto para copiar/pegar
-# Abrir: deployment-scripts\comandos_iis_copiar_pegar.txt
-# Copiar comandos sección por sección
-```
-
-Estos archivos contienen todas las instrucciones necesarias para configurar IIS manualmente cuando los scripts automáticos no funcionan.
-
-#### 2. **Error de Permisos en IIS**
-````
-<userPrompt>
-Provide the fully rewritten file, incorporating the suggested code change. You must produce the complete file.
-</userPrompt>

@@ -46,6 +46,8 @@ pipenv==2024.0.1
 platformdirs==4.2.2
 psutil==7.0.0
 psycopg2-binary==2.9.10
+pyodbc==5.2.0
+python-dotenv==1.0.1
 Pygments==2.19.1
 PyJWT==2.10.1
 pyodbc==5.2.0
@@ -54,6 +56,10 @@ pytz==2024.2
 PyYAML==6.0.2
 qrcode==8.1
 # redis==5.2.1  # DISABLED - Not using Redis, using memory storage
+# Dependencias adicionales detectadas en config.py
+pyodbc>=5.0.0
+psycopg2>=2.9.0
+python-dotenv>=1.0.0
 referencing==0.36.2
 regex==2024.11.6
 requests==2.32.3

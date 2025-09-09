@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import QRTable from '../components/QRTable';
 import { fetchFuncionarios } from '../api/apiService';
-import { Funcionario } from '../types/Funcionario'; // Import the shared type
+import type { Funcionario } from '../types/Funcionario'; // Import the shared type
 
 const QRManagement = () => {
   const [funcionarios, setFuncionarios] = useState<Funcionario[]>([]);

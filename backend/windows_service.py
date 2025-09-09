@@ -52,6 +52,7 @@ class DINQRWindowsService(win32serviceutil.ServiceFramework):
     _svc_display_name_ = ProductionConfig.WINDOWS_SERVICE_DISPLAY_NAME
     _svc_description_ = ProductionConfig.WINDOWS_SERVICE_DESCRIPTION
     _svc_deps_ = None  # No service dependencies
+    _svc_reg_class_ = "DINQRWindowsService"  # Required for PyWin32 service registration
     
     def __init__(self, args):
         """Initialize the Windows Service"""
@@ -187,37 +188,43 @@ class ServiceManager:
     def install_service():
         """Install the Windows Service"""
         try:
-            # Check if running as administrator
-            if not ServiceManager.is_admin():
-                print("ERROR: Administrator privileges required to install service")
-                return False
+            print("Attempting to install Windows Service...")
             
-            # Install the service
-            win32serviceutil.InstallService(
-                DINQRWindowsService._svc_reg_class_,
-                DINQRWindowsService._svc_name_,
-                DINQRWindowsService._svc_display_name_,
-                description=DINQRWindowsService._svc_description_,
-                startType=win32service.SERVICE_AUTO_START,  # Auto-start on boot
-                exeName=sys.executable,
-                exeArgs=f'"{__file__}"'
-            )
+            # Use the standard win32serviceutil approach
+            # This mimics running: python windows_service.py install
+            sys.argv = [sys.argv[0], 'install']
+            win32serviceutil.HandleCommandLine(DINQRWindowsService)
             
-            print(f"Service '{DINQRWindowsService._svc_display_name_}' installed successfully")
+            print(f"✅ Service '{DINQRWindowsService._svc_display_name_}' installed successfully")
             print("Service will start automatically on system boot")
             return True
             
         except Exception as e:
-            print(f"Failed to install service: {str(e)}")
+            error_msg = str(e).lower()
+            
+            # Check for specific permission errors
+            if "access" in error_msg or "denied" in error_msg or "privilege" in error_msg:
+                print("❌ ERROR: Administrator privileges required to install service")
+                print("\n🔧 SOLUCIONES:")
+                print("1. Ejecute CMD como Administrador:")
+                print("   - Click derecho en 'Símbolo del sistema'")
+                print("   - Seleccione 'Ejecutar como administrador'")
+                print("2. O use PowerShell como Administrador:")
+                print("   - Click derecho en 'Windows PowerShell'")
+                print("   - Seleccione 'Ejecutar como administrador'")
+                print("3. Verifique que UAC no esté bloqueando la operación")
+                print("\n💡 ALTERNATIVA: Use NSSM")
+                print("   instalar_servicio_nssm.bat")
+            else:
+                print(f"❌ Failed to install service: {str(e)}")
+            
             return False
     
     @staticmethod
     def remove_service():
         """Remove the Windows Service"""
         try:
-            if not ServiceManager.is_admin():
-                print("ERROR: Administrator privileges required to remove service")
-                return False
+            print("Attempting to remove Windows Service...")
             
             # Stop the service first if it's running
             try:
@@ -227,20 +234,30 @@ class ServiceManager:
             except:
                 pass  # Service might not be running
             
-            # Remove the service
-            win32serviceutil.RemoveService(DINQRWindowsService._svc_name_)
-            print(f"Service '{DINQRWindowsService._svc_display_name_}' removed successfully")
+            # Use the standard win32serviceutil approach
+            sys.argv = [sys.argv[0], 'remove']
+            win32serviceutil.HandleCommandLine(DINQRWindowsService)
+            
+            print(f"✅ Service '{DINQRWindowsService._svc_display_name_}' removed successfully")
             return True
             
         except Exception as e:
-            print(f"Failed to remove service: {str(e)}")
+            error_msg = str(e).lower()
+            
+            if "access" in error_msg or "denied" in error_msg or "privilege" in error_msg:
+                print("❌ ERROR: Administrator privileges required to remove service")
+                print("\n🔧 SOLUCIÓN: Ejecute como Administrador")
+            else:
+                print(f"❌ Failed to remove service: {str(e)}")
+            
             return False
     
     @staticmethod
     def start_service():
         """Start the Windows Service"""
         try:
-            win32serviceutil.StartService(DINQRWindowsService._svc_name_)
+            sys.argv = [sys.argv[0], 'start']
+            win32serviceutil.HandleCommandLine(DINQRWindowsService)
             print(f"Service '{DINQRWindowsService._svc_display_name_}' started successfully")
             return True
         except Exception as e:
@@ -251,7 +268,8 @@ class ServiceManager:
     def stop_service():
         """Stop the Windows Service"""
         try:
-            win32serviceutil.StopService(DINQRWindowsService._svc_name_)
+            sys.argv = [sys.argv[0], 'stop']
+            win32serviceutil.HandleCommandLine(DINQRWindowsService)
             print(f"Service '{DINQRWindowsService._svc_display_name_}' stopped successfully")
             return True
         except Exception as e:
@@ -294,12 +312,46 @@ class ServiceManager:
     def is_admin():
         """Check if running with administrator privileges"""
         try:
-            return win32api.GetUserName() in ['Administrator'] or \
-                   win32con.SE_SHUTDOWN_NAME in win32api.GetTokenInformation(
-                       win32api.GetCurrentProcess(), win32con.TokenPrivileges
-                   )
+            import ctypes
+            return ctypes.windll.shell32.IsUserAnAdmin() != 0
         except:
-            return False
+            # Fallback method using win32api
+            try:
+                import win32security
+                # Get current user token
+                token = win32security.OpenProcessToken(
+                    win32api.GetCurrentProcess(),
+                    win32security.TOKEN_QUERY
+                )
+                
+                # Check if user is in Administrators group
+                admin_sid = win32security.LookupAccountName(None, "Administrators")[0]
+                token_groups = win32security.GetTokenInformation(
+                    token, win32security.TokenGroups
+                )
+                
+                for group in token_groups:
+                    if win32security.EqualSid(group[0], admin_sid):
+                        win32api.CloseHandle(token)
+                        return True
+                
+                win32api.CloseHandle(token)
+                return False
+            except:
+                # Last fallback - just try to perform an admin operation
+                try:
+                    # Try to read a registry key that requires admin access
+                    import winreg
+                    key = winreg.OpenKey(
+                        winreg.HKEY_LOCAL_MACHINE,
+                        "SYSTEM\\CurrentControlSet\\Services",
+                        0,
+                        winreg.KEY_READ
+                    )
+                    winreg.CloseKey(key)
+                    return True
+                except:
+                    return False
 
 def main():
     """Main entry point for service management"""

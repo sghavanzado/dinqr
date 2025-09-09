@@ -1,8 +1,0 @@
-__pycache__/
-.pyc
-.git
-.gitignore
-.env
-venv/
-dist/  # Ignora la carpeta dist ya que copiamos el wheel específico
-build/ # Ignora la carpeta build

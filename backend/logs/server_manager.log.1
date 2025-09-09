@@ -1,64 +1,114 @@
-2025-09-08 15:20:08,378 INFO: Petición: OPTIONS /qr/funcionarios/total desde 127.0.0.1 - args: {} - json: None
-2025-09-08 15:20:08,403 INFO: 127.0.0.1 - - [08/Sep/2025 15:20:08] "OPTIONS /qr/funcionarios/total HTTP/1.1" 200 -
-2025-09-08 15:20:08,555 INFO: Petición: GET /qr/funcionarios/total desde 127.0.0.1 - args: {} - json: None
-2025-09-08 15:20:08,558 INFO: Conexión obtenida del pool. Activas: 2, Inactivas: 198
-2025-09-08 15:20:08,892 INFO: 127.0.0.1 - - [08/Sep/2025 15:20:08] "GET /qr/funcionarios/total HTTP/1.1" 200 -
-2025-09-08 15:20:08,887 INFO: Petición: OPTIONS /qr/funcionarios-com-qr desde 127.0.0.1 - args: {} - json: None
-2025-09-08 15:20:08,921 INFO: 127.0.0.1 - - [08/Sep/2025 15:20:08] "OPTIONS /qr/funcionarios-com-qr HTTP/1.1" 200 -
-2025-09-08 15:20:09,243 INFO: Petición: OPTIONS /qr/funcionarios/total-con-qr desde 127.0.0.1 - args: {} - json: None
-2025-09-08 15:20:09,296 INFO: 127.0.0.1 - - [08/Sep/2025 15:20:09] "OPTIONS /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
-2025-09-08 15:20:09,304 INFO: Petición: GET /qr/funcionarios-com-qr desde 127.0.0.1 - args: {} - json: None
-2025-09-08 15:20:09,429 INFO: Conexión obtenida del pool. Activas: 3, Inactivas: 197
-2025-09-08 15:20:09,536 INFO: IDs de funcionarios con QR obtenidos: ['102', '107', '109', '106', '111', '11', '113', '114', '118', '119', '120', '122', '125', '128', '13', '132', '133', '227', '43', '5000011', '5000012', '5000013', '5000018', '5000030', '500005', '5000054', '5000055', '74', '130', '131', '134', '135', '136', '137', '138', '139', '140', '14002', '14005', '14007', '14008', '14009', '14014', '14015', '14020', '142', '148', '15', '15002', '15004', '15005', '15006', '15007', '15008', '15010', '15011', '15021', '15023', '15024', '15025', '15030', '15034', '15037', '15039', '15042', '15043', '15045', '15046', '15047', '15048', '15049', '15050', '15051', '15052', '15053', '15054', '15062', '15064', '15065', '15068', '15079', '15083', '15084', '15087', '15088', '15089', '15092', '15095', '151', '152', '153', '156', '157', '16001', '16002', '16011', '16012', '16023', '16024', '16026', '161', '165', '166', '168', '17', '170', '17001', '17003', '17004', '17005', '17010', '17011', '17016', '17026', '171', '172', '173', '174', '175', '176', '177', '18001', '18002', '18006', '18007', '18023', '18026', '18027', '182', '184', '185', '188', '189', '190', '19002', '19003', '19004', '19005', '19006', '19008', '191', '194', '195', '196', '197', '20', '200001', '20001', '20003']
-2025-09-08 15:20:09,542 INFO: Conexión liberada al pool. Activas: 2, Inactivas: 198
-2025-09-08 15:20:09,543 INFO: Ejecutando consulta SQL para funcionarios COM QR: 
-                    SELECT sap, nome, funcao, area, nif, telefone, email, unineg
-                    FROM sonacard
-                    WHERE sap IN (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
-                    ORDER BY sap
-                
-2025-09-08 15:20:09,548 INFO: Petición: GET /qr/funcionarios/total-con-qr desde 127.0.0.1 - args: {} - json: None
-2025-09-08 15:20:09,556 INFO: Funcionarios con QR obtenidos: 149 registros
-2025-09-08 15:20:09,556 INFO: Conexión obtenida del pool. Activas: 3, Inactivas: 197
-2025-09-08 15:20:09,559 INFO: Conexión liberada al pool. Activas: 2, Inactivas: 198
-2025-09-08 15:20:09,560 INFO: 127.0.0.1 - - [08/Sep/2025 15:20:09] "GET /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
-2025-09-08 15:20:09,561 INFO: 127.0.0.1 - - [08/Sep/2025 15:20:09] "GET /qr/funcionarios-com-qr HTTP/1.1" 200 -
-2025-09-08 15:20:34,228 INFO: Petición: OPTIONS /qr/funcionarios-sin-qr desde 127.0.0.1 - args: {} - json: None
-2025-09-08 15:20:35,881 INFO: 127.0.0.1 - - [08/Sep/2025 15:20:35] "OPTIONS /qr/funcionarios-sin-qr HTTP/1.1" 200 -
-2025-09-08 15:20:35,588 INFO: Petición: OPTIONS /qr/funcionarios desde 127.0.0.1 - args: {'page': '1', 'per_page': '10', 'filtro': ''} - json: None
-2025-09-08 15:20:39,265 INFO: 127.0.0.1 - - [08/Sep/2025 15:20:39] "OPTIONS /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
-2025-09-08 15:20:37,919 INFO: Petición: GET /qr/funcionarios-sin-qr desde 127.0.0.1 - args: {} - json: None
-2025-09-08 15:20:39,777 INFO: Conexión obtenida del pool. Activas: 3, Inactivas: 197
-2025-09-08 15:20:39,945 INFO: Conexión liberada al pool. Activas: 2, Inactivas: 198
-2025-09-08 15:20:39,963 INFO: Ejecutando consulta SQL: 
-                    SELECT sap, nome, funcao, area, nif, telefone, email, unineg
-                    FROM sonacard
-                    WHERE sap NOT IN (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
-                
-2025-09-08 15:20:40,225 INFO: Petición: GET /qr/funcionarios desde 127.0.0.1 - args: {'page': '1', 'per_page': '10', 'filtro': ''} - json: None
-2025-09-08 15:20:40,350 INFO: Conexión obtenida del pool. Activas: 3, Inactivas: 197
-2025-09-08 15:20:40,368 INFO: 127.0.0.1 - - [08/Sep/2025 15:20:40] "GET /qr/funcionarios-sin-qr HTTP/1.1" 200 -
-2025-09-08 15:20:40,597 INFO: IDs de funcionarios con QR obtenidos: ['102', '107', '109', '106', '111', '11', '113', '114', '118', '119', '120', '122', '125', '128', '13', '132', '133', '227', '43', '5000011', '5000012', '5000013', '5000018', '5000030', '500005', '5000054', '5000055', '74', '130', '131', '134', '135', '136', '137', '138', '139', '140', '14002', '14005', '14007', '14008', '14009', '14014', '14015', '14020', '142', '148', '15', '15002', '15004', '15005', '15006', '15007', '15008', '15010', '15011', '15021', '15023', '15024', '15025', '15030', '15034', '15037', '15039', '15042', '15043', '15045', '15046', '15047', '15048', '15049', '15050', '15051', '15052', '15053', '15054', '15062', '15064', '15065', '15068', '15079', '15083', '15084', '15087', '15088', '15089', '15092', '15095', '151', '152', '153', '156', '157', '16001', '16002', '16011', '16012', '16023', '16024', '16026', '161', '165', '166', '168', '17', '170', '17001', '17003', '17004', '17005', '17010', '17011', '17016', '17026', '171', '172', '173', '174', '175', '176', '177', '18001', '18002', '18006', '18007', '18023', '18026', '18027', '182', '184', '185', '188', '189', '190', '19002', '19003', '19004', '19005', '19006', '19008', '191', '194', '195', '196', '197', '20', '200001', '20001', '20003']
-2025-09-08 15:20:40,625 INFO: Conexión liberada al pool. Activas: 2, Inactivas: 198
-2025-09-08 15:20:40,628 INFO: Ejecutando consulta SQL: 
-                    SELECT sap, nome, funcao, area, nif, telefone, email, unineg
-                    FROM sonacard
-                    WHERE sap IN (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
-                    AND nome LIKE ?
-                    ORDER BY sap
-                    OFFSET ? ROWS FETCH NEXT ? ROWS ONLY
-                
-2025-09-08 15:20:40,638 INFO: Funcionarios obtenidos: 10 registros
-2025-09-08 15:20:40,649 INFO: 127.0.0.1 - - [08/Sep/2025 15:20:40] "GET /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
-2025-09-08 15:21:50,631 INFO: Petición: OPTIONS /qr/funcionarios/total desde 127.0.0.1 - args: {} - json: None
-2025-09-08 15:21:50,767 INFO: 127.0.0.1 - - [08/Sep/2025 15:21:50] "OPTIONS /qr/funcionarios/total HTTP/1.1" 200 -
-2025-09-08 15:21:50,765 INFO: Petición: OPTIONS /qr/funcionarios-com-qr desde 127.0.0.1 - args: {} - json: None
-2025-09-08 15:21:50,777 INFO: 127.0.0.1 - - [08/Sep/2025 15:21:50] "OPTIONS /qr/funcionarios-com-qr HTTP/1.1" 200 -
-2025-09-08 15:21:51,105 INFO: Petición: GET /qr/funcionarios/total desde 127.0.0.1 - args: {} - json: None
-2025-09-08 15:21:51,107 INFO: Petición: GET /qr/funcionarios-com-qr desde 127.0.0.1 - args: {} - json: None
-2025-09-08 15:21:51,113 INFO: Conexión obtenida del pool. Activas: 3, Inactivas: 197
-2025-09-08 15:21:51,163 INFO: 127.0.0.1 - - [08/Sep/2025 15:21:51] "GET /qr/funcionarios/total HTTP/1.1" 200 -
-2025-09-08 15:21:51,178 INFO: Petición: OPTIONS /qr/funcionarios/total-con-qr desde 127.0.0.1 - args: {} - json: None
-2025-09-08 15:21:51,180 INFO: 127.0.0.1 - - [08/Sep/2025 15:21:51] "OPTIONS /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
-2025-09-08 15:21:51,243 INFO: Conexión obtenida del pool. Activas: 4, Inactivas: 196
-2025-09-08 15:21:51,289 INFO: IDs de funcionarios con QR obtenidos: ['102', '107', '109', '106', '111', '11', '113', '114', '118', '119', '120', '122', '125', '128', '13', '132', '133', '227', '43', '5000011', '5000012', '5000013', '5000018', '5000030', '500005', '5000054', '5000055', '74', '130', '131', '134', '135', '136', '137', '138', '139', '140', '14002', '14005', '14007', '14008', '14009', '14014', '14015', '14020', '142', '148', '15', '15002', '15004', '15005', '15006', '15007', '15008', '15010', '15011', '15021', '15023', '15024', '15025', '15030', '15034', '15037', '15039', '15042', '15043', '15045', '15046', '15047', '15048', '15049', '15050', '15051', '15052', '15053', '15054', '15062', '15064', '15065', '15068', '15079', '15083', '15084', '15087', '15088', '15089', '15092', '15095', '151', '152', '153', '156', '157', '16001', '16002', '16011', '16012', '16023', '16024', '16026', '161', '165', '166', '168', '17', '170', '17001', '17003', '17004', '17005', '17010', '17011', '17016', '17026', '171', '172', '173', '174', '175', '176', '177', '18001', '18002', '18006', '18007', '18023', '18026', '18027', '182', '184', '185', '188', '189', '190', '19002', '19003', '19004', '19005', '19006', '19008', '191', '194', '195', '196', '197', '20', '200001', '20001', '20003']
+2025-09-09 16:09:25,430 INFO: ==================================================
+2025-09-09 16:09:25,455 INFO: Environment: production
+2025-09-09 16:09:25,457 INFO: Debug mode: False
+2025-09-09 16:09:25,458 INFO: Database URI: 192.168.253.133:5432/localdb
+2025-09-09 16:09:25,657 INFO: Permissions and roles initialized successfully.
+2025-09-09 16:09:25,688 INFO: Permissions initialized successfully
+2025-09-09 16:09:25,763 INFO: Orígenes CORS permitidos: ['https://localhost', 'https://localhost:443', 'https://127.0.0.1', 'https://localhost:9000', 'https://127.0.1:9000']
+2025-09-09 16:09:25,764 INFO: ==================================================
+2025-09-09 16:09:25,772 INFO: DINQR Backend Application Starting
+2025-09-09 16:09:25,773 INFO: ==================================================
+2025-09-09 16:09:25,775 INFO: Environment: production
+2025-09-09 16:09:25,777 INFO: Debug mode: False
+2025-09-09 16:09:25,778 INFO: Database URI: 192.168.253.133:5432/localdb
+2025-09-09 16:09:25,877 INFO: Permissions and roles initialized successfully.
+2025-09-09 16:09:25,879 INFO: Permissions initialized successfully
+2025-09-09 16:09:25,910 WARNING: ============================================================
+2025-09-09 16:09:25,915 WARNING: WARNING: Running development server
+2025-09-09 16:09:25,918 WARNING: For production use:
+2025-09-09 16:09:25,919 WARNING:   python waitress_server.py
+2025-09-09 16:09:25,921 WARNING:   python windows_service.py install
+2025-09-09 16:09:25,922 WARNING: ============================================================
+2025-09-09 16:09:25,938 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-09-09 16:09:25,939 INFO: [33mPress CTRL+C to quit[0m
+2025-09-09 16:11:30,765 INFO: Petición: GET /api/iamc/funcionarios desde 127.0.0.1 - args: {} - json: None
+2025-09-09 16:11:31,645 ERROR: Erro ao listar funcionários: MSSQL requires an order_by when using an OFFSET or a non-simple LIMIT clause
+2025-09-09 16:11:31,648 INFO: 127.0.0.1 - - [09/Sep/2025 16:11:31] "[35m[1mGET /api/iamc/funcionarios HTTP/1.1[0m" 500 -
+2025-09-09 16:11:56,343 INFO: Orígenes CORS permitidos: ['https://localhost', 'https://localhost:443', 'https://127.0.0.1', 'https://localhost:9000', 'https://127.0.1:9000']
+2025-09-09 16:11:56,363 INFO: ==================================================
+2025-09-09 16:11:56,379 INFO: DINQR Backend Application Starting
+2025-09-09 16:11:56,452 INFO: ==================================================
+2025-09-09 16:11:56,477 INFO: Environment: production
+2025-09-09 16:11:56,481 INFO: Debug mode: False
+2025-09-09 16:11:56,486 INFO: Database URI: 192.168.253.133:5432/localdb
+2025-09-09 16:11:56,657 INFO: Permissions and roles initialized successfully.
+2025-09-09 16:11:56,691 INFO: Permissions initialized successfully
+2025-09-09 16:14:20,339 INFO: Orígenes CORS permitidos: ['https://localhost', 'https://localhost:443', 'https://127.0.0.1', 'https://localhost:9000', 'https://127.0.1:9000']
+2025-09-09 16:14:20,341 INFO: ==================================================
+2025-09-09 16:14:20,342 INFO: DINQR Backend Application Starting
+2025-09-09 16:14:20,342 INFO: ==================================================
+2025-09-09 16:14:20,343 INFO: Environment: production
+2025-09-09 16:14:20,343 INFO: Debug mode: False
+2025-09-09 16:14:20,343 INFO: Database URI: 192.168.253.133:5432/localdb
+2025-09-09 16:14:20,498 INFO: Permissions and roles initialized successfully.
+2025-09-09 16:14:20,502 INFO: Permissions initialized successfully
+2025-09-09 16:14:20,611 INFO: Orígenes CORS permitidos: ['https://localhost', 'https://localhost:443', 'https://127.0.0.1', 'https://localhost:9000', 'https://127.0.1:9000']
+2025-09-09 16:14:20,615 INFO: ==================================================
+2025-09-09 16:14:20,617 INFO: DINQR Backend Application Starting
+2025-09-09 16:14:20,619 INFO: ==================================================
+2025-09-09 16:14:20,622 INFO: Environment: production
+2025-09-09 16:14:20,626 INFO: Debug mode: False
+2025-09-09 16:14:20,645 INFO: Database URI: 192.168.253.133:5432/localdb
+2025-09-09 16:14:20,756 INFO: Permissions and roles initialized successfully.
+2025-09-09 16:14:20,759 INFO: Permissions initialized successfully
+2025-09-09 16:14:20,791 WARNING: ============================================================
+2025-09-09 16:14:20,799 WARNING: WARNING: Running development server
+2025-09-09 16:14:20,806 WARNING: For production use:
+2025-09-09 16:14:20,807 WARNING:   python waitress_server.py
+2025-09-09 16:14:20,811 WARNING:   python windows_service.py install
+2025-09-09 16:14:20,817 WARNING: ============================================================
+2025-09-09 16:14:20,836 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-09-09 16:14:20,838 INFO: [33mPress CTRL+C to quit[0m
+2025-09-09 16:14:26,774 INFO: Petición: GET /api/iamc/status desde 127.0.0.1 - args: {} - json: None
+2025-09-09 16:14:26,781 INFO: 127.0.0.1 - - [09/Sep/2025 16:14:26] "GET /api/iamc/status HTTP/1.1" 200 -
+2025-09-09 16:14:37,695 INFO: Petición: GET /api/iamc/funcionarios desde 127.0.0.1 - args: {} - json: None
+2025-09-09 16:14:37,731 ERROR: Erro ao listar funcionários: MSSQL requires an order_by when using an OFFSET or a non-simple LIMIT clause
+2025-09-09 16:14:37,737 INFO: 127.0.0.1 - - [09/Sep/2025 16:14:37] "[35m[1mGET /api/iamc/funcionarios HTTP/1.1[0m" 500 -
+2025-09-09 16:16:05,858 INFO: Petición: GET /api/iamc/status desde 127.0.0.1 - args: {} - json: None
+2025-09-09 16:16:05,864 INFO: 127.0.0.1 - - [09/Sep/2025 16:16:05] "GET /api/iamc/status HTTP/1.1" 200 -
+2025-09-09 16:16:05,874 INFO: Petición: GET /api/iamc/funcionarios desde 127.0.0.1 - args: {} - json: None
+2025-09-09 16:16:05,884 ERROR: Erro ao listar funcionários: MSSQL requires an order_by when using an OFFSET or a non-simple LIMIT clause
+2025-09-09 16:16:05,914 INFO: 127.0.0.1 - - [09/Sep/2025 16:16:05] "[35m[1mGET /api/iamc/funcionarios HTTP/1.1[0m" 500 -
+2025-09-09 16:16:55,634 INFO: Petición: GET /api/iamc/funcionarios desde 127.0.0.1 - args: {} - json: None
+2025-09-09 16:16:55,643 ERROR: Erro ao listar funcionários: MSSQL requires an order_by when using an OFFSET or a non-simple LIMIT clause
+2025-09-09 16:16:55,645 INFO: 127.0.0.1 - - [09/Sep/2025 16:16:55] "[35m[1mGET /api/iamc/funcionarios HTTP/1.1[0m" 500 -
+2025-09-09 16:18:26,777 INFO: Petición: GET /api/iamc/funcionarios desde 127.0.0.1 - args: {} - json: None
+2025-09-09 16:18:26,789 ERROR: Erro ao listar funcionários: MSSQL requires an order_by when using an OFFSET or a non-simple LIMIT clause
+2025-09-09 16:18:26,791 INFO: 127.0.0.1 - - [09/Sep/2025 16:18:26] "[35m[1mGET /api/iamc/funcionarios HTTP/1.1[0m" 500 -
+2025-09-09 16:20:42,025 INFO: Orígenes CORS permitidos: ['https://localhost', 'https://localhost:443', 'https://127.0.0.1', 'https://localhost:9000', 'https://127.0.1:9000']
+2025-09-09 16:20:42,027 INFO: ==================================================
+2025-09-09 16:20:42,028 INFO: DINQR Backend Application Starting
+2025-09-09 16:20:42,028 INFO: ==================================================
+2025-09-09 16:20:42,029 INFO: Environment: production
+2025-09-09 16:20:42,030 INFO: Debug mode: False
+2025-09-09 16:20:42,031 INFO: Database URI: 192.168.253.133:5432/localdb
+2025-09-09 16:20:42,174 INFO: Permissions and roles initialized successfully.
+2025-09-09 16:20:42,176 INFO: Permissions initialized successfully
+2025-09-09 16:20:42,275 INFO: Orígenes CORS permitidos: ['https://localhost', 'https://localhost:443', 'https://127.0.0.1', 'https://localhost:9000', 'https://127.0.1:9000']
+2025-09-09 16:20:42,278 INFO: ==================================================
+2025-09-09 16:20:42,282 INFO: DINQR Backend Application Starting
+2025-09-09 16:20:42,286 INFO: ==================================================
+2025-09-09 16:20:42,288 INFO: Environment: production
+2025-09-09 16:20:42,292 INFO: Debug mode: False
+2025-09-09 16:20:42,294 INFO: Database URI: 192.168.253.133:5432/localdb
+2025-09-09 16:20:42,404 INFO: Permissions and roles initialized successfully.
+2025-09-09 16:20:42,406 INFO: Permissions initialized successfully
+2025-09-09 16:20:42,431 WARNING: ============================================================
+2025-09-09 16:20:42,434 WARNING: WARNING: Running development server
+2025-09-09 16:20:42,436 WARNING: For production use:
+2025-09-09 16:20:42,438 WARNING:   python waitress_server.py
+2025-09-09 16:20:42,440 WARNING:   python windows_service.py install
+2025-09-09 16:20:42,441 WARNING: ============================================================
+2025-09-09 16:20:42,456 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-09-09 16:20:42,457 INFO: [33mPress CTRL+C to quit[0m
+2025-09-09 16:21:00,592 INFO: Petición: GET /api/iamc/funcionarios desde 127.0.0.1 - args: {} - json: None
+2025-09-09 16:21:00,649 INFO: 127.0.0.1 - - [09/Sep/2025 16:21:00] "GET /api/iamc/funcionarios HTTP/1.1" 200 -
+2025-09-09 16:21:16,445 INFO: Petición: GET /api/iamc/cargos desde 127.0.0.1 - args: {} - json: None
+2025-09-09 16:21:16,465 INFO: 127.0.0.1 - - [09/Sep/2025 16:21:16] "[33mGET /api/iamc/cargos HTTP/1.1[0m" 404 -
+2025-09-09 16:21:26,532 INFO: Petición: POST /api/iamc/cargos desde 127.0.0.1 - args: {} - json: {'Nome': 'Desenvolvedor Senior', 'Descricao': 'Responsável pelo desenvolvimento e manutenção de sistemas', 'Nivel': 'Senior'}
+2025-09-09 16:21:26,551 INFO: 127.0.0.1 - - [09/Sep/2025 16:21:26] "[33mPOST /api/iamc/cargos HTTP/1.1[0m" 404 -
+2025-09-09 16:39:08,290 INFO: Orígenes CORS permitidos: ['https://localhost', 'https://localhost:443', 'https://127.0.0.1', 'https://localhost:9000', 'https://127.0.1:9000']
+2025-09-09 16:39:08,292 INFO: ==================================================

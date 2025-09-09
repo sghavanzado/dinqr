@@ -1,0 +1,594 @@
+{
+  "info": {
+    "name": "IAMC - Sistema de Gestão de Funcionários",
+    "description": "Coleção completa para testar todos os endpoints do sistema IAMC - Base de dados: IAMC",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "1.1.0"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:5000",
+      "type": "string",
+      "description": "URL base do servidor Flask"
+    },
+    {
+      "key": "funcionario_id",
+      "value": "1",
+      "type": "string",
+      "description": "ID do funcionário para testes"
+    },
+    {
+      "key": "departamento_id", 
+      "value": "1",
+      "type": "string",
+      "description": "ID do departamento para testes"
+    },
+    {
+      "key": "auth_token",
+      "value": "",
+      "type": "string",
+      "description": "Token de autenticação (se necessário)"
+    }
+  ],
+  "auth": {
+    "type": "noauth"
+  },
+  "item": [
+    {
+      "name": "01. Status IAMC",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/iamc/status",
+          "host": ["{{base_url}}"],
+          "path": ["api", "iamc", "status"]
+        }
+      }
+    },
+    {
+      "name": "02. Funcionários",
+      "item": [
+        {
+          "name": "Listar Funcionários",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/iamc/funcionarios?page=1&per_page=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "iamc", "funcionarios"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "per_page",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Obter Funcionário por ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/iamc/funcionarios/{{funcionario_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "iamc", "funcionarios", "{{funcionario_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Criar Funcionário",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"João\",\n  \"apelido\": \"Silva\",\n  \"bi\": \"123456789LA040\",\n  \"data_nascimento\": \"1990-05-15\",\n  \"sexo\": \"M\",\n  \"estado_civil\": \"Solteiro\",\n  \"email\": \"joao.silva@empresa.com\",\n  \"telefone\": \"+244 923 456 789\",\n  \"endereco\": \"Rua da Paz, 123, Luanda, Angola\",\n  \"data_admissao\": \"2024-01-15\",\n  \"estado_funcionario\": \"Ativo\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/iamc/funcionarios",
+              "host": ["{{base_url}}"],
+              "path": ["api", "iamc", "funcionarios"]
+            }
+          }
+        },
+        {
+          "name": "Atualizar Funcionário",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"telefone\": \"+244 925 555 888\",\n  \"endereco\": \"Rua Nova, 456, Luanda, Angola\",\n  \"estado_funcionario\": \"Ativo\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/iamc/funcionarios/{{funcionario_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "iamc", "funcionarios", "{{funcionario_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Eliminar Funcionário",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/iamc/funcionarios/{{funcionario_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "iamc", "funcionarios", "{{funcionario_id}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "03. Departamentos",
+      "item": [
+        {
+          "name": "Listar Departamentos",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/iamc/departamentos",
+              "host": ["{{base_url}}"],
+              "path": ["api", "iamc", "departamentos"]
+            }
+          }
+        },
+        {
+          "name": "Obter Departamento por ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/iamc/departamentos/{{departamento_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "iamc", "departamentos", "{{departamento_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Criar Departamento",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Recursos Humanos\",\n  \"descricao\": \"Departamento responsável pela gestão de pessoas e talentos da empresa\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/iamc/departamentos",
+              "host": ["{{base_url}}"],
+              "path": ["api", "iamc", "departamentos"]
+            }
+          }
+        },
+        {
+          "name": "Atualizar Departamento",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Recursos Humanos e Desenvolvimento\",\n  \"descricao\": \"Departamento responsável pela gestão de pessoas, talentos e desenvolvimento organizacional\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/iamc/departamentos/{{departamento_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "iamc", "departamentos", "{{departamento_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Eliminar Departamento",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/iamc/departamentos/{{departamento_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "iamc", "departamentos", "{{departamento_id}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "04. Presenças",
+      "item": [
+        {
+          "name": "Listar Presenças",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/iamc/presencas?page=1&per_page=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "iamc", "presencas"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "per_page",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Listar Presenças por Funcionário",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/iamc/presencas?funcionario_id={{funcionario_id}}&page=1&per_page=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "iamc", "presencas"],
+              "query": [
+                {
+                  "key": "funcionario_id",
+                  "value": "{{funcionario_id}}"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "per_page",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Obter Presença por ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/iamc/presencas/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "iamc", "presencas", "1"]
+            }
+          }
+        },
+        {
+          "name": "Registrar Presença",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"funcionario_id\": {{funcionario_id}},\n  \"data\": \"2024-09-09\",\n  \"hora_entrada\": \"08:00\",\n  \"hora_saida\": \"17:00\",\n  \"observacao\": \"Presente todo o dia de trabalho\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/iamc/presencas",
+              "host": ["{{base_url}}"],
+              "path": ["api", "iamc", "presencas"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "05. Licenças",
+      "item": [
+        {
+          "name": "Listar Licenças",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/iamc/licencas?page=1&per_page=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "iamc", "licencas"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "per_page",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Obter Licença por ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/iamc/licencas/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "iamc", "licencas", "1"]
+            }
+          }
+        },
+        {
+          "name": "Criar Licença",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"funcionario_id\": {{funcionario_id}},\n  \"tipo_licenca\": \"Férias\",\n  \"data_inicio\": \"2024-10-01\",\n  \"data_fim\": \"2024-10-15\",\n  \"estado\": \"Pendente\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/iamc/licencas",
+              "host": ["{{base_url}}"],
+              "path": ["api", "iamc", "licencas"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "06. Benefícios",
+      "item": [
+        {
+          "name": "Listar Benefícios",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/iamc/beneficios",
+              "host": ["{{base_url}}"],
+              "path": ["api", "iamc", "beneficios"]
+            }
+          }
+        },
+        {
+          "name": "Obter Benefício por ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/iamc/beneficios/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "iamc", "beneficios", "1"]
+            }
+          }
+        },
+        {
+          "name": "Criar Benefício",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Plano de Saúde Premium\",\n  \"descricao\": \"Cobertura médica completa incluindo consultas, exames e internamentos\",\n  \"tipo\": \"Saúde\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/iamc/beneficios",
+              "host": ["{{base_url}}"],
+              "path": ["api", "iamc", "beneficios"]
+            }
+          }
+        },
+        {
+          "name": "Atualizar Benefício",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Plano de Saúde Premium Plus\",\n  \"descricao\": \"Cobertura médica completa incluindo consultas, exames, internamentos e medicina preventiva\",\n  \"tipo\": \"Saúde\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/iamc/beneficios/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "iamc", "beneficios", "1"]
+            }
+          }
+        },
+        {
+          "name": "Eliminar Benefício",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/iamc/beneficios/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "iamc", "beneficios", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "07. Folha Salarial",
+      "item": [
+        {
+          "name": "Listar Folhas Salariais",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/iamc/folha-salarial?page=1&per_page=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "iamc", "folha-salarial"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "per_page",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Listar Folhas por Funcionário",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/iamc/folha-salarial?funcionario_id={{funcionario_id}}&page=1&per_page=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "iamc", "folha-salarial"],
+              "query": [
+                {
+                  "key": "funcionario_id",
+                  "value": "{{funcionario_id}}"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "per_page",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

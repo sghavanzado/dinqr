@@ -1,0 +1,108 @@
+{
+  "info": {
+    "name": "IAMC - Endpoints de Foto",
+    "description": "Endpoints para gerenciamento de fotos tipo visa dos funcionários",
+    "version": "1.0.0"
+  },
+  "item": [
+    {
+      "name": "Upload Foto Funcionário",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "foto",
+              "type": "file",
+              "src": "",
+              "description": "Arquivo de foto (PNG, JPG, JPEG) - será processado para formato tipo visa"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{base_url}}/api/iamc/funcionarios/{{funcionario_id}}/foto",
+          "host": ["{{base_url}}"],
+          "path": ["api", "iamc", "funcionarios", "{{funcionario_id}}", "foto"]
+        },
+        "description": "Faz upload de uma foto tipo visa para o funcionário especificado. A imagem será automaticamente redimensionada para 354x472 pixels (formato 3x4 cm a 300 DPI)."
+      },
+      "response": [
+        {
+          "name": "Upload Sucesso",
+          "status": "OK",
+          "code": 200,
+          "body": "{\n  \"success\": true,\n  \"message\": \"Foto do funcionário atualizada com sucesso\",\n  \"foto_url\": \"/api/iamc/uploads/fotos_funcionarios/funcionario_5_abc12345.jpg\",\n  \"funcionario\": {\n    \"FuncionarioID\": 5,\n    \"Nome\": \"Ana\",\n    \"Apelido\": \"Silva\",\n    \"Foto\": \"funcionario_5_abc12345.jpg\"\n  }\n}"
+        }
+      ]
+    },
+    {
+      "name": "Obter Info da Foto",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/iamc/funcionarios/{{funcionario_id}}/foto",
+          "host": ["{{base_url}}"],
+          "path": ["api", "iamc", "funcionarios", "{{funcionario_id}}", "foto"]
+        },
+        "description": "Obtém informações sobre a foto do funcionário, incluindo URL para visualização."
+      },
+      "response": [
+        {
+          "name": "Info da Foto",
+          "status": "OK", 
+          "code": 200,
+          "body": "{\n  \"success\": true,\n  \"foto_url\": \"/api/iamc/uploads/fotos_funcionarios/funcionario_5_abc12345.jpg\",\n  \"funcionario_id\": 5,\n  \"nome\": \"Ana Silva\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Visualizar Foto (Arquivo)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/iamc/uploads/fotos_funcionarios/funcionario_5_abc12345.jpg",
+          "host": ["{{base_url}}"],
+          "path": ["api", "iamc", "uploads", "fotos_funcionarios", "funcionario_5_abc12345.jpg"]
+        },
+        "description": "Serve o arquivo de foto diretamente. Use esta URL em tags <img> ou para download direto da foto."
+      }
+    },
+    {
+      "name": "Remover Foto",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/iamc/funcionarios/{{funcionario_id}}/foto",
+          "host": ["{{base_url}}"],
+          "path": ["api", "iamc", "funcionarios", "{{funcionario_id}}", "foto"]
+        },
+        "description": "Remove a foto do funcionário, excluindo o arquivo físico e a referência no banco de dados."
+      },
+      "response": [
+        {
+          "name": "Remoção Sucesso",
+          "status": "OK",
+          "code": 200,
+          "body": "{\n  \"success\": true,\n  \"message\": \"Foto do funcionário removida com sucesso\",\n  \"funcionario\": {\n    \"FuncionarioID\": 5,\n    \"Nome\": \"Ana\",\n    \"Apelido\": \"Silva\",\n    \"Foto\": null\n  }\n}"
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:5000",
+      "type": "string"
+    },
+    {
+      "key": "funcionario_id", 
+      "value": "5",
+      "type": "string"
+    }
+  ]
+}

@@ -44,6 +44,22 @@ class Config:
         'password': os.environ.get('LOCAL_DB_PASSWORD', 'postgr3s')
     }
     
+    # Base de datos IAMC (SQL Server)
+    IAMC_DB_CONFIG = {
+        'server': os.environ.get('IAMC_DB_SERVER', 'localhost'),
+        'database': os.environ.get('IAMC_DB_NAME', 'IAMC'),
+        'username': os.environ.get('IAMC_DB_USERNAME', 'sa'),
+        'password': os.environ.get('IAMC_DB_PASSWORD', 'Global2020'),
+        'driver': 'SQL Server'
+    }
+    
+    # SQLAlchemy URI para IAMC (MSSQL)
+    IAMC_SQLALCHEMY_DATABASE_URI = (
+        f"mssql+pyodbc://{IAMC_DB_CONFIG['username']}:{IAMC_DB_CONFIG['password']}"
+        f"@{IAMC_DB_CONFIG['server']}/{IAMC_DB_CONFIG['database']}"
+        f"?driver={IAMC_DB_CONFIG['driver'].replace(' ', '+')}&TrustServerCertificate=yes"
+    )
+    
     # Configuración CORS
     _CORS_ORIGINS_RAW = os.environ.get('CORS_ORIGINS', 'https://localhost,https://localhost:443,https://127.0.0.1,https://localhost:9000,https://127.0.0.1:9000')
     CORS_ORIGINS = [o.strip() for o in _CORS_ORIGINS_RAW.split(',') if o.strip()]

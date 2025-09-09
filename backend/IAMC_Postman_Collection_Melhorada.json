@@ -1,0 +1,843 @@
+{
+  "info": {
+    "name": "IAMC - Sistema de Gestão de Funcionários (Versão Melhorada)",
+    "description": "Coleção completa para testar todos os endpoints do sistema IAMC - Base de dados: IAMC\n\n**Instruções de Uso:**\n1. Configure a variável `base_url` para o endereço do seu servidor\n2. Execute primeiro o endpoint 'Status IAMC' para verificar conectividade\n3. Use os endpoints na ordem sugerida para criar dados de teste\n4. Os testes automáticos validam as respostas\n\n**Base de Dados:** IAMC (SQL Server)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "2.0.0"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:5000",
+      "type": "string",
+      "description": "URL base do servidor Flask"
+    },
+    {
+      "key": "funcionario_id",
+      "value": "",
+      "type": "string",
+      "description": "ID do funcionário criado automaticamente"
+    },
+    {
+      "key": "departamento_id", 
+      "value": "",
+      "type": "string",
+      "description": "ID do departamento criado automaticamente"
+    },
+    {
+      "key": "cargo_id",
+      "value": "",
+      "type": "string",
+      "description": "ID do cargo criado automaticamente"
+    },
+    {
+      "key": "auth_token",
+      "value": "",
+      "type": "string",
+      "description": "Token de autenticação (se necessário)"
+    }
+  ],
+  "auth": {
+    "type": "noauth"
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "exec": [
+          "// Script global executado antes de cada request",
+          "console.log('🚀 Executando request para:', pm.request.url.toString());",
+          "",
+          "// Adicionar cabeçalhos padrão",
+          "pm.request.headers.add({",
+          "    key: 'Content-Type',",
+          "    value: 'application/json'",
+          "});",
+          "",
+          "pm.request.headers.add({",
+          "    key: 'Accept',",
+          "    value: 'application/json'",
+          "});"
+        ],
+        "type": "text/javascript"
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "exec": [
+          "// Testes globais executados após cada request",
+          "pm.test('Status code é válido', function () {",
+          "    pm.expect(pm.response.code).to.be.oneOf([200, 201, 204]);",
+          "});",
+          "",
+          "pm.test('Response time é aceitável', function () {",
+          "    pm.expect(pm.response.responseTime).to.be.below(5000);",
+          "});",
+          "",
+          "pm.test('Content-Type é application/json', function () {",
+          "    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+          "});"
+        ],
+        "type": "text/javascript"
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "🏠 01. Status e Conectividade",
+      "item": [
+        {
+          "name": "Status IAMC",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('IAMC está funcionando', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.have.property('status');",
+                  "    pm.expect(responseJson.status).to.eql('IAMC funcionando');",
+                  "});",
+                  "",
+                  "pm.test('Timestamp está presente', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.have.property('timestamp');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/iamc/status",
+              "host": ["{{base_url}}"],
+              "path": ["api", "iamc", "status"]
+            },
+            "description": "Verifica se o sistema IAMC está funcionando corretamente"
+          }
+        },
+        {
+          "name": "Health Check Geral",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Sistema está saudável', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.have.property('status');",
+                  "    pm.expect(responseJson.status).to.eql('healthy');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": ["{{base_url}}"],
+              "path": ["health"]
+            },
+            "description": "Verifica o health check geral do sistema"
+          }
+        }
+      ],
+      "description": "Endpoints para verificar o status e conectividade do sistema"
+    },
+    {
+      "name": "🏢 02. Departamentos",
+      "item": [
+        {
+          "name": "Listar Departamentos",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Response é um array', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.be.an('array');",
+                  "});",
+                  "",
+                  "if (pm.response.json().length > 0) {",
+                  "    pm.test('Departamento tem estrutura correta', function () {",
+                  "        const departamento = pm.response.json()[0];",
+                  "        pm.expect(departamento).to.have.property('departamento_id');",
+                  "        pm.expect(departamento).to.have.property('nome');",
+                  "    });",
+                  "    ",
+                  "    // Salvar ID do primeiro departamento",
+                  "    pm.collectionVariables.set('departamento_id', pm.response.json()[0].departamento_id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/iamc/departamentos",
+              "host": ["{{base_url}}"],
+              "path": ["api", "iamc", "departamentos"]
+            }
+          }
+        },
+        {
+          "name": "Criar Departamento",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Departamento criado com sucesso', function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.have.property('departamento');",
+                  "    pm.expect(responseJson.departamento.Nome).to.eql('Tecnologia da Informação');",
+                  "});",
+                  "",
+                  "// Salvar ID do departamento criado",
+                  "if (pm.response.code === 200 || pm.response.code === 201) {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.collectionVariables.set('departamento_id', responseJson.departamento.DepartamentoID);",
+                  "    console.log('✅ Departamento ID salvo:', responseJson.departamento.DepartamentoID);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"Nome\": \"Tecnologia da Informação\",\n  \"Descricao\": \"Departamento responsável pela gestão de sistemas e infraestrutura tecnológica\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/iamc/departamentos",
+              "host": ["{{base_url}}"],
+              "path": ["api", "iamc", "departamentos"]
+            }
+          }
+        },
+        {
+          "name": "Obter Departamento por ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Departamento encontrado', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.have.property('departamento_id');",
+                  "    pm.expect(responseJson).to.have.property('nome');",
+                  "    pm.expect(responseJson).to.have.property('descricao');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/iamc/departamentos/{{departamento_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "iamc", "departamentos", "{{departamento_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Atualizar Departamento",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Departamento atualizado com sucesso', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.have.property('departamento_id');",
+                  "    pm.expect(responseJson.descricao).to.include('atualizada');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Tecnologia da Informação\",\n  \"descricao\": \"Departamento responsável pela gestão de sistemas e infraestrutura tecnológica - Descrição atualizada\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/iamc/departamentos/{{departamento_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "iamc", "departamentos", "{{departamento_id}}"]
+            }
+          }
+        }
+      ],
+      "description": "Operações CRUD para gestão de departamentos"
+    },
+    {
+      "name": "💼 03. Cargos",
+      "item": [
+        {
+          "name": "Listar Cargos",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Response é um array', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.be.an('array');",
+                  "});",
+                  "",
+                  "if (pm.response.json().length > 0) {",
+                  "    // Salvar ID do primeiro cargo",
+                  "    pm.collectionVariables.set('cargo_id', pm.response.json()[0].cargo_id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/iamc/cargos",
+              "host": ["{{base_url}}"],
+              "path": ["api", "iamc", "cargos"]
+            }
+          }
+        },
+        {
+          "name": "Criar Cargo",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Cargo criado com sucesso', function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.have.property('cargo_id');",
+                  "    pm.expect(responseJson.nome).to.eql('Desenvolvedor Senior');",
+                  "});",
+                  "",
+                  "// Salvar ID do cargo criado",
+                  "if (pm.response.code === 200 || pm.response.code === 201) {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.collectionVariables.set('cargo_id', responseJson.cargo_id);",
+                  "    console.log('✅ Cargo ID salvo:', responseJson.cargo_id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"Nome\": \"Desenvolvedor Senior\",\n  \"Descricao\": \"Responsável pelo desenvolvimento e manutenção de sistemas\",\n  \"Nivel\": \"Senior\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/iamc/cargos",
+              "host": ["{{base_url}}"],
+              "path": ["api", "iamc", "cargos"]
+            }
+          }
+        },
+        {
+          "name": "Obter Cargo por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/iamc/cargos/{{cargo_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "iamc", "cargos", "{{cargo_id}}"]
+            }
+          }
+        }
+      ],
+      "description": "Operações CRUD para gestão de cargos"
+    },
+    {
+      "name": "👥 04. Funcionários",
+      "item": [
+        {
+          "name": "Listar Funcionários",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Response é um array', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.be.an('array');",
+                  "});",
+                  "",
+                  "if (pm.response.json().length > 0) {",
+                  "    pm.test('Funcionário tem estrutura correta', function () {",
+                  "        const funcionario = pm.response.json()[0];",
+                  "        pm.expect(funcionario).to.have.property('funcionario_id');",
+                  "        pm.expect(funcionario).to.have.property('nome');",
+                  "        pm.expect(funcionario).to.have.property('email');",
+                  "    });",
+                  "    ",
+                  "    // Salvar ID do primeiro funcionário",
+                  "    pm.collectionVariables.set('funcionario_id', pm.response.json()[0].funcionario_id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/iamc/funcionarios",
+              "host": ["{{base_url}}"],
+              "path": ["api", "iamc", "funcionarios"]
+            }
+          }
+        },
+        {
+          "name": "Criar Funcionário",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Funcionário criado com sucesso', function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.have.property('funcionario');",
+                  "    pm.expect(responseJson.funcionario.Nome).to.eql('João Silva');",
+                  "    pm.expect(responseJson.funcionario.Email).to.eql('joao.silva@empresa.com');",
+                  "});",
+                  "",
+                  "// Salvar ID do funcionário criado",
+                  "if (pm.response.code === 200 || pm.response.code === 201) {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.collectionVariables.set('funcionario_id', responseJson.funcionario.FuncionarioID);",
+                  "    console.log('✅ Funcionário ID salvo:', responseJson.funcionario.FuncionarioID);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"Nome\": \"João Silva\",\n  \"Apelido\": \"Silva\",\n  \"BI\": \"123456789LA041\",\n  \"DataNascimento\": \"1990-05-15\",\n  \"Sexo\": \"M\",\n  \"EstadoCivil\": \"Solteiro\",\n  \"Email\": \"joao.silva@empresa.com\",\n  \"Telefone\": \"+244 923 456 789\",\n  \"Endereco\": \"Rua da Paz, 123, Luanda\",\n  \"DataAdmissao\": \"2024-01-15\",\n  \"EstadoFuncionario\": \"Activo\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/iamc/funcionarios",
+              "host": ["{{base_url}}"],
+              "path": ["api", "iamc", "funcionarios"]
+            }
+          }
+        },
+        {
+          "name": "Obter Funcionário por ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Funcionário encontrado', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.have.property('funcionario_id');",
+                  "    pm.expect(responseJson).to.have.property('nome');",
+                  "    pm.expect(responseJson).to.have.property('email');",
+                  "    pm.expect(responseJson).to.have.property('bi');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/iamc/funcionarios/{{funcionario_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "iamc", "funcionarios", "{{funcionario_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Atualizar Funcionário",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Funcionário atualizado com sucesso', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.have.property('funcionario_id');",
+                  "    pm.expect(responseJson.telefone).to.eql('+244 924 456 789');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"João Silva\",\n  \"apelido\": \"Silva\",\n  \"bi\": \"123456789LA041\",\n  \"data_nascimento\": \"1990-05-15\",\n  \"sexo\": \"M\",\n  \"estado_civil\": \"Casado\",\n  \"email\": \"joao.silva@empresa.com\",\n  \"telefone\": \"+244 924 456 789\",\n  \"endereco\": \"Rua da Paz, 123, Luanda\",\n  \"data_admissao\": \"2024-01-15\",\n  \"estado_funcionario\": \"Ativo\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/iamc/funcionarios/{{funcionario_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "iamc", "funcionarios", "{{funcionario_id}}"]
+            }
+          }
+        }
+      ],
+      "description": "Operações CRUD para gestão de funcionários"
+    },
+    {
+      "name": "📅 05. Presenças",
+      "item": [
+        {
+          "name": "Listar Presenças",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/iamc/presencas",
+              "host": ["{{base_url}}"],
+              "path": ["api", "iamc", "presencas"]
+            }
+          }
+        },
+        {
+          "name": "Registrar Presença",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Presença registrada com sucesso', function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.have.property('presenca_id');",
+                  "    pm.expect(responseJson).to.have.property('funcionario_id');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"FuncionarioID\": {{funcionario_id}},\n  \"Data\": \"2024-12-09\",\n  \"HoraEntrada\": \"08:00:00\",\n  \"HoraSaida\": \"17:00:00\",\n  \"Observacao\": \"Presença normal\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/iamc/presencas",
+              "host": ["{{base_url}}"],
+              "path": ["api", "iamc", "presencas"]
+            }
+          }
+        },
+        {
+          "name": "Obter Presenças por Funcionário",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/iamc/presencas/funcionario/{{funcionario_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "iamc", "presencas", "funcionario", "{{funcionario_id}}"]
+            }
+          }
+        }
+      ],
+      "description": "Operações para gestão de presenças de funcionários"
+    },
+    {
+      "name": "🏖️ 06. Licenças",
+      "item": [
+        {
+          "name": "Listar Licenças",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/iamc/licencas",
+              "host": ["{{base_url}}"],
+              "path": ["api", "iamc", "licencas"]
+            }
+          }
+        },
+        {
+          "name": "Criar Licença",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Licença criada com sucesso', function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.have.property('licenca_id');",
+                  "    pm.expect(responseJson).to.have.property('funcionario_id');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"funcionario_id\": {{funcionario_id}},\n  \"tipo_licenca\": \"Férias\",\n  \"data_inicio\": \"2024-12-20\",\n  \"data_fim\": \"2024-12-30\",\n  \"motivo\": \"Férias de fim de ano\",\n  \"estado\": \"Aprovado\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/iamc/licencas",
+              "host": ["{{base_url}}"],
+              "path": ["api", "iamc", "licencas"]
+            }
+          }
+        }
+      ],
+      "description": "Operações para gestão de licenças de funcionários"
+    },
+    {
+      "name": "💰 07. Folha Salarial",
+      "item": [
+        {
+          "name": "Listar Folha Salarial",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/iamc/folha-salarial",
+              "host": ["{{base_url}}"],
+              "path": ["api", "iamc", "folha-salarial"]
+            }
+          }
+        },
+        {
+          "name": "Criar Registro Salarial",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Registro salarial criado com sucesso', function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.have.property('folha_id');",
+                  "    pm.expect(responseJson).to.have.property('funcionario_id');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"funcionario_id\": {{funcionario_id}},\n  \"mes_ano\": \"2024-12\",\n  \"salario_base\": 150000.00,\n  \"bonus\": 25000.00,\n  \"descontos\": 15000.00,\n  \"salario_liquido\": 160000.00\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/iamc/folha-salarial",
+              "host": ["{{base_url}}"],
+              "path": ["api", "iamc", "folha-salarial"]
+            }
+          }
+        }
+      ],
+      "description": "Operações para gestão da folha salarial"
+    },
+    {
+      "name": "🎁 08. Benefícios",
+      "item": [
+        {
+          "name": "Listar Benefícios",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/iamc/beneficios",
+              "host": ["{{base_url}}"],
+              "path": ["api", "iamc", "beneficios"]
+            }
+          }
+        },
+        {
+          "name": "Criar Benefício",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Benefício criado com sucesso', function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.have.property('beneficio_id');",
+                  "    pm.expect(responseJson.nome).to.eql('Seguro de Saúde');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Seguro de Saúde\",\n  \"descricao\": \"Seguro de saúde completo para funcionários\",\n  \"valor_mensal\": 25000.00\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/iamc/beneficios",
+              "host": ["{{base_url}}"],
+              "path": ["api", "iamc", "beneficios"]
+            }
+          }
+        }
+      ],
+      "description": "Operações para gestão de benefícios"
+    },
+    {
+      "name": "🗑️ 99. Limpeza (DELETE)",
+      "item": [
+        {
+          "name": "Deletar Funcionário (Cuidado!)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Funcionário deletado com sucesso', function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 204]);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/iamc/funcionarios/{{funcionario_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "iamc", "funcionarios", "{{funcionario_id}}"]
+            },
+            "description": "⚠️ CUIDADO: Esta operação delete permanentemente o funcionário!"
+          }
+        },
+        {
+          "name": "Deletar Departamento (Cuidado!)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Departamento deletado com sucesso', function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 204]);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/iamc/departamentos/{{departamento_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "iamc", "departamentos", "{{departamento_id}}"]
+            },
+            "description": "⚠️ CUIDADO: Esta operação delete permanentemente o departamento!"
+          }
+        }
+      ],
+      "description": "⚠️ Operações de DELETE - Use com cuidado!"
+    }
+  ]
+}

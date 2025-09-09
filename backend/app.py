@@ -102,6 +102,18 @@ def create_app(config_class=None):
     migrate.init_app(app, db)
     login_manager.init_app(app)
     jwt = JWTManager(app)
+    
+    # Initialize IAMC database connection
+    from extensions import init_iamc_db
+    with app.app_context():
+        try:
+            success = init_iamc_db(app)
+            if success:
+                app.logger.info("✅ IAMC SQL Server connection initialized successfully")
+            else:
+                app.logger.error("❌ Failed to initialize IAMC SQL Server connection")
+        except Exception as e:
+            app.logger.error(f"❌ Error initializing IAMC: {str(e)}")
 
     # Register CLI commands
     register_commands(app)
@@ -166,6 +178,10 @@ def create_app(config_class=None):
     app.register_blueprint(qr_routes.qr_bp, url_prefix='/qr')
     app.register_blueprint(settings_bp, url_prefix='/settings')
     app.register_blueprint(health_bp)
+    
+    # Register IAMC blueprints
+    from routes.iamc_routes import iamc_bp
+    app.register_blueprint(iamc_bp, url_prefix='/api/iamc')
 
     # Global error handlers
     @app.errorhandler(404)

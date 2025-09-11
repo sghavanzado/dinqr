@@ -4,13 +4,13 @@ from flask_migrate import Migrate
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-# Base de dados principal (PostgreSQL)
+# Base de dados principal (SQL Server IAMC)
 db = SQLAlchemy()
 login_manager = LoginManager()
 login_manager.login_view = 'auth.login'
 migrate = Migrate()
 
-# Base de dados IAMC (SQL Server) - conexão separada
+# Base de datos IAMC (SQL Server) - conexión separada
 iamc_engine = None
 _IAMCSession = None
 
@@ -29,11 +29,11 @@ def init_iamc_db(app):
         
         _IAMCSession = sessionmaker(bind=iamc_engine)
         
-        app.logger.info("✅ Conexão IAMC (SQL Server) inicializada com sucesso")
+        app.logger.info("IAMC SQL Server connection initialized successfully")
         return True
         
     except Exception as e:
-        app.logger.error(f"❌ Erro ao inicializar conexão IAMC: {str(e)}")
+        app.logger.error(f"ERROR: Failed to initialize IAMC connection: {str(e)}")
         return False
 
 def IAMCSession():

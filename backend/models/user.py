@@ -104,39 +104,43 @@ def log_action(user_id, action, target_type, target_id, ip_address=None, details
 
 # Inicialización de permisos por defecto
 def initialize_permissions(app):
-    with app.app_context():
-        # Check if the Permission table exists using proper inspection
-        inspector = inspect(db.engine)
-        if not inspector.has_table('permission'):
-            app.logger.warning("Permission table does not exist. Skipping permission initialization.")
-            return
+    try:
+        with app.app_context():
+            # Check if the Permission table exists using proper inspection
+            inspector = inspect(db.engine)
+            if not inspector.has_table('permission'):
+                app.logger.warning("Permission table does not exist. Skipping permission initialization.")
+                return
 
-        required_permissions = [
-            ('admin_access', 'Acceso completo al sistema'),
-            ('create_user', 'Crear nuevos usuarios'),
-            ('update_user', 'Modificar usuarios existentes'),
-            ('delete_user', 'Eliminar usuarios'),
-            ('view_audit_logs', 'Ver registros de auditoría')
-        ]
-        
-        for perm_name, perm_desc in required_permissions:
-            if not Permission.query.filter_by(name=perm_name).first():
-                perm = Permission(name=perm_name, description=perm_desc)
-                db.session.add(perm)
-        
-        if not Role.query.filter_by(name='admin').first():
-            admin_role = Role(name='admin', description='Administrador del sistema')
-            admin_perms = Permission.query.all()
-            admin_role.permissions.extend(admin_perms)
-            db.session.add(admin_role)
-        
-        if not Role.query.filter_by(name='user').first():
-            user_role = Role(name='user', description='Usuario estándar')
-            db.session.add(user_role)
-        
-        try:
-            db.session.commit()
-            app.logger.info("Permissions and roles initialized successfully.")
-        except Exception as e:
-            app.logger.error(f"Error initializing permissions: {e}")
-            db.session.rollback()
+            required_permissions = [
+                ('admin_access', 'Acceso completo al sistema'),
+                ('create_user', 'Crear nuevos usuarios'),
+                ('update_user', 'Modificar usuarios existentes'),
+                ('delete_user', 'Eliminar usuarios'),
+                ('view_audit_logs', 'Ver registros de auditoría')
+            ]
+            
+            for perm_name, perm_desc in required_permissions:
+                if not Permission.query.filter_by(name=perm_name).first():
+                    perm = Permission(name=perm_name, description=perm_desc)
+                    db.session.add(perm)
+            
+            if not Role.query.filter_by(name='admin').first():
+                admin_role = Role(name='admin', description='Administrador del sistema')
+                admin_perms = Permission.query.all()
+                admin_role.permissions.extend(admin_perms)
+                db.session.add(admin_role)
+            
+            if not Role.query.filter_by(name='user').first():
+                user_role = Role(name='user', description='Usuario estándar')
+                db.session.add(user_role)
+            
+            try:
+                db.session.commit()
+                app.logger.info("Permissions and roles initialized successfully.")
+            except Exception as e:
+                app.logger.error(f"Error initializing permissions: {e}")
+                db.session.rollback()
+    except Exception as e:
+        app.logger.error(f"Error initializing permissions: {e}")
+        app.logger.info("Continuing without permission initialization...")

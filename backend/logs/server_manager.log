@@ -1,69 +1,30 @@
-2025-09-09 16:39:42,983 INFO: Orígenes CORS permitidos: ['https://localhost', 'https://localhost:443', 'https://127.0.0.1', 'https://localhost:9000', 'https://127.0.1:9000']
-2025-09-09 16:39:42,985 INFO: ==================================================
-2025-09-09 16:39:42,987 INFO: DINQR Backend Application Starting
-2025-09-09 16:39:42,988 INFO: ==================================================
-2025-09-09 16:39:42,990 INFO: Environment: production
-2025-09-09 16:39:42,991 INFO: Debug mode: False
-2025-09-09 16:39:42,993 INFO: Database URI: 192.168.253.133:5432/localdb
-2025-09-09 16:39:43,153 INFO: Permissions and roles initialized successfully.
-2025-09-09 16:39:43,155 INFO: Permissions initialized successfully
-2025-09-09 16:39:43,253 INFO: Orígenes CORS permitidos: ['https://localhost', 'https://localhost:443', 'https://127.0.0.1', 'https://localhost:9000', 'https://127.0.1:9000']
-2025-09-09 16:39:43,258 INFO: ==================================================
-2025-09-09 16:39:43,260 INFO: DINQR Backend Application Starting
-2025-09-09 16:39:43,262 INFO: ==================================================
-2025-09-09 16:39:43,265 INFO: Environment: production
-2025-09-09 16:39:43,267 INFO: Debug mode: False
-2025-09-09 16:39:43,269 INFO: Database URI: 192.168.253.133:5432/localdb
-2025-09-09 16:39:43,376 INFO: Permissions and roles initialized successfully.
-2025-09-09 16:39:43,379 INFO: Permissions initialized successfully
-2025-09-09 16:39:43,402 WARNING: ============================================================
-2025-09-09 16:39:43,404 WARNING: WARNING: Running development server
-2025-09-09 16:39:43,410 WARNING: For production use:
-2025-09-09 16:39:43,414 WARNING:   python waitress_server.py
-2025-09-09 16:39:43,419 WARNING:   python windows_service.py install
-2025-09-09 16:39:43,422 WARNING: ============================================================
-2025-09-09 16:39:43,436 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
- * Running on http://127.0.0.1:5000
-2025-09-09 16:39:43,438 INFO: [33mPress CTRL+C to quit[0m
-2025-09-09 16:39:48,910 INFO: Petición: GET /api/iamc/status desde 127.0.0.1 - args: {} - json: None
-2025-09-09 16:39:48,914 INFO: 127.0.0.1 - - [09/Sep/2025 16:39:48] "GET /api/iamc/status HTTP/1.1" 200 -
-2025-09-09 16:39:49,923 INFO: Petición: GET /api/iamc/funcionarios desde 127.0.0.1 - args: {} - json: None
-2025-09-09 16:39:49,960 INFO: 127.0.0.1 - - [09/Sep/2025 16:39:49] "GET /api/iamc/funcionarios HTTP/1.1" 200 -
-2025-09-09 16:39:50,977 INFO: Petición: GET /api/iamc/departamentos desde 127.0.0.1 - args: {} - json: None
-2025-09-09 16:39:50,991 INFO: 127.0.0.1 - - [09/Sep/2025 16:39:50] "GET /api/iamc/departamentos HTTP/1.1" 200 -
-2025-09-09 16:39:52,010 INFO: Petición: GET /api/iamc/cargos desde 127.0.0.1 - args: {} - json: None
-2025-09-09 16:39:52,014 INFO: 127.0.0.1 - - [09/Sep/2025 16:39:52] "[33mGET /api/iamc/cargos HTTP/1.1[0m" 404 -
-2025-09-09 16:39:53,023 INFO: Petición: GET /api/iamc/presencas desde 127.0.0.1 - args: {} - json: None
-2025-09-09 16:39:53,044 INFO: 127.0.0.1 - - [09/Sep/2025 16:39:53] "GET /api/iamc/presencas HTTP/1.1" 200 -
-2025-09-09 16:39:54,055 INFO: Petición: GET /api/iamc/beneficios desde 127.0.0.1 - args: {} - json: None
-2025-09-09 16:39:54,062 INFO: 127.0.0.1 - - [09/Sep/2025 16:39:54] "GET /api/iamc/beneficios HTTP/1.1" 200 -
-2025-09-09 16:39:55,074 INFO: Petición: GET /api/iamc/funcionario-beneficios desde 127.0.0.1 - args: {} - json: None
-2025-09-09 16:39:55,077 INFO: 127.0.0.1 - - [09/Sep/2025 16:39:55] "[33mGET /api/iamc/funcionario-beneficios HTTP/1.1[0m" 404 -
-2025-09-09 16:39:56,085 INFO: Petición: GET /api/iamc/folha-salarial desde 127.0.0.1 - args: {} - json: None
-2025-09-09 16:39:56,121 INFO: 127.0.0.1 - - [09/Sep/2025 16:39:56] "GET /api/iamc/folha-salarial HTTP/1.1" 200 -
-2025-09-09 16:39:57,130 INFO: Petición: GET /api/iamc/historico-cargo desde 127.0.0.1 - args: {} - json: None
-2025-09-09 16:39:57,134 INFO: 127.0.0.1 - - [09/Sep/2025 16:39:57] "[33mGET /api/iamc/historico-cargo HTTP/1.1[0m" 404 -
-2025-09-09 16:40:21,732 INFO: Petición: GET /api/iamc/status desde 127.0.0.1 - args: {} - json: None
-2025-09-09 16:40:21,736 INFO: 127.0.0.1 - - [09/Sep/2025 16:40:21] "GET /api/iamc/status HTTP/1.1" 200 -
-2025-09-09 16:40:31,202 INFO: Petición: GET /api/iamc/status desde 127.0.0.1 - args: {} - json: None
-2025-09-09 16:40:31,209 INFO: 127.0.0.1 - - [09/Sep/2025 16:40:31] "GET /api/iamc/status HTTP/1.1" 200 -
-2025-09-09 16:40:48,142 INFO: Petición: GET /api/iamc/status desde 127.0.0.1 - args: {'id': '935ef96a-e593-4ec5-a583-17bfb66936a0', 'vscodeBrowserReqId': '1757432446508'} - json: None
-2025-09-09 16:40:48,146 INFO: 127.0.0.1 - - [09/Sep/2025 16:40:48] "GET /api/iamc/status?id=935ef96a-e593-4ec5-a583-17bfb66936a0&vscodeBrowserReqId=1757432446508 HTTP/1.1" 200 -
-2025-09-09 16:44:43,451 INFO: Orígenes CORS permitidos: ['https://localhost', 'https://localhost:443', 'https://127.0.0.1', 'https://localhost:9000', 'https://127.0.1:9000']
-2025-09-09 16:44:43,453 INFO: ==================================================
-2025-09-09 16:44:43,454 INFO: DINQR Backend Application Starting
-2025-09-09 16:44:43,455 INFO: ==================================================
-2025-09-09 16:44:43,458 INFO: Environment: production
-2025-09-09 16:44:43,459 INFO: Debug mode: False
-2025-09-09 16:44:43,463 INFO: Database URI: 192.168.253.133:5432/localdb
-2025-09-09 16:44:43,606 INFO: Permissions and roles initialized successfully.
-2025-09-09 16:44:43,649 INFO: Permissions initialized successfully
-2025-09-09 16:45:10,270 INFO: Orígenes CORS permitidos: ['https://localhost', 'https://localhost:443', 'https://127.0.0.1', 'https://localhost:9000', 'https://127.0.1:9000']
-2025-09-09 16:45:10,272 INFO: ==================================================
-2025-09-09 16:45:10,273 INFO: DINQR Backend Application Starting
-2025-09-09 16:45:10,274 INFO: ==================================================
-2025-09-09 16:45:10,275 INFO: Environment: production
-2025-09-09 16:45:10,276 INFO: Debug mode: False
-2025-09-09 16:45:10,277 INFO: Database URI: 192.168.253.133:5432/localdb
-2025-09-09 16:45:10,436 INFO: Permissions and roles initialized successfully.
-2025-09-09 16:45:10,437 INFO: Permissions initialized successfully
+2025-09-11 20:56:33,019 INFO: Petición: GET /api/iamc/funcionarios desde 127.0.0.1 - args: {} - json: None
+2025-09-11 20:56:33,027 INFO: 127.0.0.1 - - [11/Sep/2025 20:56:33] "GET /api/iamc/funcionarios HTTP/1.1" 200 -
+2025-09-11 20:57:46,714 INFO: Petición: GET /api/iamc/presencas desde 127.0.0.1 - args: {'page': '1', 'per_page': '10'} - json: None
+2025-09-11 20:57:46,715 INFO: Petición: GET /api/iamc/funcionarios desde 127.0.0.1 - args: {} - json: None
+2025-09-11 20:57:46,717 INFO: Petición: GET /api/iamc/departamentos desde 127.0.0.1 - args: {} - json: None
+2025-09-11 20:57:46,730 INFO: 127.0.0.1 - - [11/Sep/2025 20:57:46] "GET /api/iamc/presencas?page=1&per_page=10 HTTP/1.1" 200 -
+2025-09-11 20:57:46,731 INFO: 127.0.0.1 - - [11/Sep/2025 20:57:46] "GET /api/iamc/departamentos HTTP/1.1" 200 -
+2025-09-11 20:57:46,734 INFO: 127.0.0.1 - - [11/Sep/2025 20:57:46] "GET /api/iamc/funcionarios HTTP/1.1" 200 -
+2025-09-11 20:57:46,975 INFO: Petición: GET /api/iamc/presencas desde 127.0.0.1 - args: {'page': '1', 'per_page': '10'} - json: None
+2025-09-11 20:57:46,986 INFO: 127.0.0.1 - - [11/Sep/2025 20:57:46] "GET /api/iamc/presencas?page=1&per_page=10 HTTP/1.1" 200 -
+2025-09-11 20:57:47,039 INFO: Petición: GET /api/iamc/departamentos desde 127.0.0.1 - args: {} - json: None
+2025-09-11 20:57:47,193 INFO: 127.0.0.1 - - [11/Sep/2025 20:57:47] "GET /api/iamc/departamentos HTTP/1.1" 200 -
+2025-09-11 20:57:47,194 INFO: Petición: GET /api/iamc/licencas desde 127.0.0.1 - args: {'page': '1', 'per_page': '10'} - json: None
+2025-09-11 20:57:47,195 INFO: Petición: GET /api/iamc/funcionarios desde 127.0.0.1 - args: {} - json: None
+2025-09-11 20:57:47,204 INFO: 127.0.0.1 - - [11/Sep/2025 20:57:47] "GET /api/iamc/licencas?page=1&per_page=10 HTTP/1.1" 200 -
+2025-09-11 20:57:47,210 INFO: 127.0.0.1 - - [11/Sep/2025 20:57:47] "GET /api/iamc/funcionarios HTTP/1.1" 200 -
+2025-09-11 20:57:47,511 INFO: Petición: GET /api/iamc/licencas desde 127.0.0.1 - args: {'page': '1', 'per_page': '10'} - json: None
+2025-09-11 20:57:47,517 INFO: 127.0.0.1 - - [11/Sep/2025 20:57:47] "GET /api/iamc/licencas?page=1&per_page=10 HTTP/1.1" 200 -
+2025-09-11 20:57:47,518 INFO: Petición: GET /api/iamc/funcionarios desde 127.0.0.1 - args: {} - json: None
+2025-09-11 20:57:47,527 INFO: 127.0.0.1 - - [11/Sep/2025 20:57:47] "GET /api/iamc/funcionarios HTTP/1.1" 200 -
+2025-09-11 20:57:47,834 INFO: Petición: GET /api/iamc/funcionarios desde 127.0.0.1 - args: {} - json: None
+2025-09-11 20:57:47,841 INFO: 127.0.0.1 - - [11/Sep/2025 20:57:47] "GET /api/iamc/funcionarios HTTP/1.1" 200 -
+2025-09-11 20:57:48,083 INFO: Petición: GET /api/iamc/avaliacoes desde 127.0.0.1 - args: {} - json: None
+2025-09-11 20:57:48,086 INFO: 127.0.0.1 - - [11/Sep/2025 20:57:48] "[33mGET /api/iamc/avaliacoes HTTP/1.1[0m" 404 -
+2025-09-11 20:57:48,298 INFO: Petición: GET /api/iamc/avaliacoes desde 127.0.0.1 - args: {} - json: None
+2025-09-11 20:57:48,303 INFO: 127.0.0.1 - - [11/Sep/2025 20:57:48] "[33mGET /api/iamc/avaliacoes HTTP/1.1[0m" 404 -
+2025-09-11 20:57:48,301 INFO: Petición: GET /api/iamc/funcionarios desde 127.0.0.1 - args: {} - json: None
+2025-09-11 20:57:48,316 INFO: 127.0.0.1 - - [11/Sep/2025 20:57:48] "GET /api/iamc/funcionarios HTTP/1.1" 200 -
+2025-09-11 20:57:48,409 INFO: Petición: GET /api/iamc/funcionarios desde 127.0.0.1 - args: {} - json: None
+2025-09-11 20:57:48,416 INFO: 127.0.0.1 - - [11/Sep/2025 20:57:48] "GET /api/iamc/funcionarios HTTP/1.1" 200 -

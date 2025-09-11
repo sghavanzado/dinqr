@@ -7,6 +7,18 @@ import UserProfile from '../pages/UserProfile';
 import Settings from '../pages/Settings';
 import QRManagement from '../pages/QRManagement';
 
+// RRHH Pages
+import RRHHDashboard from '../pages/rrhh/RRHHDashboard';
+import FuncionariosList from '../pages/rrhh/FuncionariosList';
+import DepartamentosCargos from '../pages/rrhh/DepartamentosCargos';
+import PresencasList from '../pages/rrhh/PresencasList';
+import LicencasList from '../pages/rrhh/LicencasList';
+import AvaliacoesList from '../pages/rrhh/AvaliacoesList';
+import FolhaSalarialList from '../pages/rrhh/FolhaSalarialList';
+import BeneficiosList from '../pages/rrhh/BeneficiosList';
+import ComponentShowcase from '../pages/rrhh/ComponentShowcase';
+import RRHHSimple from '../pages/rrhh/RRHHSimple';
+
 const ContentArea = () => {
   return (
     <Routes>
@@ -50,6 +62,89 @@ const ContentArea = () => {
           </ProtectedRoute>
         }
       />
+      
+      {/* RRHH Routes */}
+      <Route
+        path="/rrhh/dashboard"
+        element={
+          <ProtectedRoute>
+            <RRHHDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/rrhh/funcionarios"
+        element={
+          <ProtectedRoute>
+            <FuncionariosList />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/rrhh/departamentos"
+        element={
+          <ProtectedRoute requiredRole="RRHH">
+            <DepartamentosCargos />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/rrhh/presencas"
+        element={
+          <ProtectedRoute>
+            <PresencasList />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/rrhh/licencas"
+        element={
+          <ProtectedRoute>
+            <LicencasList />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/rrhh/avaliacoes"
+        element={
+          <ProtectedRoute>
+            <AvaliacoesList />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/rrhh/folha-salarial"
+        element={
+          <ProtectedRoute>
+            <FolhaSalarialList />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/rrhh/beneficios"
+        element={
+          <ProtectedRoute>
+            <BeneficiosList />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/rrhh/showcase"
+        element={
+          <ProtectedRoute>
+            <ComponentShowcase />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/rrhh/simple"
+        element={
+          <ProtectedRoute>
+            <RRHHSimple />
+          </ProtectedRoute>
+        }
+      />
+      
       <Route path="/nao-autorizado" element={<Unauthorized />} />
       <Route
         path="*"

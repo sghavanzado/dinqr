@@ -54,7 +54,7 @@ const ITEMS: TreeViewBaseItem<ExtendedTreeItemProps>[] = [
   },
   {
     id: '2',
-    label: 'Funcionários',
+    label: 'IMPRESSÃO',
     icon: PeopleOutlineOutlinedIcon,
     children: [
       {
@@ -62,6 +62,63 @@ const ITEMS: TreeViewBaseItem<ExtendedTreeItemProps>[] = [
         label: 'Gerar Code',
         icon: ReceiptLongOutlinedIcon,
         to: '/qrcode',
+      },
+    ],
+  },
+  {
+    id: '3',
+    label: 'RRHH',
+    icon: PeopleOutlineOutlinedIcon,
+    children: [
+      {
+        id: '3.1',
+        label: 'Dashboard RRHH',
+        to: '/rrhh/dashboard',
+      },
+      {
+        id: '3.2',
+        label: 'Funcionários',
+        to: '/rrhh/funcionarios',
+      },
+      {
+        id: '3.3',
+        label: 'Departamentos & Cargos',
+        to: '/rrhh/departamentos',
+      },
+      {
+        id: '3.4',
+        label: 'Presenças',
+        to: '/rrhh/presencas',
+      },
+      {
+        id: '3.5',
+        label: 'Licenças',
+        to: '/rrhh/licencas',
+      },
+      {
+        id: '3.6',
+        label: 'Avaliações',
+        to: '/rrhh/avaliacoes',
+      },
+      {
+        id: '3.7',
+        label: 'Folha Salarial',
+        to: '/rrhh/folha-salarial',
+      },
+      {
+        id: '3.8',
+        label: 'Benefícios',
+        to: '/rrhh/beneficios',
+      },
+      {
+        id: '3.9',
+        label: 'Showcase Componentes',
+        to: '/rrhh/showcase',
+      },
+      {
+        id: '3.10',
+        label: 'RRHH Simples',
+        to: '/rrhh/simple',
       },
     ],
   },

@@ -1,0 +1,105 @@
+2025-09-10 20:56:37,166 INFO: Petición: OPTIONS /qr/funcionarios/total desde 127.0.0.1 - args: {} - json: None
+2025-09-10 20:56:37,178 INFO: 127.0.0.1 - - [10/Sep/2025 20:56:37] "OPTIONS /qr/funcionarios/total HTTP/1.1" 200 -
+2025-09-10 20:56:37,454 INFO: Petición: OPTIONS /qr/funcionarios-com-qr desde 127.0.0.1 - args: {} - json: None
+2025-09-10 20:56:37,460 INFO: 127.0.0.1 - - [10/Sep/2025 20:56:37] "OPTIONS /qr/funcionarios-com-qr HTTP/1.1" 200 -
+2025-09-10 20:56:37,455 INFO: Petición: OPTIONS /qr/funcionarios-com-qr desde 127.0.0.1 - args: {} - json: None
+2025-09-10 20:56:37,454 INFO: Petición: OPTIONS /qr/funcionarios/total desde 127.0.0.1 - args: {} - json: None
+2025-09-10 20:56:37,464 INFO: 127.0.0.1 - - [10/Sep/2025 20:56:37] "OPTIONS /qr/funcionarios-com-qr HTTP/1.1" 200 -
+2025-09-10 20:56:37,466 INFO: 127.0.0.1 - - [10/Sep/2025 20:56:37] "OPTIONS /qr/funcionarios/total HTTP/1.1" 200 -
+2025-09-10 20:56:42,829 INFO: Petición: GET /qr/funcionarios/total desde 127.0.0.1 - args: {} - json: None
+2025-09-10 20:56:43,130 INFO: Petición: GET /qr/funcionarios-com-qr desde 127.0.0.1 - args: {} - json: None
+2025-09-10 20:56:46,688 INFO: Petición: OPTIONS /users/profile desde 127.0.0.1 - args: {} - json: None
+2025-09-10 20:56:46,692 INFO: 127.0.0.1 - - [10/Sep/2025 20:56:46] "OPTIONS /users/profile HTTP/1.1" 200 -
+2025-09-10 20:56:46,688 INFO: Petición: OPTIONS /users/profile desde 127.0.0.1 - args: {} - json: None
+2025-09-10 20:56:46,694 INFO: 127.0.0.1 - - [10/Sep/2025 20:56:46] "OPTIONS /users/profile HTTP/1.1" 200 -
+2025-09-10 20:56:47,008 INFO: Petición: GET /users/profile desde 127.0.0.1 - args: {} - json: None
+2025-09-10 20:56:47,014 INFO: 127.0.0.1 - - [10/Sep/2025 20:56:47] "[31m[1mGET /users/profile HTTP/1.1[0m" 401 -
+2025-09-10 20:56:52,277 ERROR: Error al obtener conexión local: connection to server at "192.168.253.133", port 5432 failed: Connection timed out (0x0000274C/10060)
+	Is the server running on that host and accepting TCP/IP connections?
+
+2025-09-10 20:56:52,277 ERROR: Error al consultar IDs de funcionarios con QR en la base de datos local: connection to server at "192.168.253.133", port 5432 failed: Connection timed out (0x0000274C/10060)
+	Is the server running on that host and accepting TCP/IP connections?
+
+2025-09-10 20:56:52,280 INFO: 127.0.0.1 - - [10/Sep/2025 20:56:52] "[35m[1mGET /qr/funcionarios-com-qr HTTP/1.1[0m" 500 -
+2025-09-10 20:56:52,524 ERROR: Error al obtener conexión local: connection to server at "192.168.253.133", port 5432 failed: Connection timed out (0x0000274C/10060)
+	Is the server running on that host and accepting TCP/IP connections?
+
+2025-09-10 20:56:52,525 ERROR: Error al obtener el total de funcionarios: connection to server at "192.168.253.133", port 5432 failed: Connection timed out (0x0000274C/10060)
+	Is the server running on that host and accepting TCP/IP connections?
+
+2025-09-10 20:56:52,527 INFO: 127.0.0.1 - - [10/Sep/2025 20:56:52] "[35m[1mGET /qr/funcionarios/total HTTP/1.1[0m" 500 -
+2025-09-10 20:57:00,404 INFO: Petición: OPTIONS /auth/login desde 127.0.0.1 - args: {} - json: None
+2025-09-10 20:57:00,408 INFO: 127.0.0.1 - - [10/Sep/2025 20:57:00] "OPTIONS /auth/login HTTP/1.1" 200 -
+2025-09-10 20:57:00,412 INFO: Petición: POST /auth/login desde 127.0.0.1 - args: {} - json: {'email': 'maikel@ejemplos.com', 'password': 'Malcolm68200'}
+2025-09-10 20:57:00,647 ERROR: Unhandled exception: (psycopg2.OperationalError) server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+[SQL: SELECT "user".id AS user_id, "user".username AS user_username, "user".email AS user_email, "user".password_hash AS user_password_hash, "user".role_id AS user_role_id, "user".is_active AS user_is_active, "user".name AS user_name, "user".second_name AS user_second_name, "user".last_name AS user_last_name, "user".phone_number AS user_phone_number, "user".created_at AS user_created_at, "user".updated_at AS user_updated_at, "user".last_login AS user_last_login, "user".login_attempts AS user_login_attempts, "user".locked_until AS user_locked_until 
+FROM "user" 
+WHERE "user".email = %(email_1)s 
+ LIMIT %(param_1)s]
+[parameters: {'email_1': 'maikel@ejemplos.com', 'param_1': 1}]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-10 20:57:00,664 INFO: 127.0.0.1 - - [10/Sep/2025 20:57:00] "[35m[1mPOST /auth/login HTTP/1.1[0m" 500 -
+2025-09-10 20:57:03,838 ERROR: Error al obtener conexión local: connection to server at "192.168.253.133", port 5432 failed: Connection timed out (0x0000274C/10060)
+	Is the server running on that host and accepting TCP/IP connections?
+
+2025-09-10 20:57:03,848 ERROR: Error al obtener el total de funcionarios: connection to server at "192.168.253.133", port 5432 failed: Connection timed out (0x0000274C/10060)
+	Is the server running on that host and accepting TCP/IP connections?
+
+2025-09-10 20:57:03,851 INFO: 127.0.0.1 - - [10/Sep/2025 20:57:03] "[35m[1mGET /qr/funcionarios/total HTTP/1.1[0m" 500 -
+2025-09-10 20:57:04,135 ERROR: Error al obtener conexión local: connection to server at "192.168.253.133", port 5432 failed: Connection timed out (0x0000274C/10060)
+	Is the server running on that host and accepting TCP/IP connections?
+
+2025-09-10 20:57:04,405 ERROR: Error al consultar IDs de funcionarios con QR en la base de datos local: connection to server at "192.168.253.133", port 5432 failed: Connection timed out (0x0000274C/10060)
+	Is the server running on that host and accepting TCP/IP connections?
+
+2025-09-10 20:57:04,408 INFO: 127.0.0.1 - - [10/Sep/2025 20:57:04] "[35m[1mGET /qr/funcionarios-com-qr HTTP/1.1[0m" 500 -
+2025-09-10 20:57:14,734 INFO: Petición: OPTIONS /auth/login desde 127.0.0.1 - args: {} - json: None
+2025-09-10 20:57:14,737 INFO: 127.0.0.1 - - [10/Sep/2025 20:57:14] "OPTIONS /auth/login HTTP/1.1" 200 -
+2025-09-10 20:57:14,742 INFO: Petición: POST /auth/login desde 127.0.0.1 - args: {} - json: {'email': 'maikel@ejemplos.com', 'password': 'PasswordSeguro123!'}
+2025-09-10 20:57:35,748 ERROR: Unhandled exception: (psycopg2.OperationalError) connection to server at "192.168.253.133", port 5432 failed: Connection timed out (0x0000274C/10060)
+	Is the server running on that host and accepting TCP/IP connections?
+
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-10 20:57:35,752 INFO: 127.0.0.1 - - [10/Sep/2025 20:57:35] "[35m[1mPOST /auth/login HTTP/1.1[0m" 500 -
+2025-09-10 20:57:51,156 INFO: Petición: OPTIONS /auth/login desde 127.0.0.1 - args: {} - json: None
+2025-09-10 20:57:51,160 INFO: 127.0.0.1 - - [10/Sep/2025 20:57:51] "OPTIONS /auth/login HTTP/1.1" 200 -
+2025-09-10 20:57:51,466 INFO: Petición: POST /auth/login desde 127.0.0.1 - args: {} - json: {'email': 'maikel@ejemplos.com', 'password': 'PasswordSeguro123!'}
+2025-09-10 20:58:12,469 ERROR: Unhandled exception: (psycopg2.OperationalError) connection to server at "192.168.253.133", port 5432 failed: Connection timed out (0x0000274C/10060)
+	Is the server running on that host and accepting TCP/IP connections?
+
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-10 20:58:12,474 INFO: 127.0.0.1 - - [10/Sep/2025 20:58:12] "[35m[1mPOST /auth/login HTTP/1.1[0m" 500 -
+2025-09-10 23:28:55,514 INFO: Orígenes CORS permitidos: ['https://localhost', 'https://localhost:443', 'https://127.0.0.1', 'https://localhost:9000', 'https://127.0.1:9000']
+2025-09-10 23:29:16,638 ERROR: Error initializing permissions: (psycopg2.OperationalError) connection to server at "192.168.253.133", port 5432 failed: Connection timed out (0x0000274C/10060)
+	Is the server running on that host and accepting TCP/IP connections?
+
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-10 23:29:18,523 INFO: Orígenes CORS permitidos: ['https://localhost', 'https://localhost:443', 'https://127.0.0.1', 'https://localhost:9000', 'https://127.0.1:9000']
+2025-09-10 23:29:39,640 ERROR: Error initializing permissions: (psycopg2.OperationalError) connection to server at "192.168.253.133", port 5432 failed: Connection timed out (0x0000274C/10060)
+	Is the server running on that host and accepting TCP/IP connections?
+
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-10 23:29:39,669 WARNING: ============================================================
+2025-09-10 23:29:39,689 WARNING: WARNING: Running development server
+2025-09-10 23:29:39,690 WARNING: For production use:
+2025-09-10 23:29:39,691 WARNING:   python waitress_server.py
+2025-09-10 23:29:39,691 WARNING:   python windows_service.py install
+2025-09-10 23:29:39,692 WARNING: ============================================================
+2025-09-10 23:29:39,799 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-09-10 23:29:39,801 INFO: [33mPress CTRL+C to quit[0m
+2025-09-10 23:29:39,805 INFO:  * Restarting with stat
+2025-09-10 23:29:41,065 INFO: Orígenes CORS permitidos: ['https://localhost', 'https://localhost:443', 'https://127.0.0.1', 'https://localhost:9000', 'https://127.0.1:9000']
+2025-09-10 23:30:02,107 ERROR: Error initializing permissions: (psycopg2.OperationalError) connection to server at "192.168.253.133", port 5432 failed: Connection timed out (0x0000274C/10060)
+	Is the server running on that host and accepting TCP/IP connections?
+
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-10 23:30:02,234 INFO: Orígenes CORS permitidos: ['https://localhost', 'https://localhost:443', 'https://127.0.0.1', 'https://localhost:9000', 'https://127.0.1:9000']
+2025-09-10 23:30:23,330 ERROR: Error initializing permissions: (psycopg2.OperationalError) connection to server at "192.168.253.133", port 5432 failed: Connection timed out (0x0000274C/10060)
+	Is the server running on that host and accepting TCP/IP connections?
+
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-10 23:30:23,356 WARNING: ============================================================

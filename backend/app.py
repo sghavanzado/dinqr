@@ -265,7 +265,13 @@ def setup_logging(app):
         app.logger.info('=' * 50)
         app.logger.info(f'Environment: {app.config.get("FLASK_ENV", "unknown")}')
         app.logger.info(f'Debug mode: {app.debug}')
-        app.logger.info(f'Database URI: {app.config.get("SQLALCHEMY_DATABASE_URI", "").split("@")[-1] if "@" in app.config.get("SQLALCHEMY_DATABASE_URI", "") else "Not configured"}')
+        uri = app.config.get("SQLALCHEMY_DATABASE_URI", "")
+        # Extraer solo la parte de servidor/base de datos para mostrar
+        if "mssql" in uri and "IAMC" in uri:
+            db_info = "localhost/IAMC (SQL Server)"
+        else:
+            db_info = uri.split("@")[-1] if "@" in uri else "Not configured"
+        app.logger.info(f'Database URI: {db_info}')
 
 # Application instance for WSGI servers
 application = create_app()

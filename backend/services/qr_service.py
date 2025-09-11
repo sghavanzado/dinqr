@@ -1,13 +1,13 @@
 def obtener_tabela():
-    """Obtener el nombre de la tabla a consultar en la base de datos remota (campo 'tabela' en settings)."""
+    """Obtener el nombre de la tabla a consultar en la base de datos IAMC (campo 'tabela' en settings)."""
     with obtener_conexion_local() as conn:
         cursor = conn.cursor()
-        cursor.execute("SELECT value FROM settings WHERE key = %s", ('tabela',))
+        cursor.execute("SELECT value FROM settings WHERE key = ?", ('tabela',))
         result = cursor.fetchone()
         if not result:
             raise ValueError("No se encontró la configuración 'tabela' en la tabla settings.")
         return result[0]
-from utils.db_utils import obtener_conexion_remota, obtener_conexion_local
+from utils.db_utils import obtener_conexion_local, obtener_conexion_remota
 import qrcode
 import os
 import zipfile
@@ -18,10 +18,10 @@ from vobject import vCard
 import logging
 
 def obtener_carpeta_salida():
-    """Obtener la carpeta de salida desde la tabla settings de la base de datos local."""
+    """Obtener la carpeta de salida desde la tabla settings de la base de datos IAMC."""
     with obtener_conexion_local() as conn:
         cursor = conn.cursor()
-        cursor.execute("SELECT value FROM settings WHERE key = %s", ('outputFolder',))  # PostgreSQL usa %s
+        cursor.execute("SELECT value FROM settings WHERE key = ?", ('outputFolder',))
         result = cursor.fetchone()
         if not result:
             raise ValueError("No se encontró la configuración 'outputFolder' en la tabla settings.")
@@ -31,7 +31,7 @@ def obtener_server_domain():
     """Obtener ip/dominio servidor Web."""
     with obtener_conexion_local() as conn:
         cursor = conn.cursor()
-        cursor.execute("SELECT value FROM settings WHERE key = %s", ('serverDomain',))  # PostgreSQL usa %s
+        cursor.execute("SELECT value FROM settings WHERE key = ?", ('serverDomain',))
         result = cursor.fetchone()
         if not result:
             raise ValueError("No se encontró la configuración 'serverDomain' en la tabla settings.")
@@ -41,7 +41,7 @@ def obtener_qr_domain():
     """Obtener el dominio/ip que se mostrará en el QR (qrdomain)."""
     with obtener_conexion_local() as conn:
         cursor = conn.cursor()
-        cursor.execute("SELECT value FROM settings WHERE key = %s", ('qrdomain',))
+        cursor.execute("SELECT value FROM settings WHERE key = ?", ('qrdomain',))
         result = cursor.fetchone()
         if not result:
             raise ValueError("No se encontró la configuración 'qrdomain' en la tabla settings.")
@@ -51,17 +51,17 @@ def obtener_server_port():
     """Obtener port servidor Web."""
     with obtener_conexion_local() as conn:
         cursor = conn.cursor()
-        cursor.execute("SELECT value FROM settings WHERE key = %s", ('serverPort',))  # PostgreSQL usa %s
+        cursor.execute("SELECT value FROM settings WHERE key = ?", ('serverPort',))
         result = cursor.fetchone()
         if not result:
             raise ValueError("No se encontró la configuración 'serverPort' en la tabla settings.")
         return result[0]
 
 def listar_funcionarios(page, per_page, filtro):
-    """Listar funcionarios desde la base de datos remota."""
+    """Listar funcionarios desde la base de datos empresadb (tabla sonacard)."""
     try:
         tabela = obtener_tabela()
-        with obtener_conexion_remota() as conn:
+        with obtener_conexion_remota() as conn:  # empresadb para sonacard
             cursor = conn.cursor()
             query = f"""
                 SELECT sap, nome, funcao, area, nif, telefone, email, unineg
@@ -79,9 +79,9 @@ def listar_funcionarios(page, per_page, filtro):
         raise
 
 def obtener_total_funcionarios():
-    """Obtener la cantidad total de funcionarios desde la base de datos remota."""
+    """Obtener la cantidad total de funcionarios desde la base de datos empresadb."""
     tabela = obtener_tabela()
-    with obtener_conexion_remota() as conn:
+    with obtener_conexion_remota() as conn:  # empresadb para sonacard
         cursor = conn.cursor()
         cursor.execute(f"SELECT COUNT(*) FROM {tabela}")  # Contar todos los registros en la tabla definida
         result = cursor.fetchone()
@@ -90,7 +90,7 @@ def obtener_total_funcionarios():
         return result[0]
 
 def obtener_total_funcionarios_con_qr():
-    """Obtener la cantidad total de funcionarios con código QR en la base de datos local."""
+    """Obtener la cantidad total de funcionarios con código QR en la base de datos IAMC."""
     with obtener_conexion_local() as conn:
         cursor = conn.cursor()
         cursor.execute("SELECT COUNT(*) FROM qr_codes")  # Contar todos los registros en la tabla qr_codes
@@ -121,7 +121,7 @@ def generar_qr_estatico(ids):
     placeholders = ','.join(['?'] * len(ids))  # SQL Server usa ?
     query = f"SELECT * FROM {tabela} WHERE sap IN ({placeholders})"
 
-    with obtener_conexion_remota() as conn:
+    with obtener_conexion_local() as conn:
         cursor = conn.cursor()
         cursor.execute(query, *ids)
         contactos = cursor.fetchall()
@@ -157,7 +157,7 @@ def generar_qr_estatico(ids):
                 # Guardar datos en la tabla qr_codes
                 cursor.execute("""
                     INSERT INTO qr_codes (contact_id, nombre, firma, archivo_qr)
-                    VALUES (%s, %s, %s, %s)
+                    VALUES (?, ?, ?, ?)
                     ON CONFLICT (contact_id) DO UPDATE SET
                     nombre = EXCLUDED.nombre,
                     firma = EXCLUDED.firma,
@@ -193,12 +193,12 @@ def generar_qr(ids):
     placeholders = ','.join(['?'] * len(ids))  # SQL Server usa ?
     query = f"SELECT sap, nome, funcao, area, nif, telefone, unineg FROM {tabela} WHERE sap IN ({placeholders})"
 
-    with obtener_conexion_remota() as conn:
+    with obtener_conexion_remota() as conn:  # empresadb para sonacard
         cursor = conn.cursor()
         cursor.execute(query, ids)
         contactos = cursor.fetchall()
 
-    with obtener_conexion_local() as conn:
+    with obtener_conexion_local() as conn:  # IAMC para qr_codes
         cursor = conn.cursor()
         for contacto in contactos:
             try:
@@ -224,13 +224,15 @@ def generar_qr(ids):
 
                 # Guardar datos en la tabla qr_codes
                 cursor.execute("""
-                    INSERT INTO qr_codes (contact_id, nombre, firma, archivo_qr)
-                    VALUES (%s, %s, %s, %s)
-                    ON CONFLICT (contact_id) DO UPDATE SET
-                    nombre = EXCLUDED.nombre,
-                    firma = EXCLUDED.firma,
-                    archivo_qr = EXCLUDED.archivo_qr
-                """, (sap, nome, firma, archivo_qr))  # PostgreSQL usa %s
+                    MERGE qr_codes AS target
+                    USING (VALUES (?, ?, ?, ?)) AS source (contact_id, nombre, firma, archivo_qr)
+                    ON target.contact_id = source.contact_id
+                    WHEN MATCHED THEN
+                        UPDATE SET nombre = source.nombre, firma = source.firma, archivo_qr = source.archivo_qr
+                    WHEN NOT MATCHED THEN
+                        INSERT (contact_id, nombre, firma, archivo_qr)
+                        VALUES (source.contact_id, source.nombre, source.firma, source.archivo_qr);
+                """, (sap, nome, firma, archivo_qr))
                 conn.commit()
 
                 resultados.append({
@@ -248,7 +250,7 @@ def descargar_qr(contact_id):
     with obtener_conexion_local() as conn:
         cursor = conn.cursor()
         # Convertir contact_id a cadena de texto para evitar conflictos de tipos
-        cursor.execute("SELECT archivo_qr FROM qr_codes WHERE contact_id = %s", (str(contact_id),))  # PostgreSQL usa %s
+        cursor.execute("SELECT archivo_qr FROM qr_codes WHERE contact_id = ?", (str(contact_id),))
         result = cursor.fetchone()
         if not result:
             raise FileNotFoundError("QR no encontrado")
@@ -259,7 +261,10 @@ def descargar_multiples_qr(ids):
     archivos = []
     with obtener_conexion_local() as conn:
         cursor = conn.cursor()
-        cursor.execute("SELECT archivo_qr FROM qr_codes WHERE contact_id = ANY(%s)", (ids,))  # PostgreSQL usa %s
+        # Para SQL Server, construir la consulta IN dinámicamente
+        placeholders = ','.join('?' * len(ids))
+        query = f"SELECT archivo_qr FROM qr_codes WHERE contact_id IN ({placeholders})"
+        cursor.execute(query, ids)
         archivos = [row[0] for row in cursor.fetchall()]
 
     zip_filename = "qr_codes.zip"
@@ -272,10 +277,20 @@ def eliminar_qr(contact_id):
     """Eliminar un código QR específico."""
     with obtener_conexion_local() as conn:
         cursor = conn.cursor()
-        # Convertir contact_id a cadena de texto para evitar conflictos de tipos
-        cursor.execute("DELETE FROM qr_codes WHERE contact_id = %s RETURNING archivo_qr", (str(contact_id),))  # PostgreSQL usa %s
+        # Primero obtener el archivo antes de eliminar
+        cursor.execute("SELECT archivo_qr FROM qr_codes WHERE contact_id = ?", (str(contact_id),))
         result = cursor.fetchone()
         if not result:
             raise FileNotFoundError("QR no encontrado")
-        os.remove(result[0])
+        archivo_qr = result[0]
+        
+        # Eliminar el registro
+        cursor.execute("DELETE FROM qr_codes WHERE contact_id = ?", (str(contact_id),))
+        conn.commit()
+        
+        # Eliminar el archivo físico
+        if os.path.exists(archivo_qr):
+            os.remove(archivo_qr)
+        
+        return archivo_qr
     return {"message": "QR eliminado exitosamente"}

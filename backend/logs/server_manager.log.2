@@ -1,0 +1,87 @@
+2025-09-10 23:47:36,648 INFO: Ejecutando consulta SQL para funcionarios COM QR: 
+                    SELECT sap, nome, funcao, area, nif, telefone, email, unineg
+                    FROM sonacard
+                    WHERE sap IN (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+                    ORDER BY sap
+                
+2025-09-10 23:47:36,659 INFO: Funcionarios con QR obtenidos: 48 registros
+2025-09-10 23:47:36,661 INFO: 127.0.0.1 - - [10/Sep/2025 23:47:36] "GET /qr/funcionarios-com-qr HTTP/1.1" 200 -
+2025-09-10 23:47:37,085 INFO: Petición: GET /qr/funcionarios/total desde 127.0.0.1 - args: {} - json: None
+2025-09-10 23:47:37,086 INFO: Petición: GET /qr/funcionarios-com-qr desde 127.0.0.1 - args: {} - json: None
+2025-09-10 23:47:37,398 ERROR: Error al obtener el total de funcionarios: ('42000', "[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near the keyword 'key'. (156) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+2025-09-10 23:47:37,400 INFO: 127.0.0.1 - - [10/Sep/2025 23:47:37] "[35m[1mGET /qr/funcionarios/total HTTP/1.1[0m" 500 -
+2025-09-10 23:47:37,401 INFO: IDs de funcionarios con QR obtenidos: ['102', '106', '107', '109', '11', '111', '113', '114', '118', '119', '120', '122', '125', '128', '13', '130', '131', '132', '133', '134', '135', '136', '137', '138', '139', '140', '14002', '14005', '14007', '14008', '14009', '14014', '14015', '14020', '142', '148', '15', '227', '43', '5000011', '5000012', '5000013', '5000018', '5000030', '500005', '5000054', '5000055', '74']
+2025-09-10 23:47:37,408 INFO: Ejecutando consulta SQL para funcionarios COM QR: 
+                    SELECT sap, nome, funcao, area, nif, telefone, email, unineg
+                    FROM sonacard
+                    WHERE sap IN (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+                    ORDER BY sap
+                
+2025-09-10 23:47:37,411 INFO: Funcionarios con QR obtenidos: 48 registros
+2025-09-10 23:47:37,416 INFO: 127.0.0.1 - - [10/Sep/2025 23:47:37] "GET /qr/funcionarios-com-qr HTTP/1.1" 200 -
+2025-09-10 23:48:12,508 INFO: Petición: GET /api/iamc/departamentos desde 127.0.0.1 - args: {} - json: None
+2025-09-10 23:48:12,509 INFO: Petición: GET /api/iamc/funcionarios desde 127.0.0.1 - args: {} - json: None
+2025-09-10 23:48:12,510 INFO: Petición: GET /api/iamc/presencas desde 127.0.0.1 - args: {'page': '1', 'per_page': '10'} - json: None
+2025-09-10 23:48:12,537 INFO: 127.0.0.1 - - [10/Sep/2025 23:48:12] "GET /api/iamc/departamentos HTTP/1.1" 200 -
+2025-09-10 23:48:12,538 INFO: 127.0.0.1 - - [10/Sep/2025 23:48:12] "GET /api/iamc/presencas?page=1&per_page=10 HTTP/1.1" 200 -
+2025-09-10 23:48:12,552 INFO: 127.0.0.1 - - [10/Sep/2025 23:48:12] "GET /api/iamc/funcionarios HTTP/1.1" 200 -
+2025-09-10 23:48:12,914 INFO: Petición: GET /api/iamc/departamentos desde 127.0.0.1 - args: {} - json: None
+2025-09-10 23:48:12,916 INFO: Petición: GET /api/iamc/presencas desde 127.0.0.1 - args: {'page': '1', 'per_page': '10'} - json: None
+2025-09-10 23:48:12,917 INFO: Petición: GET /api/iamc/funcionarios desde 127.0.0.1 - args: {} - json: None
+2025-09-10 23:48:12,928 INFO: 127.0.0.1 - - [10/Sep/2025 23:48:12] "GET /api/iamc/departamentos HTTP/1.1" 200 -
+2025-09-10 23:48:12,930 INFO: 127.0.0.1 - - [10/Sep/2025 23:48:12] "GET /api/iamc/presencas?page=1&per_page=10 HTTP/1.1" 200 -
+2025-09-10 23:48:12,943 INFO: 127.0.0.1 - - [10/Sep/2025 23:48:12] "GET /api/iamc/funcionarios HTTP/1.1" 200 -
+2025-09-10 23:48:14,674 INFO: Petición: GET /api/iamc/licencas desde 127.0.0.1 - args: {'page': '1', 'per_page': '10'} - json: None
+2025-09-10 23:48:14,899 INFO: 127.0.0.1 - - [10/Sep/2025 23:48:14] "GET /api/iamc/licencas?page=1&per_page=10 HTTP/1.1" 200 -
+2025-09-10 23:48:14,999 INFO: Petición: GET /api/iamc/funcionarios desde 127.0.0.1 - args: {} - json: None
+2025-09-10 23:48:15,006 INFO: 127.0.0.1 - - [10/Sep/2025 23:48:15] "GET /api/iamc/funcionarios HTTP/1.1" 200 -
+2025-09-10 23:48:15,209 INFO: Petición: GET /api/iamc/licencas desde 127.0.0.1 - args: {'page': '1', 'per_page': '10'} - json: None
+2025-09-10 23:48:15,214 INFO: 127.0.0.1 - - [10/Sep/2025 23:48:15] "GET /api/iamc/licencas?page=1&per_page=10 HTTP/1.1" 200 -
+2025-09-10 23:48:15,385 INFO: Petición: GET /api/iamc/funcionarios desde 127.0.0.1 - args: {} - json: None
+2025-09-10 23:48:15,392 INFO: 127.0.0.1 - - [10/Sep/2025 23:48:15] "GET /api/iamc/funcionarios HTTP/1.1" 200 -
+2025-09-11 20:48:58,438 INFO: Petición: OPTIONS /users/profile desde 127.0.0.1 - args: {} - json: None
+2025-09-11 20:48:58,447 INFO: 127.0.0.1 - - [11/Sep/2025 20:48:58] "OPTIONS /users/profile HTTP/1.1" 200 -
+2025-09-11 20:48:58,477 INFO: Petición: OPTIONS /users/profile desde 127.0.0.1 - args: {} - json: None
+2025-09-11 20:48:58,484 INFO: 127.0.0.1 - - [11/Sep/2025 20:48:58] "OPTIONS /users/profile HTTP/1.1" 200 -
+2025-09-11 20:48:58,766 INFO: Petición: GET /users/profile desde 127.0.0.1 - args: {} - json: None
+2025-09-11 20:48:58,771 INFO: 127.0.0.1 - - [11/Sep/2025 20:48:58] "[31m[1mGET /users/profile HTTP/1.1[0m" 401 -
+2025-09-11 20:49:25,545 INFO: Petición: OPTIONS /auth/login desde 127.0.0.1 - args: {} - json: None
+2025-09-11 20:49:25,551 INFO: 127.0.0.1 - - [11/Sep/2025 20:49:25] "OPTIONS /auth/login HTTP/1.1" 200 -
+2025-09-11 20:49:25,557 INFO: Petición: POST /auth/login desde 127.0.0.1 - args: {} - json: {'email': 'maikel@ejemplos.com', 'password': 'PasswordSeguro123!'}
+2025-09-11 20:49:25,761 INFO: 127.0.0.1 - - [11/Sep/2025 20:49:25] "POST /auth/login HTTP/1.1" 200 -
+2025-09-11 20:49:26,228 INFO: Petición: OPTIONS /users/profile desde 127.0.0.1 - args: {} - json: None
+2025-09-11 20:49:26,231 INFO: 127.0.0.1 - - [11/Sep/2025 20:49:26] "OPTIONS /users/profile HTTP/1.1" 200 -
+2025-09-11 20:49:26,235 INFO: Petición: GET /users/profile desde 127.0.0.1 - args: {} - json: None
+2025-09-11 20:49:26,241 INFO: 127.0.0.1 - - [11/Sep/2025 20:49:26] "GET /users/profile HTTP/1.1" 200 -
+2025-09-11 20:49:26,381 INFO: Petición: OPTIONS /qr/funcionarios/total desde 127.0.0.1 - args: {} - json: None
+2025-09-11 20:49:26,387 INFO: 127.0.0.1 - - [11/Sep/2025 20:49:26] "OPTIONS /qr/funcionarios/total HTTP/1.1" 200 -
+2025-09-11 20:49:26,391 INFO: Petición: OPTIONS /qr/funcionarios-com-qr desde 127.0.0.1 - args: {} - json: None
+2025-09-11 20:49:26,394 INFO: 127.0.0.1 - - [11/Sep/2025 20:49:26] "OPTIONS /qr/funcionarios-com-qr HTTP/1.1" 200 -
+2025-09-11 20:49:26,395 INFO: Petición: OPTIONS /qr/funcionarios/total desde 127.0.0.1 - args: {} - json: None
+2025-09-11 20:49:26,399 INFO: 127.0.0.1 - - [11/Sep/2025 20:49:26] "OPTIONS /qr/funcionarios/total HTTP/1.1" 200 -
+2025-09-11 20:49:26,396 INFO: Petición: OPTIONS /qr/funcionarios-com-qr desde 127.0.0.1 - args: {} - json: None
+2025-09-11 20:49:26,406 INFO: 127.0.0.1 - - [11/Sep/2025 20:49:26] "OPTIONS /qr/funcionarios-com-qr HTTP/1.1" 200 -
+2025-09-11 20:49:26,697 INFO: Petición: GET /qr/funcionarios/total desde 127.0.0.1 - args: {} - json: None
+2025-09-11 20:49:26,711 INFO: Petición: GET /qr/funcionarios-com-qr desde 127.0.0.1 - args: {} - json: None
+2025-09-11 20:49:26,715 ERROR: Error al obtener el total de funcionarios: ('42000', "[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near the keyword 'key'. (156) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+2025-09-11 20:49:26,716 INFO: 127.0.0.1 - - [11/Sep/2025 20:49:26] "[35m[1mGET /qr/funcionarios/total HTTP/1.1[0m" 500 -
+2025-09-11 20:49:26,718 INFO: IDs de funcionarios con QR obtenidos: ['102', '106', '107', '109', '11', '111', '113', '114', '118', '119', '120', '122', '125', '128', '13', '130', '131', '132', '133', '134', '135', '136', '137', '138', '139', '140', '14002', '14005', '14007', '14008', '14009', '14014', '14015', '14020', '142', '148', '15', '227', '43', '5000011', '5000012', '5000013', '5000018', '5000030', '500005', '5000054', '5000055', '74']
+2025-09-11 20:49:26,724 INFO: Ejecutando consulta SQL para funcionarios COM QR: 
+                    SELECT sap, nome, funcao, area, nif, telefone, email, unineg
+                    FROM sonacard
+                    WHERE sap IN (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+                    ORDER BY sap
+                
+2025-09-11 20:49:26,726 INFO: Funcionarios con QR obtenidos: 48 registros
+2025-09-11 20:49:26,730 INFO: 127.0.0.1 - - [11/Sep/2025 20:49:26] "GET /qr/funcionarios-com-qr HTTP/1.1" 200 -
+2025-09-11 20:49:26,950 INFO: Petición: GET /qr/funcionarios/total desde 127.0.0.1 - args: {} - json: None
+2025-09-11 20:49:26,953 ERROR: Error al obtener el total de funcionarios: ('42000', "[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near the keyword 'key'. (156) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+2025-09-11 20:49:26,955 INFO: 127.0.0.1 - - [11/Sep/2025 20:49:26] "[35m[1mGET /qr/funcionarios/total HTTP/1.1[0m" 500 -
+2025-09-11 20:49:27,025 INFO: Petición: GET /qr/funcionarios-com-qr desde 127.0.0.1 - args: {} - json: None
+2025-09-11 20:49:27,031 INFO: IDs de funcionarios con QR obtenidos: ['102', '106', '107', '109', '11', '111', '113', '114', '118', '119', '120', '122', '125', '128', '13', '130', '131', '132', '133', '134', '135', '136', '137', '138', '139', '140', '14002', '14005', '14007', '14008', '14009', '14014', '14015', '14020', '142', '148', '15', '227', '43', '5000011', '5000012', '5000013', '5000018', '5000030', '500005', '5000054', '5000055', '74']
+2025-09-11 20:49:27,032 INFO: Ejecutando consulta SQL para funcionarios COM QR: 
+                    SELECT sap, nome, funcao, area, nif, telefone, email, unineg
+                    FROM sonacard
+                    WHERE sap IN (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+                    ORDER BY sap
+                

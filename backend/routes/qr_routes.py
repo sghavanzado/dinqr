@@ -11,7 +11,7 @@ from services.qr_service import (
     obtener_total_funcionarios,
     obtener_total_funcionarios_con_qr
 )
-from utils.db_utils import obtener_conexion_remota, obtener_conexion_local, liberar_conexion_local
+from utils.db_utils import obtener_conexion_local, obtener_conexion_remota
 import logging
 import csv
 from werkzeug.utils import secure_filename
@@ -29,7 +29,7 @@ class QRRequestSchema(Schema):
 
 @qr_bp.route('/funcionarios', methods=['GET'])
 def listar_funcionarios():
-    """Listado de funcionarios desde la base de datos remota."""
+    """Listado de funcionarios desde la base de datos IAMC."""
     page = request.args.get('page', 1, type=int)
     per_page = request.args.get('per_page', 10, type=int)
     filtro = request.args.get('filtro', '', type=str)
@@ -39,7 +39,7 @@ def listar_funcionarios():
         if page < 1 or per_page < 1:
             return jsonify({"error": "Los parámetros 'page' y 'per_page' deben ser mayores a 0"}), 400
 
-        # Consultar IDs de funcionarios con QR en la base de datos local
+        # Consultar IDs de funcionarios con QR en la base de datos IAMC
         conn_local = None
         try:
             conn_local = obtener_conexion_local()
@@ -48,20 +48,16 @@ def listar_funcionarios():
             qr_generated_ids = [row[0] for row in cursor.fetchall()]
             logging.info(f"IDs de funcionarios con QR obtenidos: {qr_generated_ids}")
         except Exception as e:
-            logging.error(f"Error al consultar IDs de funcionarios con QR en la base de datos local: {str(e)}")
+            logging.error(f"Error al consultar IDs de funcionarios con QR en la base de datos IAMC: {str(e)}")
             return jsonify({"error": "Error interno del servidor"}), 500
-        finally:
-            if conn_local:
-                liberar_conexion_local(conn_local)
-
         # Si no hay IDs en qr_generated_ids, devolver lista vacía
         if not qr_generated_ids:
-            logging.info("No se encontraron IDs de funcionarios con QR en la base de datos local.")
+            logging.info("No se encontraron IDs de funcionarios con QR en la base de datos IAMC.")
             return jsonify([])
 
-        # Consultar funcionarios desde la base de datos remota
+        # Consultar funcionarios desde la base de datos empresadb (tabla sonacard)
         try:
-            with obtener_conexion_remota() as conn:
+            with obtener_conexion_remota() as conn:  # empresadb para sonacard
                 cursor = conn.cursor()
                 placeholders = ",".join("?" for _ in qr_generated_ids)  # Crear placeholders dinámicos
                 query = f"""
@@ -77,7 +73,7 @@ def listar_funcionarios():
                 funcionarios = cursor.fetchall()
                 logging.info(f"Funcionarios obtenidos: {len(funcionarios)} registros")
         except Exception as e:
-            logging.error(f"Error al consultar funcionarios desde la base de datos remota: {str(e)}")
+            logging.error(f"Error al consultar funcionarios desde la base de datos empresadb: {str(e)}")
             return jsonify({"error": "Error interno del servidor"}), 500
 
         # Combinar datos y agregar estado de QR
@@ -110,18 +106,19 @@ def listar_funcionarios():
 def listar_funcionarios_sin_qr():
     """Listado de funcionarios que no tienen un código QR generado."""
     try:
-        # Consultar IDs de funcionarios con QR en la base de datos local
+        # Consultar IDs de funcionarios con QR en la base de datos IAMC
         conn_local = None
         try:
             conn_local = obtener_conexion_local()
             cursor = conn_local.cursor()
             cursor.execute("SELECT contact_id FROM qr_codes")
             qr_generated_ids = [row[0] for row in cursor.fetchall()]
-        finally:
-            liberar_conexion_local(conn_local)
+        except Exception as e:
+            logging.error(f"Error al consultar QR codes: {str(e)}")
+            qr_generated_ids = []
 
-        # Consultar funcionarios desde la base de datos remota que no tienen QR
-        with obtener_conexion_remota() as conn:
+        # Consultar funcionarios desde la base de datos empresadb que no tienen QR
+        with obtener_conexion_remota() as conn:  # empresadb para sonacard
             cursor = conn.cursor()
             if qr_generated_ids:
                 placeholders = ",".join("?" for _ in qr_generated_ids)
@@ -205,7 +202,7 @@ def eliminar_codigo_qr(contact_id):
 
 @qr_bp.route('/funcionarios/total', methods=['GET'])
 def obtener_total_funcionarios_endpoint():
-    """Obtener la cantidad total de funcionarios desde la base de datos remota."""
+    """Obtener la cantidad total de funcionarios desde la base de datos IAMC."""
     try:
         total = obtener_total_funcionarios()
         return jsonify({"total": total})
@@ -215,7 +212,7 @@ def obtener_total_funcionarios_endpoint():
 
 @qr_bp.route('/funcionarios/total-con-qr', methods=['GET'])
 def obtener_total_funcionarios_con_qr_endpoint():
-    """Obtener la cantidad total de funcionarios con código QR en la base de datos local."""
+    """Obtener la cantidad total de funcionarios con código QR en la base de datos IAMC."""
     conn_local = None
     try:
         conn_local = obtener_conexion_local()
@@ -226,17 +223,15 @@ def obtener_total_funcionarios_con_qr_endpoint():
     except Exception as e:
         logging.error(f"Error al obtener el total de funcionarios con QR: {str(e)}")
         return jsonify({"error": "Error interno del servidor"}), 500
-    finally:
-        if conn_local:
-            liberar_conexion_local(conn_local)  # Ensure the connection is released
+    # Conexión se libera automáticamente
 
 @qr_bp.route('/generar-todos', methods=['POST'])
 def generar_todos_codigos_qr():
     """Generar códigos QR para todos los funcionarios en la base de datos externa."""
     conn_remota = None
     try:
-        # Obtener todos los IDs de funcionarios desde la base de datos remota
-        conn_remota = obtener_conexion_remota()
+        # Obtener todos los IDs de funcionarios desde la base de datos empresadb
+        conn_remota = obtener_conexion_remota()  # empresadb para sonacard
         cursor = conn_remota.cursor()
         cursor.execute("SELECT sap FROM sonacard")
         ids = [row[0] for row in cursor.fetchall()]
@@ -264,7 +259,7 @@ def generar_todos_codigos_qr():
 def listar_funcionarios_com_qr():
     """Listado de funcionarios que SÍ tienen un código QR generado (sin paginación backend)."""
     try:
-        # Consultar IDs de funcionarios con QR en la base de datos local
+        # Consultar IDs de funcionarios con QR en la base de datos IAMC
         conn_local = None
         try:
             conn_local = obtener_conexion_local()
@@ -273,20 +268,16 @@ def listar_funcionarios_com_qr():
             qr_generated_ids = [row[0] for row in cursor.fetchall()]
             logging.info(f"IDs de funcionarios con QR obtenidos: {qr_generated_ids}")
         except Exception as e:
-            logging.error(f"Error al consultar IDs de funcionarios con QR en la base de datos local: {str(e)}")
+            logging.error(f"Error al consultar IDs de funcionarios con QR en la base de datos IAMC: {str(e)}")
             return jsonify({"error": "Error interno del servidor"}), 500
-        finally:
-            if conn_local:
-                liberar_conexion_local(conn_local)
-
         # Si no hay IDs en qr_generated_ids, devolver lista vacía
         if not qr_generated_ids:
-            logging.info("No se encontraron IDs de funcionarios con QR en la base de datos local.")
+            logging.info("No se encontraron IDs de funcionarios con QR en la base de datos IAMC.")
             return jsonify([])
 
-        # Consultar funcionarios desde la base de datos remota que SÍ tienen QR
+        # Consultar funcionarios desde la base de datos empresadb que SÍ tienen QR
         try:
-            with obtener_conexion_remota() as conn:
+            with obtener_conexion_remota() as conn:  # empresadb para sonacard
                 cursor = conn.cursor()
                 placeholders = ",".join("?" for _ in qr_generated_ids)
                 query = f"""
@@ -300,7 +291,7 @@ def listar_funcionarios_com_qr():
                 funcionarios = cursor.fetchall()
                 logging.info(f"Funcionarios con QR obtenidos: {len(funcionarios)} registros")
         except Exception as e:
-            logging.error(f"Error al consultar funcionarios con QR desde la base de datos remota: {str(e)}")
+            logging.error(f"Error al consultar funcionarios con QR desde la base de datos empresadb: {str(e)}")
             return jsonify({"error": "Error interno del servidor"}), 500
 
         # Procesar datos

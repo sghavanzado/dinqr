@@ -56,10 +56,10 @@ pytz==2024.2
 PyYAML==6.0.2
 qrcode==8.1
 # redis==5.2.1  # DISABLED - Not using Redis, using memory storage
-# Dependencias adicionales detectadas en config.py
+# Dependencias principales - Base de datos IAMC (SQL Server)
 pyodbc>=5.0.0
-psycopg2>=2.9.0
 python-dotenv>=1.0.0
+# psycopg2>=2.9.0  # LEGACY - Ya no se usa PostgreSQL, migrado a SQL Server IAMC
 referencing==0.36.2
 regex==2024.11.6
 requests==2.32.3

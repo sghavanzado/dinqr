@@ -25,7 +25,7 @@ import {
   getCargos,
   updateFuncionario,
   deleteFuncionario
-} from '../../services/api/rrhh';
+} from '../../services/api/rrhh.js';
 
 // Import modular components
 import DataTable from '../../components/funcionarios/DataTable';

@@ -67,13 +67,15 @@ class Cargo(Base):
     Nome = Column(String(100), nullable=False)
     Descricao = Column(String(255), nullable=True)
     Nivel = Column(String(50), nullable=True)
+    DepartamentoID = Column(Integer, ForeignKey('Departamentos.DepartamentoID'), nullable=True)
     
     def to_dict(self):
         return {
             'CargoID': self.CargoID,
             'Nome': self.Nome,
             'Descricao': self.Descricao,
-            'Nivel': self.Nivel
+            'Nivel': self.Nivel,
+            'DepartamentoID': self.DepartamentoID
         }
     
     def __repr__(self):

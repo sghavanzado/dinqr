@@ -36,7 +36,7 @@ import {
   createFuncionario, 
   updateFuncionario,
   uploadFoto
-} from '../../services/api/rrhh';
+} from '../../services/api/rrhh.js';
 
 // Schema de validação
 const funcionarioSchema = z.object({

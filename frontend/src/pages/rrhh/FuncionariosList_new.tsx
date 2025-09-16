@@ -25,7 +25,7 @@ import {
   getCargos,
   updateFuncionario,
   deleteFuncionario
-} from '../../services/api/rrhh';
+} from '../../services/api/rrhh.js';
 import FuncionarioForm from '../../components/funcionarios/FuncionarioForm';
 import FuncionarioDetail from '../../components/funcionarios/FuncionarioDetail';
 import ConfirmDialog from '../../components/funcionarios/ConfirmDialog';

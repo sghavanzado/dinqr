@@ -35,8 +35,8 @@ class Config:
         f"?driver={IAMC_DB_CONFIG['driver'].replace(' ', '+')}&TrustServerCertificate=yes"
     )
     
-    # Configuración CORS
-    _CORS_ORIGINS_RAW = os.environ.get('CORS_ORIGINS', 'https://localhost,https://localhost:443,https://127.0.0.1,https://localhost:9000,https://127.0.0.1:9000')
+    # Configuración CORS - permitir tanto HTTP quanto HTTPS para desenvolvimento
+    _CORS_ORIGINS_RAW = os.environ.get('CORS_ORIGINS', 'http://localhost,http://localhost:3000,http://localhost:5173,http://127.0.0.1,http://127.0.0.1:3000,http://127.0.0.1:5173,https://localhost,https://localhost:443,https://127.0.0.1,https://localhost:9000,https://127.0.0.1:9000')
     CORS_ORIGINS = [o.strip() for o in _CORS_ORIGINS_RAW.split(',') if o.strip()]
     CORS_SUPPORTS_CREDENTIALS = True
     CORS_EXPOSE_HEADERS = ['Content-Type', 'X-Total-Count', 'X-Requested-With', 'Authorization'] 

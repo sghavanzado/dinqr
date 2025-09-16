@@ -120,6 +120,11 @@ const ITEMS: TreeViewBaseItem<ExtendedTreeItemProps>[] = [
         label: 'RRHH Simples',
         to: '/rrhh/simple',
       },
+      {
+        id: '3.11',
+        label: 'Status Integração',
+        to: '/rrhh/status-checker',
+      },
     ],
   },
 ];

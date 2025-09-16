@@ -24,7 +24,7 @@ import {
   getDepartamentos, 
   getCargos,
   deleteFuncionario
-} from '../../services/api/rrhh';
+} from '../../services/api/funcionarios';
 
 // Import modular components
 import DataTable from '../../components/funcionarios/DataTable';
@@ -32,6 +32,11 @@ import type { Column } from '../../components/funcionarios/DataTable';
 import SearchFilter from '../../components/funcionarios/SearchFilter';
 import type { FilterField } from '../../components/funcionarios/SearchFilter';
 import ExportOptions from '../../components/funcionarios/ExportOptions';
+
+// Import CRUD dialog components
+import FuncionarioFormDialog from '../../components/funcionarios/FuncionarioFormDialog';
+import FuncionarioViewDialog from '../../components/funcionarios/FuncionarioViewDialog';
+import DeleteConfirmDialog from '../../components/funcionarios/DeleteConfirmDialog';
 
 // Simple Error Boundary for DataTable
 class DataTableErrorBoundary extends React.Component<
@@ -99,21 +104,28 @@ const FuncionariosList: React.FC = () => {
     severity: 'success',
   });
 
-  // Define table columns
+  // Dialog states
+  const [formDialogOpen, setFormDialogOpen] = useState(false);
+  const [viewDialogOpen, setViewDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [selectedFuncionario, setSelectedFuncionario] = useState<Funcionario | null>(null);
+  const [deletingFuncionario, setDeletingFuncionario] = useState(false);
+
+  // Define table columns (usando campos do backend)
   const columns: Column[] = [
     {
-      id: 'id',
+      id: 'FuncionarioID',
       label: 'ID',
       align: 'center',
       minWidth: 80
     },
     {
-      id: 'nome',
-      label: 'Nome',
+      id: 'nomeCompleto',
+      label: 'Nome Completo',
       minWidth: 200
     },
     {
-      id: 'email',
+      id: 'Email',
       label: 'Email',
       minWidth: 200
     },
@@ -130,13 +142,13 @@ const FuncionariosList: React.FC = () => {
       format: (value: Cargo) => value?.nome || '-'
     },
     {
-      id: 'estado',
+      id: 'EstadoFuncionario',
       label: 'Estado',
       align: 'center',
       minWidth: 120
     },
     {
-      id: 'data_admissao',
+      id: 'DataAdmissao',
       label: 'Data Admissão',
       align: 'center',
       minWidth: 120,
@@ -173,6 +185,8 @@ const FuncionariosList: React.FC = () => {
   ];
 
   useEffect(() => {
+    // Test backend connection first
+    testBackendConnection();
     loadData();
   }, [currentPage, rowsPerPage, searchTerm, filters]);
 
@@ -191,46 +205,69 @@ const FuncionariosList: React.FC = () => {
         ...filters
       };
 
+      console.log('🔍 Carregando funcionários com filtros:', queryFilters);
+      
+      // Verificar se o backend está acessível primeiro
+      try {
+        const statusResponse = await fetch('http://localhost:5000/api/iamc/status');
+        if (!statusResponse.ok) {
+          throw new Error(`Backend não acessível: ${statusResponse.status}`);
+        }
+        console.log('✅ Backend está acessível');
+      } catch (statusError) {
+        console.error('❌ Backend não está acessível:', statusError);
+        showNotification('Servidor backend não está rodando. Verifique se está executando na porta 5000.', 'error');
+        return;
+      }
+
       const response = await getFuncionarios(queryFilters);
+      console.log('📊 Resposta do backend:', response);
+      
+      // Verificar se a resposta tem a estrutura esperada
+      if (typeof response !== 'object' || response === null) {
+        console.error('❌ Resposta inválida:', response);
+        showNotification('Resposta inválida do servidor', 'error');
+        return;
+      }
       
       if (response.success) {
-        setFuncionarios(response.data);
-        setTotalCount(response.total);
+        const funcionariosData = response.data || [];
+        const totalData = response.total || 0;
+        
+        console.log('✅ Dados recebidos:', funcionariosData);
+        console.log('📋 Total de funcionários:', totalData);
+        
+        // Processar dados para adicionar campos calculados
+        const funcionariosProcessados = funcionariosData.map((f: any) => ({
+          ...f,
+          nomeCompleto: `${f.Nome || ''} ${f.Apelido || ''}`.trim(),
+          // Garantir que existe um campo de ID para a tabela
+          id: f.FuncionarioID || f.funcionarioID || f.id
+        }));
+        
+        setFuncionarios(funcionariosProcessados);
+        setTotalCount(totalData);
+        
+        if (funcionariosData.length === 0 && totalData === 0) {
+          showNotification('Nenhum funcionário encontrado na base de dados', 'info');
+        } else if (funcionariosData.length === 0) {
+          showNotification('Nenhum funcionário encontrado com os filtros aplicados', 'info');
+        } else {
+          console.log(`✅ Carregados ${funcionariosData.length} funcionários de ${totalData} total`);
+        }
+      } else {
+        console.error('❌ Resposta de erro:', response);
+        const errorMessage = (response as any).message || (response as any).error || 'Erro desconhecido';
+        showNotification(`Erro do servidor: ${errorMessage}`, 'error');
       }
     } catch (error) {
-      console.error('Erro ao carregar funcionários:', error);
-      // Fallback para dados mock quando a API não estiver disponível
-      const mockFuncionarios = [
-        {
-          id: 1,
-          funcionarioID: 1,
-          nome: 'João Silva',
-          apelido: 'João',
-          bi: '12345678901',
-          email: 'joao@empresa.com',
-          telefone: '923456789',
-          dataAdmissao: '2023-01-15',
-          estadoFuncionario: 'Activo' as const,
-          cargoID: 1,
-          departamentoID: 1
-        },
-        {
-          id: 2,
-          funcionarioID: 2,
-          nome: 'Maria Santos',
-          apelido: 'Maria',
-          bi: '98765432109',
-          email: 'maria@empresa.com',
-          telefone: '987654321',
-          dataAdmissao: '2023-03-20',
-          estadoFuncionario: 'Activo' as const,
-          cargoID: 2,
-          departamentoID: 2
-        }
-      ];
-      setFuncionarios(mockFuncionarios);
-      setTotalCount(mockFuncionarios.length);
-      showNotification('Exibindo dados de demonstração (API não disponível)', 'warning');
+      console.error('❌ Erro ao carregar funcionários:', error);
+      
+      if (error instanceof TypeError && error.message.includes('fetch')) {
+        showNotification('Erro de conexão com o servidor. Verifique se o backend está rodando.', 'error');
+      } else {
+        showNotification('Erro ao carregar funcionários. Verifique sua conexão.', 'error');
+      }
     } finally {
       setLoading(false);
     }
@@ -244,20 +281,7 @@ const FuncionariosList: React.FC = () => {
       }
     } catch (error) {
       console.error('Erro ao carregar departamentos:', error);
-      // Fallback para dados mock
-      const mockDepartamentos = [
-        { id: 1, departamentoID: 1, nome: 'Recursos Humanos', descricao: 'Gestão de pessoas' },
-        { id: 2, departamentoID: 2, nome: 'Tecnologia', descricao: 'Desenvolvimento e infraestrutura' },
-        { id: 3, departamentoID: 3, nome: 'Comercial', descricao: 'Vendas e relacionamento' }
-      ];
-      setDepartamentos(mockDepartamentos);
-      
-      // Show user-friendly notification
-      setNotification({
-        open: true,
-        message: 'Usando dados de demonstração para departamentos (API não disponível)',
-        severity: 'warning'
-      });
+      showNotification('Erro ao carregar departamentos', 'error');
     }
   };
 
@@ -269,20 +293,8 @@ const FuncionariosList: React.FC = () => {
       }
     } catch (error) {
       console.error('Erro ao carregar cargos:', error);
-      // Fallback para dados mock
-      const mockCargos = [
-        { id: 1, cargoID: 1, nome: 'Analista de RH', salarioBase: 75000, departamentoID: 1 },
-        { id: 2, cargoID: 2, nome: 'Desenvolvedor Senior', salarioBase: 120000, departamentoID: 2 },
-        { id: 3, cargoID: 3, nome: 'Gerente Comercial', salarioBase: 95000, departamentoID: 3 }
-      ];
-      setCargos(mockCargos);
-      
-      // Show user-friendly notification
-      setNotification({
-        open: true,
-        message: 'Usando dados de demonstração para cargos (API não disponível)',
-        severity: 'warning'
-      });
+      // Usar warning em vez de error para ser menos disruptivo
+      showNotification('Cargos não disponíveis (backend precisa ser reiniciado)', 'warning');
     }
   };
 
@@ -295,27 +307,70 @@ const FuncionariosList: React.FC = () => {
   };
 
   const handleCreate = () => {
-    // TODO: Implement create functionality
-    showNotification('Função criar funcionário será implementada', 'info');
+    setSelectedFuncionario(null);
+    setFormDialogOpen(true);
   };
 
   const handleEdit = (funcionario: Funcionario) => {
-    // TODO: Implement edit functionality
-    showNotification(`Editar funcionário: ${funcionario.nome}`, 'info');
+    setSelectedFuncionario(funcionario);
+    setFormDialogOpen(true);
   };
 
   const handleView = (funcionario: Funcionario) => {
-    // TODO: Implement view functionality
-    showNotification(`Visualizar funcionário: ${funcionario.nome}`, 'info');
+    setSelectedFuncionario(funcionario);
+    setViewDialogOpen(true);
   };
 
-  const handleDelete = async (funcionario: Funcionario) => {
+  const handleDelete = (funcionario: Funcionario) => {
+    setSelectedFuncionario(funcionario);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleFormDialogClose = () => {
+    setFormDialogOpen(false);
+    setSelectedFuncionario(null);
+  };
+
+  const handleFormSuccess = () => {
+    loadData();
+    showNotification('Funcionário salvo com sucesso!', 'success');
+  };
+
+  const handleViewDialogClose = () => {
+    setViewDialogOpen(false);
+    setSelectedFuncionario(null);
+  };
+
+  const handleViewEditClick = () => {
+    setViewDialogOpen(false);
+    setFormDialogOpen(true);
+    // selectedFuncionario já está definido
+  };
+
+  const handleDeleteDialogClose = () => {
+    setDeleteDialogOpen(false);
+    setSelectedFuncionario(null);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!selectedFuncionario) return;
+
     try {
-      await deleteFuncionario(funcionario.id);
-      showNotification('Funcionário excluído com sucesso!', 'success');
-      loadData();
+      setDeletingFuncionario(true);
+      const response = await deleteFuncionario(selectedFuncionario.funcionarioID);
+      
+      if (response.success) {
+        showNotification('Funcionário excluído com sucesso!', 'success');
+        loadData();
+        handleDeleteDialogClose();
+      } else {
+        showNotification('Erro ao excluir funcionário', 'error');
+      }
     } catch (error) {
+      console.error('Erro ao excluir funcionário:', error);
       showNotification('Erro ao excluir funcionário', 'error');
+    } finally {
+      setDeletingFuncionario(false);
     }
   };
 
@@ -354,6 +409,54 @@ const FuncionariosList: React.FC = () => {
       showNotification('Dados exportados com sucesso!', 'success');
     } catch (error) {
       showNotification('Erro ao exportar dados', 'error');
+    }
+  };
+
+  // Test function to verify backend connectivity
+  const testBackendConnection = async () => {
+    console.log('🧪 Testando conexão com backend...');
+    
+    try {
+      // Test 1: Status endpoint
+      const statusUrl = 'http://localhost:5000/api/iamc/status';
+      console.log(`🔗 Testando: ${statusUrl}`);
+      
+      const statusResponse = await fetch(statusUrl);
+      console.log(`📡 Status response: ${statusResponse.status}`);
+      
+      if (statusResponse.ok) {
+        const statusData = await statusResponse.json();
+        console.log('✅ Status data:', statusData);
+      }
+      
+      // Test 2: Funcionarios endpoint
+      const funcUrl = 'http://localhost:5000/api/iamc/funcionarios';
+      console.log(`🔗 Testando: ${funcUrl}`);
+      
+      const funcResponse = await fetch(funcUrl);
+      console.log(`📡 Funcionarios response: ${funcResponse.status}`);
+      
+      if (funcResponse.ok) {
+        const funcData = await funcResponse.json();
+        console.log('✅ Funcionarios data structure:', {
+          type: typeof funcData,
+          keys: Object.keys(funcData),
+          success: funcData.success,
+          dataType: typeof funcData.data,
+          dataLength: Array.isArray(funcData.data) ? funcData.data.length : 'not array',
+          total: funcData.total
+        });
+        
+        if (funcData.data && funcData.data.length > 0) {
+          console.log('👤 Primeiro funcionário:', funcData.data[0]);
+        }
+      } else {
+        const errorText = await funcResponse.text();
+        console.error('❌ Funcionarios error:', errorText);
+      }
+      
+    } catch (error) {
+      console.error('❌ Erro no teste de conexão:', error);
     }
   };
 
@@ -446,6 +549,33 @@ const FuncionariosList: React.FC = () => {
           {notification.message}
         </Alert>
       </Snackbar>
+
+      {/* CRUD Dialogs */}
+      <FuncionarioFormDialog
+        open={formDialogOpen}
+        onClose={handleFormDialogClose}
+        onSuccess={handleFormSuccess}
+        funcionario={selectedFuncionario}
+        departamentos={departamentos}
+        cargos={cargos}
+      />
+
+      <FuncionarioViewDialog
+        open={viewDialogOpen}
+        onClose={handleViewDialogClose}
+        onEdit={handleViewEditClick}
+        funcionario={selectedFuncionario}
+        departamentos={departamentos}
+        cargos={cargos}
+      />
+
+      <DeleteConfirmDialog
+        open={deleteDialogOpen}
+        onClose={handleDeleteDialogClose}
+        onConfirm={handleDeleteConfirm}
+        funcionario={selectedFuncionario}
+        loading={deletingFuncionario}
+      />
     </Box>
   );
 };

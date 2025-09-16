@@ -34,7 +34,26 @@ axios.defaults.timeout = 10000;
 
 // Dashboard
 export const getDashboardMetrics = async (): Promise<DashboardMetrics> => {
-  const response = await axios.get(`${API_BASE}/dashboard/metrics`);
+  try {
+    const response = await axios.get(`${API_BASE}/dashboard/metrics`);
+    return response.data.metrics || response.data;
+  } catch (error) {
+    console.error('Erro ao buscar métricas do dashboard:', error);
+    // Retornar dados mock em caso de erro
+    return {
+      totalFuncionarios: 0,
+      funcionariosAtivos: 0,
+      funcionariosInativos: 0,
+      ultimasContratacoes: 0,
+      licencasAtivas: 0,
+      proximasAvaliacoes: 0
+    };
+  }
+};
+
+// Status IAMC
+export const getStatusIAMC = async () => {
+  const response = await axios.get(`${API_BASE}/status`);
   return response.data;
 };
 
@@ -97,21 +116,61 @@ export const deleteFoto = async (id: number): Promise<ApiResponse<void>> => {
 // Departamentos
 export const getDepartamentos = async (): Promise<ApiResponse<Departamento[]>> => {
   const response = await axios.get(`${API_BASE}/departamentos`);
-  return response.data;
+  const data = response.data;
+  
+  // Mapear dados do backend (PascalCase) para frontend (camelCase)
+  if (data.success && data.data) {
+    data.data = data.data.map((dept: any) => ({
+      id: dept.DepartamentoID || dept.departamentoID || dept.id,
+      departamentoID: dept.DepartamentoID || dept.departamentoID,
+      nome: dept.Nome || dept.nome,
+      descricao: dept.Descricao || dept.descricao,
+      // Manter campos originais para compatibilidade
+      ...dept
+    }));
+  }
+  
+  return data;
 };
 
 export const getDepartamento = async (id: number): Promise<ApiResponse<Departamento>> => {
   const response = await axios.get(`${API_BASE}/departamentos/${id}`);
-  return response.data;
+  const data = response.data;
+  
+  // Mapear dados do backend (PascalCase) para frontend (camelCase) 
+  if (data.success && data.data) {
+    const dept = data.data;
+    data.data = {
+      id: dept.DepartamentoID || dept.departamentoID || dept.id,
+      departamentoID: dept.DepartamentoID || dept.departamentoID,
+      nome: dept.Nome || dept.nome,
+      descricao: dept.Descricao || dept.descricao,
+      // Manter campos originais para compatibilidade
+      ...dept
+    };
+  }
+  
+  return data;
 };
 
 export const createDepartamento = async (data: DepartamentoFormData): Promise<ApiResponse<Departamento>> => {
-  const response = await axios.post(`${API_BASE}/departamentos`, data);
+  // Mapear dados frontend (camelCase) para backend (PascalCase)
+  const mappedData = {
+    Nome: data.nome,
+    Descricao: data.descricao
+  };
+  
+  const response = await axios.post(`${API_BASE}/departamentos`, mappedData);
   return response.data;
 };
 
 export const updateDepartamento = async (id: number, data: Partial<DepartamentoFormData>): Promise<ApiResponse<Departamento>> => {
-  const response = await axios.put(`${API_BASE}/departamentos/${id}`, data);
+  // Mapear dados frontend (camelCase) para backend (PascalCase)
+  const mappedData: any = {};
+  if (data.nome !== undefined) mappedData.Nome = data.nome;
+  if (data.descricao !== undefined) mappedData.Descricao = data.descricao;
+  
+  const response = await axios.put(`${API_BASE}/departamentos/${id}`, mappedData);
   return response.data;
 };
 
@@ -123,21 +182,68 @@ export const deleteDepartamento = async (id: number): Promise<ApiResponse<void>>
 // Cargos
 export const getCargos = async (): Promise<ApiResponse<Cargo[]>> => {
   const response = await axios.get(`${API_BASE}/cargos`);
-  return response.data;
+  const data = response.data;
+  
+  // Mapear dados do backend (PascalCase) para frontend (camelCase)
+  if (data.success && data.data) {
+    data.data = data.data.map((cargo: any) => ({
+      id: cargo.CargoID || cargo.cargoID || cargo.id,
+      cargoID: cargo.CargoID || cargo.cargoID,
+      nome: cargo.Nome || cargo.nome,
+      descricao: cargo.Descricao || cargo.descricao,
+      nivel: cargo.Nivel || cargo.nivel,
+      departamentoID: cargo.DepartamentoID || cargo.departamentoID,
+      // Manter campos originais para compatibilidade
+      ...cargo
+    }));
+  }
+  
+  return data;
 };
 
 export const getCargo = async (id: number): Promise<ApiResponse<Cargo>> => {
   const response = await axios.get(`${API_BASE}/cargos/${id}`);
-  return response.data;
+  const data = response.data;
+  
+  // Mapear dados do backend (PascalCase) para frontend (camelCase)
+  if (data.success && data.data) {
+    const cargo = data.data;
+    data.data = {
+      id: cargo.CargoID || cargo.cargoID || cargo.id,
+      cargoID: cargo.CargoID || cargo.cargoID,
+      nome: cargo.Nome || cargo.nome,
+      descricao: cargo.Descricao || cargo.descricao,
+      nivel: cargo.Nivel || cargo.nivel,
+      departamentoID: cargo.DepartamentoID || cargo.departamentoID,
+      // Manter campos originais para compatibilidade
+      ...cargo
+    };
+  }
+  
+  return data;
 };
 
 export const createCargo = async (data: CargoFormData): Promise<ApiResponse<Cargo>> => {
-  const response = await axios.post(`${API_BASE}/cargos`, data);
+  // Mapear dados frontend (camelCase) para backend (PascalCase)
+  const mappedData = {
+    Nome: data.nome,
+    Descricao: data.descricao,
+    Nivel: data.nivel,
+    DepartamentoID: data.departamentoID
+  };
+  const response = await axios.post(`${API_BASE}/cargos`, mappedData);
   return response.data;
 };
 
 export const updateCargo = async (id: number, data: Partial<CargoFormData>): Promise<ApiResponse<Cargo>> => {
-  const response = await axios.put(`${API_BASE}/cargos/${id}`, data);
+  // Mapear dados frontend (camelCase) para backend (PascalCase)
+  const mappedData: any = {};
+  if (data.nome !== undefined) mappedData.Nome = data.nome;
+  if (data.descricao !== undefined) mappedData.Descricao = data.descricao;
+  if (data.nivel !== undefined) mappedData.Nivel = data.nivel;
+  if (data.departamentoID !== undefined) mappedData.DepartamentoID = data.departamentoID;
+  
+  const response = await axios.put(`${API_BASE}/cargos/${id}`, mappedData);
   return response.data;
 };
 

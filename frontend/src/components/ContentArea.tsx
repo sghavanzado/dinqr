@@ -18,6 +18,7 @@ import FolhaSalarialList from '../pages/rrhh/FolhaSalarialList';
 import BeneficiosList from '../pages/rrhh/BeneficiosList';
 import ComponentShowcase from '../pages/rrhh/ComponentShowcase';
 import RRHHSimple from '../pages/rrhh/RRHHSimple';
+import StatusChecker from '../components/rrhh/StatusChecker';
 
 const ContentArea = () => {
   return (
@@ -83,7 +84,7 @@ const ContentArea = () => {
       <Route
         path="/rrhh/departamentos"
         element={
-          <ProtectedRoute requiredRole="RRHH">
+          <ProtectedRoute>
             <DepartamentosCargos />
           </ProtectedRoute>
         }
@@ -121,9 +122,9 @@ const ContentArea = () => {
         }
       />
       <Route
-        path="/rrhh/beneficios"
+        path="/rrhh/beneficios "
         element={
-          <ProtectedRoute>
+          <ProtectedRoute >
             <BeneficiosList />
           </ProtectedRoute>
         }
@@ -141,6 +142,14 @@ const ContentArea = () => {
         element={
           <ProtectedRoute>
             <RRHHSimple />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/rrhh/status-checker"
+        element={
+          <ProtectedRoute>
+            <StatusChecker />
           </ProtectedRoute>
         }
       />

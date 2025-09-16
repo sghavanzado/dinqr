@@ -24,12 +24,16 @@ class FuncionarioController:
             funcionarios = session.query(Funcionario).order_by(Funcionario.FuncionarioID).offset(offset).limit(per_page).all()
             total = session.query(Funcionario).count()
             
+            # Calcular número total de páginas
+            pages = (total + per_page - 1) // per_page
+            
             return jsonify({
                 'success': True,
-                'funcionarios': [f.to_dict() for f in funcionarios],
+                'data': [f.to_dict() for f in funcionarios],  # Usar 'data' em vez de 'funcionarios'
                 'total': total,
                 'page': page,
-                'per_page': per_page
+                'per_page': per_page,
+                'pages': pages  # Adicionar campo 'pages'
             }), 200
         except Exception as e:
             logger.error(f"Erro ao listar funcionários: {str(e)}")
@@ -66,34 +70,43 @@ class FuncionarioController:
         try:
             dados = request.get_json()
             
+            # Support both camelCase (frontend) and PascalCase (backend)
+            nome = dados.get('nome') or dados.get('Nome')
+            apelido = dados.get('apelido') or dados.get('Apelido')
+            bi = dados.get('bi') or dados.get('BI')
+            
             # Validar campos obrigatórios
-            if not dados.get('Nome') or not dados.get('Apelido') or not dados.get('BI'):
+            if not nome or not apelido or not bi:
                 return jsonify({
                     'success': False, 
                     'error': 'Nome, apelido e BI são obrigatórios'
                 }), 400
             
             # Verificar se BI já existe
-            existing = session.query(Funcionario).filter(Funcionario.BI == dados.get('BI')).first()
+            existing = session.query(Funcionario).filter(Funcionario.BI == bi).first()
             if existing:
                 return jsonify({
                     'success': False,
                     'error': 'Já existe um funcionário com este BI'
                 }), 400
             
+            # Handle date fields from camelCase
+            data_nascimento = dados.get('dataNascimento') or dados.get('DataNascimento')
+            data_admissao = dados.get('dataAdmissao') or dados.get('DataAdmissao')
+            
             funcionario = Funcionario(
-                Nome=dados.get('Nome'),
-                Apelido=dados.get('Apelido'),
-                BI=dados.get('BI'),
-                DataNascimento=datetime.strptime(dados.get('DataNascimento'), '%Y-%m-%d').date() if dados.get('DataNascimento') else None,
-                Sexo=dados.get('Sexo'),
-                EstadoCivil=dados.get('EstadoCivil'),
-                Email=dados.get('Email'),
-                Telefone=dados.get('Telefone'),
-                Endereco=dados.get('Endereco'),
-                DataAdmissao=datetime.strptime(dados.get('DataAdmissao'), '%Y-%m-%d').date() if dados.get('DataAdmissao') else datetime.now().date(),
-                EstadoFuncionario=dados.get('EstadoFuncionario', 'Activo'),
-                Foto=dados.get('Foto')  # Caminho da foto (será definido via upload)
+                Nome=nome,
+                Apelido=apelido,
+                BI=bi,
+                DataNascimento=datetime.strptime(data_nascimento, '%Y-%m-%d').date() if data_nascimento else None,
+                Sexo=dados.get('sexo') or dados.get('Sexo'),
+                EstadoCivil=dados.get('estadoCivil') or dados.get('EstadoCivil'),
+                Email=dados.get('email') or dados.get('Email'),
+                Telefone=dados.get('telefone') or dados.get('Telefone'),
+                Endereco=dados.get('endereco') or dados.get('Endereco'),
+                DataAdmissao=datetime.strptime(data_admissao, '%Y-%m-%d').date() if data_admissao else datetime.now().date(),
+                EstadoFuncionario=dados.get('estadoFuncionario') or dados.get('EstadoFuncionario', 'Activo'),
+                Foto=dados.get('foto') or dados.get('Foto')  # Caminho da foto (será definido via upload)
             )
             
             session.add(funcionario)
@@ -138,7 +151,7 @@ class FuncionarioController:
                     return jsonify({
                         'success': False,
                         'error': 'Já existe um funcionário com este BI'
-                    }), 400
+                    }, 400)
                 funcionario.BI = dados['BI']
             if 'DataNascimento' in dados:
                 funcionario.DataNascimento = datetime.strptime(dados['DataNascimento'], '%Y-%m-%d').date() if dados['DataNascimento'] else None
@@ -367,6 +380,118 @@ class FuncionarioController:
         finally:
             session.close()
 
+    @staticmethod
+    def dashboard_metrics():
+        """Obter métricas do dashboard RRHH"""
+        session = IAMCSession()
+        try:
+            # Total de funcionários
+            total_funcionarios = session.query(Funcionario).count()
+            
+            # Funcionários ativos
+            funcionarios_ativos = session.query(Funcionario).filter(
+                Funcionario.EstadoFuncionario == 'Activo'
+            ).count()
+            
+            # Funcionários por departamento
+            from sqlalchemy import func
+            funcionarios_por_depto = session.query(
+                Departamento.Nome.label('departamento'),
+                func.count(HistoricoCargoFuncionario.FuncionarioID).label('total')
+            ).join(
+                HistoricoCargoFuncionario, 
+                Departamento.DepartamentoID == HistoricoCargoFuncionario.DepartamentoID
+            ).filter(
+                HistoricoCargoFuncionario.DataFim.is_(None)  # Apenas posições atuais
+            ).group_by(Departamento.Nome).all()
+            
+            # Funcionários por estado
+            funcionarios_por_estado = session.query(
+                Funcionario.EstadoFuncionario.label('estado'),
+                func.count(Funcionario.FuncionarioID).label('total')
+            ).group_by(Funcionario.EstadoFuncionario).all()
+            
+            # Funcionários por sexo
+            funcionarios_por_sexo = session.query(
+                Funcionario.Sexo.label('sexo'),
+                func.count(Funcionario.FuncionarioID).label('total')
+            ).group_by(Funcionario.Sexo).all()
+            
+            # Contratações por mês (simplificado)
+            contratacoes_mensais = []
+            
+            return jsonify({
+                'success': True,
+                'metrics': {
+                    'totalFuncionarios': total_funcionarios,
+                    'funcionariosAtivos': funcionarios_ativos,
+                    'funcionariosInativos': total_funcionarios - funcionarios_ativos,
+                    'funcionariosPorDepartamento': [
+                        {'nome': item.departamento, 'total': item.total}
+                        for item in funcionarios_por_depto
+                    ],
+                    'funcionariosPorEstado': [
+                        {'estado': item.estado, 'total': item.total}
+                        for item in funcionarios_por_estado
+                    ],
+                    'funcionariosPorSexo': [
+                        {'sexo': item.sexo or 'Não informado', 'total': item.total}
+                        for item in funcionarios_por_sexo
+                    ],
+                    'contratacoesMensais': contratacoes_mensais
+                }
+            }), 200
+            
+        except Exception as e:
+            logger.error(f"Erro ao obter métricas do dashboard: {str(e)}")
+            import traceback
+            logger.error(f"Traceback: {traceback.format_exc()}")
+            return jsonify({'success': False, 'error': 'Erro ao obter métricas'}), 500
+        finally:
+            session.close()
+
+    @staticmethod
+    def verificar_status():
+        """Verificar status da conexão e dados IAMC"""
+        session = IAMCSession()
+        try:
+            # Verificar conexão e contar registros
+            total_funcionarios = session.query(Funcionario).count()
+            total_departamentos = session.query(Departamento).count()
+            total_cargos = session.query(Cargo).count()
+            
+            # Funcionários por estado
+            from sqlalchemy import func
+            funcionarios_por_estado = session.query(
+                Funcionario.EstadoFuncionario,
+                func.count(Funcionario.FuncionarioID)
+            ).group_by(Funcionario.EstadoFuncionario).all()
+            
+            return jsonify({
+                'success': True,
+                'status': 'Conectado',
+                'dados': {
+                    'totalFuncionarios': total_funcionarios,
+                    'totalDepartamentos': total_departamentos,
+                    'totalCargos': total_cargos,
+                    'funcionariosPorEstado': {
+                        estado: total for estado, total in funcionarios_por_estado
+                    }
+                },
+                'timestamp': datetime.now().isoformat()
+            }), 200
+            
+        except Exception as e:
+            logger.error(f"Erro ao verificar status IAMC: {str(e)}")
+            return jsonify({
+                'success': False,
+                'status': 'Erro de conexão',
+                'error': str(e),
+                'timestamp': datetime.now().isoformat()
+            }), 500
+        finally:
+            session.close()
+
 class DepartamentoController:
     
     @staticmethod
@@ -377,7 +502,7 @@ class DepartamentoController:
             departamentos = session.query(Departamento).all()
             return jsonify({
                 'success': True,
-                'departamentos': [d.to_dict() for d in departamentos]
+                'data': [d.to_dict() for d in departamentos]
             }), 200
         except Exception as e:
             logger.error(f"Erro ao listar departamentos: {str(e)}")
@@ -396,7 +521,7 @@ class DepartamentoController:
                 
             return jsonify({
                 'success': True,
-                'departamento': departamento.to_dict()
+                'data': departamento.to_dict()
             }), 200
         except Exception as e:
             logger.error(f"Erro ao obter departamento: {str(e)}")
@@ -411,15 +536,19 @@ class DepartamentoController:
         try:
             dados = request.get_json()
             
-            if not dados.get('Nome'):
+            # Support both camelCase (frontend) and PascalCase (backend)
+            nome = dados.get('nome') or dados.get('Nome')
+            descricao = dados.get('descricao') or dados.get('Descricao')
+            
+            if not nome:
                 return jsonify({
                     'success': False, 
                     'error': 'Nome é obrigatório'
                 }), 400
             
             departamento = Departamento(
-                Nome=dados.get('Nome'),
-                Descricao=dados.get('Descricao')
+                Nome=nome,
+                Descricao=descricao
             )
             
             session.add(departamento)
@@ -427,7 +556,7 @@ class DepartamentoController:
             
             return jsonify({
                 'success': True,
-                'departamento': departamento.to_dict(),
+                'data': departamento.to_dict(),
                 'message': 'Departamento criado com sucesso'
             }), 201
             
@@ -449,16 +578,17 @@ class DepartamentoController:
                 
             dados = request.get_json()
             
-            if 'Nome' in dados:
-                departamento.Nome = dados['Nome']
-            if 'Descricao' in dados:
-                departamento.Descricao = dados['Descricao']
+            # Support both camelCase (frontend) and PascalCase (backend)
+            if 'nome' in dados or 'Nome' in dados:
+                departamento.Nome = dados.get('nome') or dados.get('Nome')
+            if 'descricao' in dados or 'Descricao' in dados:
+                departamento.Descricao = dados.get('descricao') or dados.get('Descricao')
             
             session.commit()
             
             return jsonify({
                 'success': True,
-                'departamento': departamento.to_dict(),
+                'data': departamento.to_dict(),
                 'message': 'Departamento atualizado com sucesso'
             }), 200
             
@@ -490,5 +620,141 @@ class DepartamentoController:
             session.rollback()
             logger.error(f"Erro ao eliminar departamento: {str(e)}")
             return jsonify({'success': False, 'error': 'Erro ao eliminar departamento'}), 500
+        finally:
+            session.close()
+    
+    # === MÉTODOS PARA CARGOS ===
+    @staticmethod
+    def listar_cargos():
+        """Listar todos os cargos"""
+        session = IAMCSession()
+        try:
+            cargos = session.query(Cargo).order_by(Cargo.CargoID).all()
+            return jsonify({
+                'success': True,
+                'data': [c.to_dict() for c in cargos],
+                'total': len(cargos)
+            }), 200
+        except Exception as e:
+            logger.error(f"Erro ao listar cargos: {str(e)}")
+            return jsonify({'success': False, 'error': 'Erro interno do servidor'}), 500
+        finally:
+            session.close()
+    
+    @staticmethod
+    def obter_cargo_por_id(cargo_id):
+        """Obter cargo por ID"""
+        session = IAMCSession()
+        try:
+            cargo = session.query(Cargo).filter(Cargo.CargoID == cargo_id).first()
+            if not cargo:
+                return jsonify({'success': False, 'error': 'Cargo não encontrado'}), 404
+                
+            return jsonify({
+                'success': True,
+                'data': cargo.to_dict()
+            }), 200
+        except Exception as e:
+            logger.error(f"Erro ao obter cargo: {str(e)}")
+            return jsonify({'success': False, 'error': 'Cargo não encontrado'}), 404
+        finally:
+            session.close()
+    
+    @staticmethod
+    def criar_cargo():
+        """Criar novo cargo"""
+        session = IAMCSession()
+        try:
+            dados = request.get_json()
+            
+            # Support both camelCase (frontend) and PascalCase (backend)
+            nome = dados.get('nome') or dados.get('Nome')
+            
+            if not nome:
+                return jsonify({
+                    'success': False, 
+                    'error': 'Nome é obrigatório'
+                }), 400
+            
+            cargo = Cargo(
+                Nome=nome,
+                Descricao=dados.get('descricao') or dados.get('Descricao'),
+                Nivel=dados.get('nivel') or dados.get('Nivel'),
+                DepartamentoID=dados.get('departamentoId') or dados.get('DepartamentoID')
+            )
+            
+            session.add(cargo)
+            session.commit()
+            
+            return jsonify({
+                'success': True,
+                'data': cargo.to_dict(),
+                'message': 'Cargo criado com sucesso'
+            }), 201
+            
+        except Exception as e:
+            session.rollback()
+            logger.error(f"Erro ao criar cargo: {str(e)}")
+            return jsonify({'success': False, 'error': 'Erro ao criar cargo'}), 500
+        finally:
+            session.close()
+    
+    @staticmethod
+    def atualizar_cargo(cargo_id):
+        """Atualizar cargo"""
+        session = IAMCSession()
+        try:
+            cargo = session.query(Cargo).filter(Cargo.CargoID == cargo_id).first()
+            if not cargo:
+                return jsonify({'success': False, 'error': 'Cargo não encontrado'}), 404
+            
+            dados = request.get_json()
+            
+            # Support both camelCase (frontend) and PascalCase (backend)
+            if 'nome' in dados or 'Nome' in dados:
+                cargo.Nome = dados.get('nome') or dados.get('Nome')
+            if 'descricao' in dados or 'Descricao' in dados:
+                cargo.Descricao = dados.get('descricao') or dados.get('Descricao')
+            if 'nivel' in dados or 'Nivel' in dados:
+                cargo.Nivel = dados.get('nivel') or dados.get('Nivel')
+            if 'departamentoId' in dados or 'DepartamentoID' in dados:
+                cargo.DepartamentoID = dados.get('departamentoId') or dados.get('DepartamentoID')
+            
+            session.commit()
+            
+            return jsonify({
+                'success': True,
+                'data': cargo.to_dict(),
+                'message': 'Cargo atualizado com sucesso'
+            }), 200
+            
+        except Exception as e:
+            session.rollback()
+            logger.error(f"Erro ao atualizar cargo: {str(e)}")
+            return jsonify({'success': False, 'error': 'Erro ao atualizar cargo'}), 500
+        finally:
+            session.close()
+    
+    @staticmethod
+    def eliminar_cargo(cargo_id):
+        """Eliminar cargo"""
+        session = IAMCSession()
+        try:
+            cargo = session.query(Cargo).filter(Cargo.CargoID == cargo_id).first()
+            if not cargo:
+                return jsonify({'success': False, 'error': 'Cargo não encontrado'}), 404
+            
+            session.delete(cargo)
+            session.commit()
+            
+            return jsonify({
+                'success': True,
+                'message': 'Cargo eliminado com sucesso'
+            }), 200
+            
+        except Exception as e:
+            session.rollback()
+            logger.error(f"Erro ao eliminar cargo: {str(e)}")
+            return jsonify({'success': False, 'error': 'Erro ao eliminar cargo'}), 500
         finally:
             session.close()

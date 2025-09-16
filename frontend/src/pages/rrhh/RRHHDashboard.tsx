@@ -31,7 +31,7 @@ import {
   Tooltip,
 } from 'recharts';
 import type { DashboardMetrics, ChartData } from '../../types/rrhh';
-import { getDashboardMetrics } from '../../services/api/rrhh';
+import { getDashboardMetrics } from '../../services/api/rrhh.js';
 import StatsCard from '../../components/funcionarios/StatsCard';
 
 const RRHHDashboard: React.FC = () => {

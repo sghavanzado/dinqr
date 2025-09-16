@@ -53,7 +53,7 @@ import {
   createAvaliacao, 
   updateAvaliacao,
   getFuncionarios
-} from '../../services/api/rrhh';
+} from '../../services/api/rrhh.js';
 
 // Schema de validação
 const avaliacaoSchema = z.object({

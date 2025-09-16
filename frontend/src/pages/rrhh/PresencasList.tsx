@@ -53,7 +53,7 @@ import {
   updatePresenca,
   getFuncionarios,
   getDepartamentos,
-} from '../../services/api/rrhh';
+} from '../../services/api/rrhh.js';
 
 // Validation schema
 const presencaSchema = z.object({

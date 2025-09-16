@@ -57,7 +57,7 @@ import {
   createLicenca, 
   updateLicenca,
   getFuncionarios
-} from '../../services/api/rrhh';
+} from '../../services/api/rrhh.js';
 import ConfirmDialog from '../../components/funcionarios/ConfirmDialog';
 
 // Schema de validação

@@ -55,7 +55,7 @@ import {
   createFolhaSalarial, 
   updateFolhaSalarial,
   getFuncionarios
-} from '../../services/api/rrhh';
+} from '../../services/api/rrhh.js';
 
 // Schema de validação
 const folhaSalarialSchema = z.object({

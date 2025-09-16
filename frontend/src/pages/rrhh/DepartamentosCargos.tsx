@@ -49,7 +49,7 @@ import {
   createCargo,
   updateCargo,
   deleteCargo
-} from '../../services/api/rrhh';
+} from '../../services/api/rrhh.js';
 
 // Simple inline ConfirmDialog component
 interface ConfirmDialogProps {
@@ -142,6 +142,7 @@ const DepartamentosCargos: React.FC = () => {
   const loadData = async () => {
     try {
       setLoading(true);
+      
       const [deptsResponse, cargosResponse] = await Promise.all([
         getDepartamentos(),
         getCargos()

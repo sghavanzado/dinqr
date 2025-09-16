@@ -149,9 +149,18 @@ def create_app(config_class=None):
         # Handle CORS preflight requests
         if request.method == "OPTIONS":
             origin = request.headers.get("Origin")
-            if origin and origin in app.config.get('CORS_ORIGINS', []):
+            allowed_origins = app.config.get('CORS_ORIGINS', [])
+            
+            # Para desenvolvimento, permitir file:// e origens locais
+            is_local_dev = (not origin or 
+                          origin.startswith('file://') or 
+                          origin.startswith('http://localhost') or 
+                          origin.startswith('http://127.0.0.1') or
+                          origin in allowed_origins)
+            
+            if is_local_dev:
                 resp = make_response()
-                resp.headers["Access-Control-Allow-Origin"] = origin
+                resp.headers["Access-Control-Allow-Origin"] = origin or "*"
                 resp.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization, X-Requested-With"
                 resp.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
                 resp.headers["Access-Control-Allow-Credentials"] = "true"
@@ -161,8 +170,17 @@ def create_app(config_class=None):
     @app.after_request
     def after_all(response):
         origin = request.headers.get("Origin")
-        if origin and origin in app.config.get('CORS_ORIGINS', []):
-            response.headers["Access-Control-Allow-Origin"] = origin
+        allowed_origins = app.config.get('CORS_ORIGINS', [])
+        
+        # Para desenvolvimento, permitir file:// e origens locais
+        is_local_dev = (not origin or 
+                      origin.startswith('file://') or 
+                      origin.startswith('http://localhost') or 
+                      origin.startswith('http://127.0.0.1') or
+                      origin in allowed_origins)
+        
+        if is_local_dev:
+            response.headers["Access-Control-Allow-Origin"] = origin or "*"
             response.headers["Access-Control-Allow-Credentials"] = "true"
         
         # Security headers for Windows Server

@@ -77,3 +77,40 @@ def atualizar_departamento(departamento_id):
 def eliminar_departamento(departamento_id):
     """DELETE /api/departamentos/{id} - Eliminar departamento"""
     return DepartamentoController.eliminar(departamento_id)
+
+# === ROTAS PARA CARGOS ===
+@funcionarios_bp.route('/cargos', methods=['GET'])
+def listar_cargos():
+    """GET /api/cargos - Listar todos os cargos"""
+    return DepartamentoController.listar_cargos()
+
+@funcionarios_bp.route('/cargos/<int:cargo_id>', methods=['GET'])
+def obter_cargo(cargo_id):
+    """GET /api/cargos/{id} - Obter cargo por ID"""
+    return DepartamentoController.obter_cargo_por_id(cargo_id)
+
+@funcionarios_bp.route('/cargos', methods=['POST'])
+def criar_cargo():
+    """POST /api/cargos - Criar novo cargo"""
+    return DepartamentoController.criar_cargo()
+
+@funcionarios_bp.route('/cargos/<int:cargo_id>', methods=['PUT'])
+def atualizar_cargo(cargo_id):
+    """PUT /api/cargos/{id} - Atualizar cargo"""
+    return DepartamentoController.atualizar_cargo(cargo_id)
+
+@funcionarios_bp.route('/cargos/<int:cargo_id>', methods=['DELETE'])
+def eliminar_cargo(cargo_id):
+    """DELETE /api/cargos/{id} - Eliminar cargo"""
+    return DepartamentoController.eliminar_cargo(cargo_id)
+
+# === ROTAS PARA DASHBOARD E MÉTRICAS ===
+@funcionarios_bp.route('/dashboard/metrics', methods=['GET'])
+def obter_metricas_dashboard():
+    """GET /api/dashboard/metrics - Obter métricas do dashboard RRHH"""
+    return FuncionarioController.dashboard_metrics()
+
+@funcionarios_bp.route('/status', methods=['GET'])
+def verificar_status_iamc():
+    """GET /api/status - Verificar status da conexão IAMC"""
+    return FuncionarioController.verificar_status()

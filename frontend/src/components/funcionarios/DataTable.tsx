@@ -194,14 +194,15 @@ const DataTable: React.FC<DataTableProps> = ({
               </TableRow>
             ) : (
               data.map((row) => {
-                const isItemSelected = isSelected(row.id.toString());
+                const rowId = row.id || row.funcionarioID || row.FuncionarioID || 'unknown';
+                const isItemSelected = isSelected(rowId.toString());
                 return (
-                  <TableRow hover key={row.id} selected={isItemSelected}>
+                  <TableRow hover key={rowId} selected={isItemSelected}>
                     {selectable && (
                       <TableCell padding="checkbox">
                         <Checkbox
                           checked={isItemSelected}
-                          onChange={() => handleSelectOne(row.id.toString())}
+                          onChange={() => handleSelectOne(rowId.toString())}
                         />
                       </TableCell>
                     )}

@@ -1,30 +1,22 @@
-2025-09-11 20:56:33,019 INFO: Petición: GET /api/iamc/funcionarios desde 127.0.0.1 - args: {} - json: None
-2025-09-11 20:56:33,027 INFO: 127.0.0.1 - - [11/Sep/2025 20:56:33] "GET /api/iamc/funcionarios HTTP/1.1" 200 -
-2025-09-11 20:57:46,714 INFO: Petición: GET /api/iamc/presencas desde 127.0.0.1 - args: {'page': '1', 'per_page': '10'} - json: None
-2025-09-11 20:57:46,715 INFO: Petición: GET /api/iamc/funcionarios desde 127.0.0.1 - args: {} - json: None
-2025-09-11 20:57:46,717 INFO: Petición: GET /api/iamc/departamentos desde 127.0.0.1 - args: {} - json: None
-2025-09-11 20:57:46,730 INFO: 127.0.0.1 - - [11/Sep/2025 20:57:46] "GET /api/iamc/presencas?page=1&per_page=10 HTTP/1.1" 200 -
-2025-09-11 20:57:46,731 INFO: 127.0.0.1 - - [11/Sep/2025 20:57:46] "GET /api/iamc/departamentos HTTP/1.1" 200 -
-2025-09-11 20:57:46,734 INFO: 127.0.0.1 - - [11/Sep/2025 20:57:46] "GET /api/iamc/funcionarios HTTP/1.1" 200 -
-2025-09-11 20:57:46,975 INFO: Petición: GET /api/iamc/presencas desde 127.0.0.1 - args: {'page': '1', 'per_page': '10'} - json: None
-2025-09-11 20:57:46,986 INFO: 127.0.0.1 - - [11/Sep/2025 20:57:46] "GET /api/iamc/presencas?page=1&per_page=10 HTTP/1.1" 200 -
-2025-09-11 20:57:47,039 INFO: Petición: GET /api/iamc/departamentos desde 127.0.0.1 - args: {} - json: None
-2025-09-11 20:57:47,193 INFO: 127.0.0.1 - - [11/Sep/2025 20:57:47] "GET /api/iamc/departamentos HTTP/1.1" 200 -
-2025-09-11 20:57:47,194 INFO: Petición: GET /api/iamc/licencas desde 127.0.0.1 - args: {'page': '1', 'per_page': '10'} - json: None
-2025-09-11 20:57:47,195 INFO: Petición: GET /api/iamc/funcionarios desde 127.0.0.1 - args: {} - json: None
-2025-09-11 20:57:47,204 INFO: 127.0.0.1 - - [11/Sep/2025 20:57:47] "GET /api/iamc/licencas?page=1&per_page=10 HTTP/1.1" 200 -
-2025-09-11 20:57:47,210 INFO: 127.0.0.1 - - [11/Sep/2025 20:57:47] "GET /api/iamc/funcionarios HTTP/1.1" 200 -
-2025-09-11 20:57:47,511 INFO: Petición: GET /api/iamc/licencas desde 127.0.0.1 - args: {'page': '1', 'per_page': '10'} - json: None
-2025-09-11 20:57:47,517 INFO: 127.0.0.1 - - [11/Sep/2025 20:57:47] "GET /api/iamc/licencas?page=1&per_page=10 HTTP/1.1" 200 -
-2025-09-11 20:57:47,518 INFO: Petición: GET /api/iamc/funcionarios desde 127.0.0.1 - args: {} - json: None
-2025-09-11 20:57:47,527 INFO: 127.0.0.1 - - [11/Sep/2025 20:57:47] "GET /api/iamc/funcionarios HTTP/1.1" 200 -
-2025-09-11 20:57:47,834 INFO: Petición: GET /api/iamc/funcionarios desde 127.0.0.1 - args: {} - json: None
-2025-09-11 20:57:47,841 INFO: 127.0.0.1 - - [11/Sep/2025 20:57:47] "GET /api/iamc/funcionarios HTTP/1.1" 200 -
-2025-09-11 20:57:48,083 INFO: Petición: GET /api/iamc/avaliacoes desde 127.0.0.1 - args: {} - json: None
-2025-09-11 20:57:48,086 INFO: 127.0.0.1 - - [11/Sep/2025 20:57:48] "[33mGET /api/iamc/avaliacoes HTTP/1.1[0m" 404 -
-2025-09-11 20:57:48,298 INFO: Petición: GET /api/iamc/avaliacoes desde 127.0.0.1 - args: {} - json: None
-2025-09-11 20:57:48,303 INFO: 127.0.0.1 - - [11/Sep/2025 20:57:48] "[33mGET /api/iamc/avaliacoes HTTP/1.1[0m" 404 -
-2025-09-11 20:57:48,301 INFO: Petición: GET /api/iamc/funcionarios desde 127.0.0.1 - args: {} - json: None
-2025-09-11 20:57:48,316 INFO: 127.0.0.1 - - [11/Sep/2025 20:57:48] "GET /api/iamc/funcionarios HTTP/1.1" 200 -
-2025-09-11 20:57:48,409 INFO: Petición: GET /api/iamc/funcionarios desde 127.0.0.1 - args: {} - json: None
-2025-09-11 20:57:48,416 INFO: 127.0.0.1 - - [11/Sep/2025 20:57:48] "GET /api/iamc/funcionarios HTTP/1.1" 200 -
+2025-09-16 16:39:15,154 INFO: 127.0.0.1 - - [16/Sep/2025 16:39:15] "GET /qr/funcionarios-com-qr HTTP/1.1" 200 -
+2025-09-16 16:39:15,185 INFO: Petición: GET /qr/funcionarios/total desde 127.0.0.1 - args: {} - json: None
+2025-09-16 16:39:15,190 ERROR: Error al obtener el total de funcionarios: ('42000', "[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near the keyword 'key'. (156) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+2025-09-16 16:39:15,197 INFO: 127.0.0.1 - - [16/Sep/2025 16:39:15] "[35m[1mGET /qr/funcionarios/total HTTP/1.1[0m" 500 -
+2025-09-16 16:39:16,049 INFO: Petición: GET /qr/funcionarios-com-qr desde 127.0.0.1 - args: {} - json: None
+2025-09-16 16:39:16,131 INFO: IDs de funcionarios con QR obtenidos: ['102', '106', '107', '109', '11', '111', '113', '114', '118', '119', '120', '122', '125', '128', '13', '130', '131', '132', '133', '134', '135', '136', '137', '138', '139', '140', '14002', '14005', '14007', '14008', '14009', '14014', '14015', '14020', '142', '148', '15', '227', '43', '5000011', '5000012', '5000013', '5000018', '5000030', '500005', '5000054', '5000055', '74']
+2025-09-16 16:39:16,133 INFO: Ejecutando consulta SQL para funcionarios COM QR: 
+                    SELECT sap, nome, funcao, area, nif, telefone, email, unineg
+                    FROM sonacard
+                    WHERE sap IN (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+                    ORDER BY sap
+                
+2025-09-16 16:39:16,134 INFO: Funcionarios con QR obtenidos: 48 registros
+2025-09-16 16:39:16,136 INFO: 127.0.0.1 - - [16/Sep/2025 16:39:16] "GET /qr/funcionarios-com-qr HTTP/1.1" 200 -
+2025-09-16 16:39:21,911 INFO: Petición: GET /api/iamc/departamentos desde 127.0.0.1 - args: {} - json: None
+2025-09-16 16:39:21,912 INFO: Petición: GET /api/iamc/cargos desde 127.0.0.1 - args: {} - json: None
+2025-09-16 16:39:21,922 INFO: 127.0.0.1 - - [16/Sep/2025 16:39:21] "GET /api/iamc/departamentos HTTP/1.1" 200 -
+2025-09-16 16:39:21,923 INFO: 127.0.0.1 - - [16/Sep/2025 16:39:21] "GET /api/iamc/cargos HTTP/1.1" 200 -
+2025-09-16 16:39:22,404 INFO: Petición: GET /api/iamc/departamentos desde 127.0.0.1 - args: {} - json: None
+2025-09-16 16:39:22,405 INFO: Petición: GET /api/iamc/cargos desde 127.0.0.1 - args: {} - json: None
+2025-09-16 16:39:22,413 INFO: 127.0.0.1 - - [16/Sep/2025 16:39:22] "GET /api/iamc/departamentos HTTP/1.1" 200 -
+2025-09-16 16:39:22,415 INFO: 127.0.0.1 - - [16/Sep/2025 16:39:22] "GET /api/iamc/cargos HTTP/1.1" 200 -

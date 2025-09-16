@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Frontend RRHH</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .section { margin: 20px 0; padding: 20px; border: 1px solid #ddd; border-radius: 5px; }
+        .success { background-color: #e8f5e8; border-color: #4caf50; }
+        .error { background-color: #ffe8e8; border-color: #f44336; }
+        .loading { background-color: #fff3cd; border-color: #ffc107; }
+        pre { background: #f5f5f5; padding: 10px; border-radius: 3px; overflow-x: auto; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .status-badge { padding: 2px 8px; border-radius: 3px; font-size: 12px; }
+        .status-activo { background-color: #e8f5e8; color: #2e7d32; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Teste Frontend RRHH - Funcionários</h1>
+        
+        <div class="section">
+            <h2>🔗 Teste de Conexão Backend</h2>
+            <button onclick="testBackendConnection()">Testar Conexão</button>
+            <div id="connectionResult"></div>
+        </div>
+
+        <div class="section">
+            <h2>📋 Lista de Funcionários</h2>
+            <button onclick="loadFuncionarios()">Carregar Funcionários</button>
+            <button onclick="loadFuncionarios(true)">Carregar com Debug</button>
+            <div id="funcionariosResult"></div>
+        </div>
+
+        <div class="section">
+            <h2>📊 Status IAMC</h2>
+            <button onclick="testIAMCStatus()">Verificar Status IAMC</button>
+            <div id="statusResult"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:5000/api/iamc';
+        
+        function showResult(elementId, content, type = 'info') {
+            const element = document.getElementById(elementId);
+            element.innerHTML = `<div class="section ${type}">${content}</div>`;
+        }
+        
+        function showLoading(elementId, message = 'Carregando...') {
+            showResult(elementId, `<p>⏳ ${message}</p>`, 'loading');
+        }
+        
+        async function testBackendConnection() {
+            showLoading('connectionResult', 'Testando conexão...');
+            
+            try {
+                const response = await fetch(`${API_BASE}/status`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    showResult('connectionResult', `
+                        <h3>✅ Conexão OK</h3>
+                        <p><strong>Status:</strong> ${response.status}</p>
+                        <p><strong>Módulo:</strong> ${data.module}</p>
+                        <p><strong>Status:</strong> ${data.status}</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `, 'success');
+                } else {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+            } catch (error) {
+                showResult('connectionResult', `
+                    <h3>❌ Erro de Conexão</h3>
+                    <p><strong>Erro:</strong> ${error.message}</p>
+                    <p>Verifique se o backend está rodando em <code>http://localhost:5000</code></p>
+                `, 'error');
+            }
+        }
+        
+        async function loadFuncionarios(debug = false) {
+            showLoading('funcionariosResult', 'Carregando funcionários...');
+            
+            try {
+                const url = `${API_BASE}/funcionarios?page=1&per_page=10`;
+                if (debug) console.log('🌐 Fazendo requisição para:', url);
+                
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                
+                if (debug) console.log('📡 Status da resposta:', response.status);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    if (debug) console.log('📄 Dados da resposta:', data);
+                    
+                    if (data.success) {
+                        const funcionarios = data.data || data.funcionarios || [];
+                        const total = data.total || 0;
+                        
+                        let html = `
+                            <h3>✅ Funcionários Carregados</h3>
+                            <p><strong>Total:</strong> ${total}</p>
+                            <p><strong>Página:</strong> ${data.page || 1}</p>
+                            <p><strong>Por página:</strong> ${data.per_page || 10}</p>
+                        `;
+                        
+                        if (funcionarios.length > 0) {
+                            html += `
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Nome</th>
+                                            <th>Email</th>
+                                            <th>Estado</th>
+                                            <th>Data Admissão</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                            `;
+                            
+                            funcionarios.forEach(f => {
+                                html += `
+                                    <tr>
+                                        <td>${f.FuncionarioID || f.funcionarioID}</td>
+                                        <td>${f.Nome || f.nome} ${f.Apelido || f.apelido}</td>
+                                        <td>${f.Email || f.email || '-'}</td>
+                                        <td><span class="status-badge status-activo">${f.EstadoFuncionario || f.estadoFuncionario}</span></td>
+                                        <td>${f.DataAdmissao || f.dataAdmissao || '-'}</td>
+                                    </tr>
+                                `;
+                            });
+                            
+                            html += `
+                                    </tbody>
+                                </table>
+                            `;
+                        } else {
+                            html += '<p>⚠️ Nenhum funcionário encontrado</p>';
+                        }
+                        
+                        if (debug) {
+                            html += `<pre>Raw Response:\n${JSON.stringify(data, null, 2)}</pre>`;
+                        }
+                        
+                        showResult('funcionariosResult', html, 'success');
+                    } else {
+                        throw new Error(data.error || data.message || 'Resposta de erro do servidor');
+                    }
+                } else {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+            } catch (error) {
+                if (debug) console.error('❌ Erro na requisição:', error);
+                showResult('funcionariosResult', `
+                    <h3>❌ Erro ao Carregar Funcionários</h3>
+                    <p><strong>Erro:</strong> ${error.message}</p>
+                    <p>Verifique:</p>
+                    <ul>
+                        <li>Se o backend está rodando</li>
+                        <li>Se o endpoint /api/iamc/funcionarios está funcionando</li>
+                        <li>Se há dados na base de dados IAMC</li>
+                    </ul>
+                `, 'error');
+            }
+        }
+        
+        async function testIAMCStatus() {
+            showLoading('statusResult', 'Verificando status IAMC...');
+            
+            try {
+                const response = await fetch(`${API_BASE}/status`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    let html = `
+                        <h3>✅ Status IAMC</h3>
+                        <p><strong>Módulo:</strong> ${data.module}</p>
+                        <p><strong>Status:</strong> ${data.status}</p>
+                        <h4>Endpoints Disponíveis:</h4>
+                        <ul>
+                    `;
+                    
+                    Object.entries(data.endpoints || {}).forEach(([key, value]) => {
+                        html += `<li><strong>${key}:</strong> <code>${value}</code></li>`;
+                    });
+                    
+                    html += `
+                        </ul>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                    
+                    showResult('statusResult', html, 'success');
+                } else {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+            } catch (error) {
+                showResult('statusResult', `
+                    <h3>❌ Erro ao Verificar Status</h3>
+                    <p><strong>Erro:</strong> ${error.message}</p>
+                `, 'error');
+            }
+        }
+        
+        // Auto-load status on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            testBackendConnection();
+        });
+    </script>
+</body>
+</html>

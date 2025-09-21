@@ -229,23 +229,23 @@ def generar_qr(ids):
                     qr_img.save(caminho_arquivo)
 
                     # Verificar si ya existe un registro en qr_codes para este funcionario
-                    cursor_local.execute("SELECT contact_id FROM qr_codes WHERE contact_id = ?", (str(funcionario_id),))
+                    cursor_local.execute("SELECT contact_id FROM qr_codes WHERE contact_id = ?", (funcionario_id,))
                     existe = cursor_local.fetchone()
                     
                     if existe:
                         # Actualizar registro existente
                         cursor_local.execute("""
                             UPDATE qr_codes 
-                            SET nombre = ?, archivo_qr = ?, firma = ?, qr_path = ?, hash_value = ?
+                            SET qr_path = ?, hash_value = ?, generated_at = GETDATE()
                             WHERE contact_id = ?
-                        """, (nome_completo, nome_arquivo, firma, caminho_arquivo, firma, str(funcionario_id)))
+                        """, (caminho_arquivo, firma, funcionario_id))
                         logging.info(f"QR actualizado para funcionario ID {funcionario_id}")
                     else:
                         # Insertar nuevo registro
                         cursor_local.execute("""
-                            INSERT INTO qr_codes (contact_id, nombre, archivo_qr, firma, qr_path, hash_value) 
-                            VALUES (?, ?, ?, ?, ?, ?)
-                        """, (str(funcionario_id), nome_completo, nome_arquivo, firma, caminho_arquivo, firma))
+                            INSERT INTO qr_codes (contact_id, qr_path, hash_value, generated_at) 
+                            VALUES (?, ?, ?, GETDATE())
+                        """, (funcionario_id, caminho_arquivo, firma))
                         logging.info(f"QR creado para funcionario ID {funcionario_id}")
                     
                     conn_local.commit()

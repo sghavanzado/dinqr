@@ -22,6 +22,9 @@ class Funcionario(Base):
     DataAdmissao = Column(Date, nullable=False)
     EstadoFuncionario = Column(String(20), nullable=True)  # Activo, Inactivo, Suspenso
     Foto = Column(String(255), nullable=True)  # Caminho para a foto tipo visa
+    # Campos para cargo e departamento atuais
+    CargoID = Column(Integer, ForeignKey('Cargos.CargoID'), nullable=True)
+    DepartamentoID = Column(Integer, ForeignKey('Departamentos.DepartamentoID'), nullable=True)
     
     def to_dict(self):
         return {
@@ -37,7 +40,9 @@ class Funcionario(Base):
             'Endereco': self.Endereco,
             'DataAdmissao': self.DataAdmissao.isoformat() if self.DataAdmissao else None,
             'EstadoFuncionario': self.EstadoFuncionario,
-            'Foto': self.Foto
+            'Foto': self.Foto,
+            'CargoID': self.CargoID,
+            'DepartamentoID': self.DepartamentoID
         }
     
     def __repr__(self):

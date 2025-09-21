@@ -1,0 +1,6 @@
+{
+  "funcionario_id": 1,
+  "incluir_qr": true,
+  "tema": "default",
+  "formato_saida": "pdf"
+}

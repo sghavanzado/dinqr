@@ -31,18 +31,18 @@ import {
 import QrCodeIcon from '@mui/icons-material/QrCode';
 import SearchIcon from '@mui/icons-material/Search';
 import axiosInstance from '../api/axiosInstance';
-import type { Funcionario } from '../types/Funcionario';
+import type { DashboardFuncionario } from '../types/Funcionario';
 import Checkbox from '@mui/material/Checkbox';
 
 interface QRTableProps {
-  funcionarios?: Funcionario[]; // Props opcional (no utilizado actualmente)
+  funcionarios?: DashboardFuncionario[]; // Props opcional (no utilizado actualmente)
 }
 
 const QRTable: FC<QRTableProps> = () => {
   // =============================================
   // 📋 ESTADOS PARA FUNCIONARIOS SIN QR
   // =============================================
-  const [funcionariosSinQR, setFuncionariosSinQR] = useState<Funcionario[]>([]); // Lista completa
+  const [funcionariosSinQR, setFuncionariosSinQR] = useState<DashboardFuncionario[]>([]); // Lista completa
   const [selectedIdsSinQR, setSelectedIdsSinQR] = useState<number[]>([]);        // IDs seleccionados
   const [loading, setLoading] = useState(false);                                 // Estado de carga
   const [filterSinQR, setFilterSinQR] = useState('');                           // Filtro de búsqueda
@@ -60,8 +60,10 @@ const QRTable: FC<QRTableProps> = () => {
   const filteredFuncionariosSinQR = funcionariosSinQR.filter(
     (funcionario) =>
       funcionario.nome.toLowerCase().includes(filterSinQR.toLowerCase()) ||
-      funcionario.funcao?.toLowerCase().includes(filterSinQR.toLowerCase()) ||
-      funcionario.area?.toLowerCase().includes(filterSinQR.toLowerCase())
+      funcionario.apelido?.toLowerCase().includes(filterSinQR.toLowerCase()) ||
+      funcionario.cargo?.toLowerCase().includes(filterSinQR.toLowerCase()) ||
+      funcionario.departamento?.toLowerCase().includes(filterSinQR.toLowerCase()) ||
+      funcionario.email?.toLowerCase().includes(filterSinQR.toLowerCase())
   );
 
   // 🔥 CALCULAR TOTAL DE PÁGINAS BASADO EN FUNCIONARIOS FILTRADOS
@@ -170,7 +172,7 @@ const QRTable: FC<QRTableProps> = () => {
         <Box sx={{ mb: 2 }}>
           <TextField
             fullWidth
-            placeholder="Pesquisar por nome, função ou direção..."
+            placeholder="Pesquisar por nome, cargo ou departamento..."
             value={filterSinQR}
             onChange={(e) => {
               setFilterSinQR(e.target.value);
@@ -203,22 +205,25 @@ const QRTable: FC<QRTableProps> = () => {
                       />
                     </TableCell>
                     <TableCell>
-                      <strong>SAP</strong>
+                      <strong>ID</strong>
                     </TableCell>
                     <TableCell>
                       <strong>Nome</strong>
                     </TableCell>
                     <TableCell>
-                      <strong>Função</strong>
+                      <strong>Apelido</strong>
                     </TableCell>
                     <TableCell>
-                      <strong>Direção</strong>
-                    </TableCell>
-                    <TableCell>
-                      <strong>NIF</strong>
+                      <strong>Email</strong>
                     </TableCell>
                     <TableCell>
                       <strong>Telefone</strong>
+                    </TableCell>
+                    <TableCell>
+                      <strong>Cargo</strong>
+                    </TableCell>
+                    <TableCell>
+                      <strong>Departamento</strong>
                     </TableCell>
                     <TableCell align="center">
                       <strong>Ações</strong>
@@ -250,12 +255,13 @@ const QRTable: FC<QRTableProps> = () => {
                             </Typography>
                           </Box>
                         </TableCell>
-                        <TableCell>
-                          <Chip label={funcionario.funcao || 'Não especificada'} size="small" />
-                        </TableCell>
-                        <TableCell>{funcionario.area || 'Não especificada'}</TableCell>
-                        <TableCell>{funcionario.nif || 'Não especificado'}</TableCell>
+                        <TableCell>{funcionario.apelido || 'Não especificado'}</TableCell>
+                        <TableCell>{funcionario.email || 'Não especificado'}</TableCell>
                         <TableCell>{funcionario.telefone || 'Não especificado'}</TableCell>
+                        <TableCell>
+                          <Chip label={funcionario.cargo || 'Não especificado'} size="small" />
+                        </TableCell>
+                        <TableCell>{funcionario.departamento || 'Não especificado'}</TableCell>
                         <TableCell align="center">
                           <IconButton
                             size="small"
@@ -273,7 +279,7 @@ const QRTable: FC<QRTableProps> = () => {
                     ))
                   ) : (
                     <TableRow>
-                      <TableCell colSpan={8} align="center">
+                      <TableCell colSpan={9} align="center">
                         <Box sx={{ py: 4 }}>
                           <QrCodeIcon sx={{ fontSize: 64, color: 'text.secondary', mb: 2 }} />
                           <Typography variant="h6" color="text.secondary">

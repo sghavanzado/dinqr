@@ -1,0 +1,328 @@
+/* 
+ * Employee Pass CSS - Formato CR80 (85.6mm x 53.98mm)
+ * Optimizado para impressão a 300 DPI
+ */
+
+/* Variáveis CSS para fácil customização */
+:root {
+  /* Dimensões CR80 em pontos (300 DPI) */
+  --pass-width: 242.65pt;  /* 85.6mm */
+  --pass-height: 153.07pt; /* 53.98mm */
+  
+  /* Cores principais */
+  --primary-color: #1976d2;
+  --secondary-color: #0d47a1;
+  --accent-color: #2196f3;
+  --text-primary: #212121;
+  --text-secondary: #757575;
+  --background-color: #ffffff;
+  --border-color: #e0e0e0;
+  
+  /* Tipografia */
+  --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  --font-size-large: 14pt;
+  --font-size-medium: 10pt;
+  --font-size-small: 8pt;
+  --font-size-tiny: 6pt;
+  
+  /* Espaçamentos */
+  --padding-small: 4pt;
+  --padding-medium: 6pt;
+  --padding-large: 8pt;
+  --margin-small: 2pt;
+  --margin-medium: 4pt;
+}
+
+/* Reset e configuração base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: #f5f5f5;
+  padding: 20pt;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* Container principal do passe */
+.pass-container {
+  width: var(--pass-width);
+  height: var(--pass-height);
+  background: linear-gradient(135deg, var(--background-color) 0%, #f8f9fa 100%);
+  border: 1pt solid var(--border-color);
+  border-radius: 8pt;
+  box-shadow: 0 2pt 8pt rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  position: relative;
+}
+
+/* Frente do passe */
+.pass-front {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 60pt;
+  grid-template-rows: auto auto 1fr auto;
+  grid-template-areas: 
+    "header qr"
+    "photo qr"
+    "info qr"
+    "footer footer";
+  padding: var(--padding-medium);
+  gap: var(--margin-small);
+}
+
+/* Cabeçalho com logo e nome da empresa */
+.company-logo {
+  grid-area: header;
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--margin-small);
+}
+
+.logo-image {
+  max-height: 20pt;
+  max-width: 40pt;
+  object-fit: contain;
+}
+
+.company-name {
+  margin-left: var(--padding-small);
+}
+
+.company-name h1 {
+  font-size: var(--font-size-medium);
+  font-weight: bold;
+  color: var(--primary-color);
+  line-height: 1.2;
+  margin: 0;
+}
+
+.company-subtitle {
+  font-size: var(--font-size-tiny);
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1;
+}
+
+/* Foto do funcionário */
+.employee-photo {
+  grid-area: photo;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: var(--margin-small);
+}
+
+.photo-image {
+  width: 40pt;
+  height: 40pt;
+  border-radius: 4pt;
+  object-fit: cover;
+  border: 1pt solid var(--border-color);
+  box-shadow: 0 1pt 3pt rgba(0, 0, 0, 0.2);
+}
+
+/* Informações do funcionário */
+.employee-info {
+  grid-area: info;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.employee-name {
+  font-size: var(--font-size-medium);
+  font-weight: bold;
+  color: var(--text-primary);
+  margin-bottom: var(--margin-small);
+  line-height: 1.2;
+}
+
+.employee-details {
+  display: flex;
+  flex-direction: column;
+  gap: 1pt;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: var(--font-size-small);
+  line-height: 1.2;
+}
+
+.detail-row .label {
+  font-weight: 600;
+  color: var(--text-secondary);
+  flex: 0 0 auto;
+}
+
+.detail-row .value {
+  color: var(--text-primary);
+  text-align: right;
+  flex: 1 1 auto;
+  margin-left: var(--margin-small);
+  font-weight: 500;
+}
+
+/* Código QR */
+.qr-code {
+  grid-area: qr;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--padding-small);
+}
+
+.qr-image {
+  width: 50pt;
+  height: 50pt;
+  object-fit: contain;
+  background: white;
+  border: 1pt solid var(--border-color);
+  border-radius: 2pt;
+  padding: 1pt;
+}
+
+.qr-label {
+  font-size: var(--font-size-tiny);
+  color: var(--text-secondary);
+  margin-top: var(--margin-small);
+  text-align: center;
+  line-height: 1;
+}
+
+/* Rodapé */
+.pass-footer {
+  grid-area: footer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1pt solid var(--border-color);
+  padding-top: var(--padding-small);
+  margin-top: var(--margin-small);
+}
+
+.validity {
+  font-size: var(--font-size-tiny);
+  color: var(--text-secondary);
+  line-height: 1;
+}
+
+.security-features {
+  display: flex;
+  align-items: center;
+  gap: 2pt;
+}
+
+.security-dot {
+  width: 4pt;
+  height: 4pt;
+  background-color: var(--accent-color);
+  border-radius: 50%;
+}
+
+.security-text {
+  font-size: var(--font-size-tiny);
+  color: var(--text-secondary);
+  font-weight: 500;
+  line-height: 1;
+}
+
+/* Efeitos visuais */
+.pass-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3pt;
+  background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+  z-index: 1;
+}
+
+/* Configurações de impressão */
+@media print {
+  body {
+    background: white;
+    padding: 0;
+    margin: 0;
+    display: block;
+  }
+  
+  .pass-container {
+    width: var(--pass-width);
+    height: var(--pass-height);
+    margin: 0;
+    box-shadow: none;
+    border: 1pt solid var(--border-color);
+    page-break-inside: avoid;
+    position: relative;
+  }
+  
+  /* Assegurar que as cores sejam impressas */
+  .pass-container,
+  .pass-front,
+  .company-name h1,
+  .security-dot,
+  .pass-container::before {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  
+  /* Configurar página para impressão sem margens */
+  @page {
+    size: 85.6mm 53.98mm;
+    margin: 0;
+  }
+}
+
+/* Responsividade para pré-visualização */
+@media screen and (max-width: 768px) {
+  body {
+    padding: 10pt;
+  }
+  
+  .pass-container {
+    transform: scale(1.5);
+    transform-origin: center;
+  }
+}
+
+/* Estados de hover para pré-visualização */
+@media screen {
+  .pass-container:hover {
+    transform: scale(1.02);
+    transition: transform 0.2s ease;
+    box-shadow: 0 4pt 12pt rgba(0, 0, 0, 0.15);
+  }
+}
+
+/* Utilidades para diferentes temas/empresas */
+.pass-container.theme-dark {
+  --primary-color: #37474f;
+  --secondary-color: #263238;
+  --accent-color: #546e7a;
+}
+
+.pass-container.theme-green {
+  --primary-color: #2e7d32;
+  --secondary-color: #1b5e20;
+  --accent-color: #4caf50;
+}
+
+.pass-container.theme-orange {
+  --primary-color: #f57722;
+  --secondary-color: #e65100;
+  --accent-color: #ff9800;
+}

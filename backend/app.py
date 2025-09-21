@@ -197,9 +197,13 @@ def create_app(config_class=None):
     app.register_blueprint(settings_bp, url_prefix='/settings')
     app.register_blueprint(health_bp)
     
-    # Register IAMC blueprints
+    # Register IAMC main blueprint (includes funcionarios, presencas, passes)
     from routes.iamc_routes import iamc_bp
     app.register_blueprint(iamc_bp, url_prefix='/api/iamc')
+    
+    # Dashboard blueprint no longer needed - QR routes now use IAMC directly
+    # from routes.dashboard_routes import dashboard_bp
+    # app.register_blueprint(dashboard_bp, url_prefix='/api/dashboard')
 
     # Global error handlers
     @app.errorhandler(404)

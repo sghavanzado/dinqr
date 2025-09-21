@@ -19,6 +19,7 @@ import BeneficiosList from '../pages/rrhh/BeneficiosList';
 import ComponentShowcase from '../pages/rrhh/ComponentShowcase';
 import RRHHSimple from '../pages/rrhh/RRHHSimple';
 import StatusChecker from '../components/rrhh/StatusChecker';
+import PassesList from '../pages/rrhh/PassesList';
 
 const ContentArea = () => {
   return (
@@ -122,9 +123,9 @@ const ContentArea = () => {
         }
       />
       <Route
-        path="/rrhh/beneficios "
+        path="/rrhh/beneficios"
         element={
-          <ProtectedRoute >
+          <ProtectedRoute>
             <BeneficiosList />
           </ProtectedRoute>
         }
@@ -150,6 +151,14 @@ const ContentArea = () => {
         element={
           <ProtectedRoute>
             <StatusChecker />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/rrhh/passes"
+        element={
+          <ProtectedRoute>
+            <PassesList />
           </ProtectedRoute>
         }
       />

@@ -2,6 +2,7 @@ from flask import jsonify, request
 from models.iamc_funcionarios_new import Funcionario, Departamento, Cargo, HistoricoCargoFuncionario, Contrato
 from models.iamc_presencas_new import Presenca, Licenca
 from extensions import IAMCSession
+from utils.db_utils import obtener_conexion_local
 from datetime import datetime
 import logging
 
@@ -11,8 +12,8 @@ class FuncionarioController:
     
     @staticmethod
     def listar_todos():
-        """Listar todos os funcionários com paginação"""
-        session = IAMCSession()
+        """Listar todos os funcionários com paginação e nomes de Cargo e Departamento"""
+        session = None
         try:
             page = request.args.get('page', 1, type=int)
             per_page = request.args.get('per_page', 20, type=int)
@@ -20,23 +21,158 @@ class FuncionarioController:
             # Calcular offset
             offset = (page - 1) * per_page
             
-            # Consultar funcionários com ORDER BY obrigatório para SQL Server
-            funcionarios = session.query(Funcionario).order_by(Funcionario.FuncionarioID).offset(offset).limit(per_page).all()
+            session = IAMCSession()
+            
+            # Set timeout
+            from sqlalchemy import text
+            session.execute(text("SET LOCK_TIMEOUT 5000"))  # 5 second timeout
+            
+            # Consultar funcionários com JOINs para obter nomes de Cargo e Departamento
+            funcionarios_query = session.query(
+                Funcionario.FuncionarioID,
+                Funcionario.Nome,
+                Funcionario.Apelido,
+                Funcionario.Email,
+                Funcionario.Telefone,
+                Funcionario.DataAdmissao,
+                Funcionario.EstadoFuncionario,
+                Cargo.Nome.label('CargoNome'),
+                Departamento.Nome.label('DepartamentoNome'),
+                Funcionario.CargoID,
+                Funcionario.DepartamentoID
+            ).outerjoin(
+                Cargo, Funcionario.CargoID == Cargo.CargoID
+            ).outerjoin(
+                Departamento, Funcionario.DepartamentoID == Departamento.DepartamentoID
+            ).order_by(Funcionario.FuncionarioID).offset(offset).limit(per_page)
+            
+            funcionarios = funcionarios_query.all()
+            
+            # Contar total sin JOINs para mejor performance
             total = session.query(Funcionario).count()
             
             # Calcular número total de páginas
             pages = (total + per_page - 1) // per_page
             
+            # Procesar datos para incluir nombres de cargo y departamento
+            funcionarios_data = []
+            for func in funcionarios:
+                funcionarios_data.append({
+                    'FuncionarioID': func.FuncionarioID,
+                    'Nome': func.Nome,
+                    'Apelido': func.Apelido or '',
+                    'Email': func.Email or '',
+                    'Telefone': func.Telefone or '',
+                    'DataAdmissao': func.DataAdmissao.strftime('%d/%m/%Y') if func.DataAdmissao else '',
+                    'EstadoFuncionario': func.EstadoFuncionario or 'Activo',
+                    'CargoID': func.CargoID,
+                    'DepartamentoID': func.DepartamentoID,
+                    'CargoNome': func.CargoNome or 'Não especificado',
+                    'DepartamentoNome': func.DepartamentoNome or 'Não especificado',
+                    # Campos adicionales para compatibilidad
+                    'nomeCompleto': f"{func.Nome or ''} {func.Apelido or ''}".strip(),
+                    'id': func.FuncionarioID,
+                    'cargo': {'nome': func.CargoNome or 'Não especificado'},
+                    'departamento': {'nome': func.DepartamentoNome or 'Não especificado'}
+                })
+            
             return jsonify({
                 'success': True,
-                'data': [f.to_dict() for f in funcionarios],  # Usar 'data' em vez de 'funcionarios'
+                'data': funcionarios_data,
                 'total': total,
                 'page': page,
                 'per_page': per_page,
-                'pages': pages  # Adicionar campo 'pages'
+                'pages': pages
             }), 200
         except Exception as e:
             logger.error(f"Erro ao listar funcionários: {str(e)}")
+            logger.error(f"Tipo do erro: {type(e)}")
+            import traceback
+            logger.error(f"Traceback completo: {traceback.format_exc()}")
+            
+            # Return empty list as fallback
+            return jsonify({
+                'success': False, 
+                'error': 'Database IAMC não acessível',
+                'data': [],
+                'total': 0,
+                'page': 1,
+                'per_page': 20,
+                'pages': 0
+            }), 200  # Return 200 to avoid frontend errors
+        finally:
+            if session:
+                try:
+                    session.close()
+                except:
+                    pass
+    
+    @staticmethod
+    def listar_funcionarios_com_qr():
+        """Listar funcionários que têm códigos QR gerados, com nomes de Cargo e Departamento"""
+        session = IAMCSession()
+        try:
+            # Primeiro, obter os IDs de funcionários que têm QR codes
+            # Conectar à base de dados local para obter os QR codes
+            conn_local = obtener_conexion_local()
+            cursor_local = conn_local.cursor()
+            cursor_local.execute("SELECT contact_id FROM qr_codes")
+            qr_generated_ids = [row[0] for row in cursor_local.fetchall()]
+            conn_local.close()
+            
+            if not qr_generated_ids:
+                return jsonify({
+                    'success': True,
+                    'data': []
+                }), 200
+            
+            # Consultar funcionários com JOINs para obter nomes de Cargo e Departamento
+            funcionarios_query = session.query(
+                Funcionario.FuncionarioID,
+                Funcionario.Nome,
+                Funcionario.Apelido,
+                Funcionario.Email,
+                Funcionario.Telefone,
+                Cargo.Nome.label('CargoNome'),
+                Departamento.Nome.label('DepartamentoNome'),
+                Funcionario.CargoID,
+                Funcionario.DepartamentoID
+            ).outerjoin(
+                Cargo, Funcionario.CargoID == Cargo.CargoID
+            ).outerjoin(
+                Departamento, Funcionario.DepartamentoID == Departamento.DepartamentoID
+            ).filter(
+                Funcionario.FuncionarioID.in_(qr_generated_ids)
+            ).order_by(Funcionario.FuncionarioID)
+            
+            funcionarios = funcionarios_query.all()
+            
+            # Procesar dados
+            result = []
+            for func in funcionarios:
+                result.append({
+                    'id': func.FuncionarioID,  # Para compatibilidade com frontend
+                    'funcionarioId': func.FuncionarioID,
+                    'nome': func.Nome,
+                    'apelido': func.Apelido,
+                    'email': func.Email,
+                    'telefone': func.Telefone,
+                    'cargo': func.CargoNome,
+                    'cargoId': func.CargoID,
+                    'departamento': func.DepartamentoNome,
+                    'departamentoId': func.DepartamentoID,
+                    'qrGenerated': True
+                })
+            
+            logger.info(f"Funcionários com QR encontrados: {len(result)}")
+            
+            return jsonify({
+                'success': True,
+                'data': result
+            }), 200
+            
+        except Exception as e:
+            logger.error(f"Erro ao listar funcionários com QR: {str(e)}")
             logger.error(f"Tipo do erro: {type(e)}")
             import traceback
             logger.error(f"Traceback completo: {traceback.format_exc()}")
@@ -88,11 +224,15 @@ class FuncionarioController:
                 return jsonify({
                     'success': False,
                     'error': 'Já existe um funcionário com este BI'
-                }), 400
+                }, 400)
             
             # Handle date fields from camelCase
             data_nascimento = dados.get('dataNascimento') or dados.get('DataNascimento')
             data_admissao = dados.get('dataAdmissao') or dados.get('DataAdmissao')
+            
+            # Handle cargo and departamento fields
+            cargo_id = dados.get('cargoID') or dados.get('CargoID')
+            departamento_id = dados.get('departamentoID') or dados.get('DepartamentoID')
             
             funcionario = Funcionario(
                 Nome=nome,
@@ -106,7 +246,9 @@ class FuncionarioController:
                 Endereco=dados.get('endereco') or dados.get('Endereco'),
                 DataAdmissao=datetime.strptime(data_admissao, '%Y-%m-%d').date() if data_admissao else datetime.now().date(),
                 EstadoFuncionario=dados.get('estadoFuncionario') or dados.get('EstadoFuncionario', 'Activo'),
-                Foto=dados.get('foto') or dados.get('Foto')  # Caminho da foto (será definido via upload)
+                Foto=dados.get('foto') or dados.get('Foto'),  # Caminho da foto (será definido via upload)
+                CargoID=cargo_id,
+                DepartamentoID=departamento_id
             )
             
             session.add(funcionario)
@@ -114,7 +256,7 @@ class FuncionarioController:
             
             return jsonify({
                 'success': True,
-                'funcionario': funcionario.to_dict(),
+                'data': funcionario.to_dict(),
                 'message': 'Funcionário criado com sucesso'
             }), 201
             
@@ -136,45 +278,51 @@ class FuncionarioController:
                 
             dados = request.get_json()
             
-            # Atualizar campos se fornecidos
-            if 'Nome' in dados:
-                funcionario.Nome = dados['Nome']
-            if 'Apelido' in dados:
-                funcionario.Apelido = dados['Apelido']
-            if 'BI' in dados:
+            # Atualizar campos se fornecidos (support both camelCase and PascalCase)
+            if dados.get('Nome') or dados.get('nome'):
+                funcionario.Nome = dados.get('Nome') or dados.get('nome')
+            if dados.get('Apelido') or dados.get('apelido'):
+                funcionario.Apelido = dados.get('Apelido') or dados.get('apelido')
+            if dados.get('BI') or dados.get('bi'):
                 # Verificar se o novo BI não está em uso por outro funcionário
+                new_bi = dados.get('BI') or dados.get('bi')
                 existing = session.query(Funcionario).filter(
-                    Funcionario.BI == dados['BI'], 
+                    Funcionario.BI == new_bi, 
                     Funcionario.FuncionarioID != funcionario_id
                 ).first()
                 if existing:
                     return jsonify({
                         'success': False,
                         'error': 'Já existe um funcionário com este BI'
-                    }, 400)
-                funcionario.BI = dados['BI']
-            if 'DataNascimento' in dados:
-                funcionario.DataNascimento = datetime.strptime(dados['DataNascimento'], '%Y-%m-%d').date() if dados['DataNascimento'] else None
-            if 'Sexo' in dados:
-                funcionario.Sexo = dados['Sexo']
-            if 'EstadoCivil' in dados:
-                funcionario.EstadoCivil = dados['EstadoCivil']
-            if 'Email' in dados:
-                funcionario.Email = dados['Email']
-            if 'Telefone' in dados:
-                funcionario.Telefone = dados['Telefone']
-            if 'Endereco' in dados:
-                funcionario.Endereco = dados['Endereco']
-            if 'EstadoFuncionario' in dados:
-                funcionario.EstadoFuncionario = dados['EstadoFuncionario']
-            if 'Foto' in dados:
-                funcionario.Foto = dados['Foto']
+                    }), 400
+                funcionario.BI = new_bi
+            if dados.get('DataNascimento') or dados.get('dataNascimento'):
+                data_nasc = dados.get('DataNascimento') or dados.get('dataNascimento')
+                funcionario.DataNascimento = datetime.strptime(data_nasc, '%Y-%m-%d').date() if data_nasc else None
+            if dados.get('Sexo') or dados.get('sexo'):
+                funcionario.Sexo = dados.get('Sexo') or dados.get('sexo')
+            if dados.get('EstadoCivil') or dados.get('estadoCivil'):
+                funcionario.EstadoCivil = dados.get('EstadoCivil') or dados.get('estadoCivil')
+            if dados.get('Email') or dados.get('email'):
+                funcionario.Email = dados.get('Email') or dados.get('email')
+            if dados.get('Telefone') or dados.get('telefone'):
+                funcionario.Telefone = dados.get('Telefone') or dados.get('telefone')
+            if dados.get('Endereco') or dados.get('endereco'):
+                funcionario.Endereco = dados.get('Endereco') or dados.get('endereco')
+            if dados.get('EstadoFuncionario') or dados.get('estadoFuncionario'):
+                funcionario.EstadoFuncionario = dados.get('EstadoFuncionario') or dados.get('estadoFuncionario')
+            if dados.get('Foto') or dados.get('foto'):
+                funcionario.Foto = dados.get('Foto') or dados.get('foto')
+            if dados.get('CargoID') or dados.get('cargoID'):
+                funcionario.CargoID = dados.get('CargoID') or dados.get('cargoID')
+            if dados.get('DepartamentoID') or dados.get('departamentoID'):
+                funcionario.DepartamentoID = dados.get('DepartamentoID') or dados.get('departamentoID')
             
             session.commit()
             
             return jsonify({
                 'success': True,
-                'funcionario': funcionario.to_dict(),
+                'data': funcionario.to_dict(),
                 'message': 'Funcionário atualizado com sucesso'
             }), 200
             
@@ -453,8 +601,15 @@ class FuncionarioController:
     @staticmethod
     def verificar_status():
         """Verificar status da conexão e dados IAMC"""
-        session = IAMCSession()
+        session = None
         try:
+            # Try to create session with timeout
+            session = IAMCSession()
+            
+            # Set a query timeout 
+            from sqlalchemy import text
+            session.execute(text("SET LOCK_TIMEOUT 5000"))  # 5 second timeout
+            
             # Verificar conexão e contar registros
             total_funcionarios = session.query(Funcionario).count()
             total_departamentos = session.query(Departamento).count()
@@ -483,12 +638,97 @@ class FuncionarioController:
             
         except Exception as e:
             logger.error(f"Erro ao verificar status IAMC: {str(e)}")
+            # Return a basic status even if database is not accessible
             return jsonify({
                 'success': False,
-                'status': 'Erro de conexão',
+                'status': 'Erro de conexão - Database IAMC não acessível',
                 'error': str(e),
+                'dados': {
+                    'totalFuncionarios': 0,
+                    'totalDepartamentos': 0,
+                    'totalCargos': 0,
+                    'funcionariosPorEstado': {}
+                },
                 'timestamp': datetime.now().isoformat()
-            }), 500
+            }), 200  # Return 200 instead of 500 to avoid frontend errors
+        finally:
+            if session:
+                try:
+                    session.close()
+                except:
+                    pass
+
+    @staticmethod
+    def listar_funcionarios_com_qr():
+        """Listar funcionários que têm códigos QR gerados, com nomes de Cargo e Departamento"""
+        session = IAMCSession()
+        try:
+            # Primeiro, obter os IDs de funcionários que têm QR codes
+            # Conectar à base de dados local para obter os QR codes
+            from utils.db_utils import obtener_conexion_local
+            conn_local = obtener_conexion_local()
+            cursor_local = conn_local.cursor()
+            cursor_local.execute("SELECT contact_id FROM qr_codes")
+            qr_generated_ids = [row[0] for row in cursor_local.fetchall()]
+            conn_local.close()
+            
+            if not qr_generated_ids:
+                return jsonify({
+                    'success': True,
+                    'data': []
+                }), 200
+            
+            # Consultar funcionários com JOINs para obter nomes de Cargo e Departamento
+            funcionarios_query = session.query(
+                Funcionario.FuncionarioID,
+                Funcionario.Nome,
+                Funcionario.Apelido,
+                Funcionario.Email,
+                Funcionario.Telefone,
+                Cargo.Nome.label('CargoNome'),
+                Departamento.Nome.label('DepartamentoNome'),
+                Funcionario.CargoID,
+                Funcionario.DepartamentoID
+            ).outerjoin(
+                Cargo, Funcionario.CargoID == Cargo.CargoID
+            ).outerjoin(
+                Departamento, Funcionario.DepartamentoID == Departamento.DepartamentoID
+            ).filter(
+                Funcionario.FuncionarioID.in_(qr_generated_ids)
+            ).order_by(Funcionario.FuncionarioID)
+            
+            funcionarios = funcionarios_query.all()
+            
+            # Procesar dados
+            result = []
+            for func in funcionarios:
+                result.append({
+                    'id': func.FuncionarioID,  # Para compatibilidade com frontend
+                    'funcionarioId': func.FuncionarioID,
+                    'nome': func.Nome,
+                    'apelido': func.Apelido,
+                    'email': func.Email,
+                    'telefone': func.Telefone,
+                    'cargo': func.CargoNome,
+                    'cargoId': func.CargoID,
+                    'departamento': func.DepartamentoNome,
+                    'departamentoId': func.DepartamentoID,
+                    'qrGenerated': True
+                })
+            
+            logger.info(f"Funcionários com QR encontrados: {len(result)}")
+            
+            return jsonify({
+                'success': True,
+                'data': result
+            }), 200
+            
+        except Exception as e:
+            logger.error(f"Erro ao listar funcionários com QR: {str(e)}")
+            logger.error(f"Tipo do erro: {type(e)}")
+            import traceback
+            logger.error(f"Traceback completo: {traceback.format_exc()}")
+            return jsonify({'success': False, 'error': 'Erro interno do servidor'}), 500
         finally:
             session.close()
 
@@ -497,8 +737,14 @@ class DepartamentoController:
     @staticmethod
     def listar_todos():
         """Listar todos os departamentos"""
-        session = IAMCSession()
+        session = None
         try:
+            session = IAMCSession()
+            
+            # Set timeout
+            from sqlalchemy import text
+            session.execute(text("SET LOCK_TIMEOUT 5000"))
+            
             departamentos = session.query(Departamento).all()
             return jsonify({
                 'success': True,
@@ -506,9 +752,18 @@ class DepartamentoController:
             }), 200
         except Exception as e:
             logger.error(f"Erro ao listar departamentos: {str(e)}")
-            return jsonify({'success': False, 'error': 'Erro interno do servidor'}), 500
+            # Return empty list as fallback
+            return jsonify({
+                'success': False, 
+                'error': 'Database IAMC não acessível',
+                'data': []
+            }), 200
         finally:
-            session.close()
+            if session:
+                try:
+                    session.close()
+                except:
+                    pass
     
     @staticmethod
     def obter_por_id(departamento_id):
@@ -627,8 +882,14 @@ class DepartamentoController:
     @staticmethod
     def listar_cargos():
         """Listar todos os cargos"""
-        session = IAMCSession()
+        session = None
         try:
+            session = IAMCSession()
+            
+            # Set timeout
+            from sqlalchemy import text
+            session.execute(text("SET LOCK_TIMEOUT 5000"))
+            
             cargos = session.query(Cargo).order_by(Cargo.CargoID).all()
             return jsonify({
                 'success': True,
@@ -637,9 +898,19 @@ class DepartamentoController:
             }), 200
         except Exception as e:
             logger.error(f"Erro ao listar cargos: {str(e)}")
-            return jsonify({'success': False, 'error': 'Erro interno do servidor'}), 500
+            # Return empty list as fallback
+            return jsonify({
+                'success': False, 
+                'error': 'Database IAMC não acessível',
+                'data': [],
+                'total': 0
+            }), 200
         finally:
-            session.close()
+            if session:
+                try:
+                    session.close()
+                except:
+                    pass
     
     @staticmethod
     def obter_cargo_por_id(cargo_id):

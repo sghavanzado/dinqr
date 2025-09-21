@@ -13,13 +13,6 @@ import functools
 
 qrdata_bp = Blueprint('qrdata_bp', __name__)
 
-# Configurar logging
-logging.basicConfig(
-    filename='access.log',
-    level=logging.INFO,
-    format='%(asctime)s %(levelname)s %(message)s'
-)
-
 def generar_firma_hmac(nombre_contacto):
     """Genera firma HMAC-SHA256 basada en el nombre del contacto"""
     return hmac.new(
@@ -28,27 +21,57 @@ def generar_firma_hmac(nombre_contacto):
         hashlib.sha256
     ).hexdigest()
 
-# Cargar contactos desde la base de datos
+# Cargar contactos desde la tabla IAMC Funcionarios
 contactos = {}
-with obtener_conexion_remota() as conn:
-    cursor = conn.cursor()
-    cursor.execute("SELECT sap, nome, funcao, area, nif, telefone, email, unineg FROM sonacard") # Asegúrate de seleccionar las columnas en el orden correcto
-    for row in cursor.fetchall():
-        # Acceder a los datos por índice
-        id_normalizado = str(row[0]).strip()  # sap es el primer elemento (índice 0)
+try:
+    from extensions import IAMCSession
+    from models.iamc_funcionarios_new import Funcionario, Cargo, Departamento
+    
+    session = IAMCSession()
+    
+    # Consulta con JOINs para obtener información completa
+    query = session.query(
+        Funcionario.FuncionarioID,
+        Funcionario.Nome,
+        Funcionario.Apelido,
+        Funcionario.Email,
+        Funcionario.Telefone,
+        Funcionario.BI,
+        Cargo.Nome.label('CargoNome'),
+        Departamento.Nome.label('DepartamentoNome'),
+        Funcionario.CargoID,
+        Funcionario.DepartamentoID
+    ).outerjoin(
+        Cargo, Funcionario.CargoID == Cargo.CargoID
+    ).outerjoin(
+        Departamento, Funcionario.DepartamentoID == Departamento.DepartamentoID
+    )
+    
+    for func in query.all():
+        # Usar FuncionarioID como clave principal
+        id_normalizado = str(func.FuncionarioID).strip()
+        nome_completo = f"{func.Nome} {func.Apelido}".strip()
         contactos[id_normalizado] = {
             "firma": None,  # Se calculará al iniciar
             "datos": {
-                "sap": id_normalizado,
-                "nome": row[1],      # nome es el segundo elemento (índice 1)
-                "funcao": row[2],    # funcao es el tercer elemento (índice 2)
-                "area": row[3],      # area es el cuarto elemento (índice 3)
-                "nif": row[4],       # nif es el quinto elemento (índice 4)
-                "telefone": row[5],  # telefone es el sexto elemento (índice 5)
-                "email": row[6],     # email es el séptimo elemento (índice 6)
-                "unineg": row[7]     # unineg es el octavo elemento (índice 7)
+                "funcionarioId": func.FuncionarioID,
+                "nome": nome_completo,
+                "cargo": func.CargoNome or "Sin Cargo",
+                "departamento": func.DepartamentoNome or "Sin Departamento", 
+                "bi": func.BI,
+                "telefone": func.Telefone or "",
+                "email": func.Email or "",
+                "cargoId": func.CargoID,
+                "departamentoId": func.DepartamentoID
             }
         }
+    
+    session.close()
+    logging.info(f"Cargados {len(contactos)} contactos desde la tabla IAMC Funcionarios")
+    
+except Exception as e:
+    logging.error(f"Error al cargar contactos desde IAMC: {str(e)}")
+    contactos = {}
 
 # Precalcular firmas al iniciar el servidor
 for contacto_id, contacto in contactos.items():
@@ -59,7 +82,8 @@ def validar_hmac(f):
     """Decorador para validar HMAC en las solicitudes"""
     @functools.wraps(f)
     def wrapper(*args, **kwargs):
-        id_contacto = request.args.get('sap', '').strip()  # Normalizar el ID recibido
+        # Permitir compatibilidad: aceptar 'funcionarioId' (nuevo) o 'sap' (legacy)
+        id_contacto = request.args.get('funcionarioId', '').strip() or request.args.get('sap', '').strip()
         # Permitir compatibilidad: aceptar 'hash' o 'firma' como parámetro
         firma_recibida = request.args.get('hash', '').strip()
         if not firma_recibida:
@@ -99,34 +123,55 @@ def get_logger():
 @validar_hmac
 def descargar_vcard():
     """Devuelve la vCard del contacto si la firma es válida."""
-    id_contacto = request.args.get('sap', '').strip()
+    # Permitir compatibilidad: aceptar 'funcionarioId' (nuevo) o 'sap' (legacy)
+    id_contacto = request.args.get('funcionarioId', '').strip() or request.args.get('sap', '').strip()
     hash_recebido = request.args.get('hash', '').strip() or request.args.get('firma', '').strip()
 
     if not id_contacto or not hash_recebido:
         abort(400, description="Parâmetros em falta")
 
     try:
-        # Buscar contacto en la base de datos remota usando consulta específica
-        with obtener_conexion_remota() as conn:
-            cursor = conn.cursor()
-            cursor.execute("SELECT sap, nome, funcao, area, nif, telefone, email, unineg FROM sonacard WHERE sap = ?", (id_contacto,))
-            contacto_data = cursor.fetchone()
+        # Buscar contacto en la tabla IAMC Funcionarios usando consulta específica
+        from extensions import IAMCSession
+        from models.iamc_funcionarios_new import Funcionario, Cargo, Departamento
+        
+        session = IAMCSession()
+        try:
+            # Consulta con JOINs para obtener información completa
+            funcionario_data = session.query(
+                Funcionario.FuncionarioID,
+                Funcionario.Nome,
+                Funcionario.Apelido,
+                Funcionario.Email,
+                Funcionario.Telefone,
+                Funcionario.BI,
+                Cargo.Nome.label('CargoNome'),
+                Departamento.Nome.label('DepartamentoNome')
+            ).outerjoin(
+                Cargo, Funcionario.CargoID == Cargo.CargoID
+            ).outerjoin(
+                Departamento, Funcionario.DepartamentoID == Departamento.DepartamentoID
+            ).filter(
+                Funcionario.FuncionarioID == int(id_contacto)
+            ).first()
+        finally:
+            session.close()
 
-        if not contacto_data:
+        if not funcionario_data:
             abort(404, description="Contacto não encontrado")
 
-        # Construir datos para vCard usando acceso por índice
+        # Construir datos para vCard usando la nueva estructura IAMC
         dados = {
-            "nome": contacto_data[1],      # nome es el segundo elemento (índice 1)
-            "funcao": contacto_data[2],    # funcao es el tercer elemento (índice 2)
-            "area": contacto_data[3],      # area es el cuarto elemento (índice 3)
-            "nif": contacto_data[4],       # nif es el quinto elemento (índice 4)
-            "telefone": contacto_data[5],  # telefone es el sexto elemento (índice 5)
-            "email": contacto_data[6],     # email es el séptimo elemento (índice 6)
-            "unineg": contacto_data[7]     # unineg es el octavo elemento (índice 7)
+            "nome": f"{funcionario_data.Nome} {funcionario_data.Apelido}".strip(),
+            "cargo": funcionario_data.CargoNome or "Sin Cargo",
+            "departamento": funcionario_data.DepartamentoNome or "Sin Departamento",
+            "bi": funcionario_data.BI or "",
+            "telefone": funcionario_data.Telefone or "",
+            "email": funcionario_data.Email or "",
+            "org": "SONANGOL"  # Organización fija
         }
         
-        vcard_str = """BEGIN:VCARD\nVERSION:3.0\nFN:{nome}\nTITLE:{funcao}\nDEPARTMENT:{area}\nORG:{unineg}\nTEL;TYPE=WORK,VOICE:{telefone}\nEMAIL:{email}\nEND:VCARD\n""".format(**dados)
+        vcard_str = """BEGIN:VCARD\nVERSION:3.0\nFN:{nome}\nTITLE:{cargo}\nDEPARTMENT:{departamento}\nORG:{org}\nTEL;TYPE=WORK,VOICE:{telefone}\nEMAIL:{email}\nEND:VCARD\n""".format(**dados)
 
         # Enviar como archivo descargable
         from flask import Response
@@ -134,13 +179,15 @@ def descargar_vcard():
         response.headers['Content-Disposition'] = f'attachment; filename=contacto_{id_contacto}.vcf'
         return response
     except Exception as e:
+        logging.error(f"Error al generar vCard: {str(e)}")
         abort(500, description=f"Erro ao gerar vCard: {str(e)}")
 
 @qrdata_bp.route('/contacto')
 @validar_hmac
 def mostrar_contacto():
     """Devolve a informação de um contacto em formato HTML validando o ID e o hash."""
-    id_contacto = request.args.get('sap', '').strip()
+    # Permitir compatibilidad: aceptar 'funcionarioId' (nuevo) o 'sap' (legacy)
+    id_contacto = request.args.get('funcionarioId', '').strip() or request.args.get('sap', '').strip()
     hash_recebido = request.args.get('hash', '').strip()
 
     logging.info(f"Parâmetros recebidos: id_contacto={id_contacto}, hash_recebido={hash_recebido}")
@@ -166,33 +213,51 @@ def mostrar_contacto():
             logging.warning(f"Hash não coincide para o ID {id_contacto} de {request.remote_addr}")
             abort(403, description="Hash inválido")
 
-        # Consultar na base de dados remota (externaldb)
-        with obtener_conexion_remota() as conn:
-            cursor = conn.cursor()
-            # Asegúrate de seleccionar las columnas en el mismo orden que las usas
-            cursor.execute("SELECT sap, nome, funcao, area, nif, telefone, email, unineg FROM sonacard WHERE sap = ?", (id_contacto,))
-            contacto_data = cursor.fetchone() # Cambiado el nombre de la variable para evitar confusión
+        # Consultar na tabla IAMC Funcionarios
+        from extensions import IAMCSession
+        from models.iamc_funcionarios_new import Funcionario, Cargo, Departamento
+        
+        session = IAMCSession()
+        try:
+            # Consulta con JOINs para obtener información completa
+            funcionario_data = session.query(
+                Funcionario.FuncionarioID,
+                Funcionario.Nome,
+                Funcionario.Apelido,
+                Funcionario.Email,
+                Funcionario.Telefone,
+                Funcionario.BI,
+                Cargo.Nome.label('CargoNome'),
+                Departamento.Nome.label('DepartamentoNome')
+            ).outerjoin(
+                Cargo, Funcionario.CargoID == Cargo.CargoID
+            ).outerjoin(
+                Departamento, Funcionario.DepartamentoID == Departamento.DepartamentoID
+            ).filter(
+                Funcionario.FuncionarioID == int(id_contacto)
+            ).first()
+        finally:
+            session.close()
 
-        if not contacto_data: # Comprobar si se encontró el contacto
-            logging.warning(f"ID não encontrado na base de dados remota: {id_contacto}")
+        if not funcionario_data:
+            logging.warning(f"ID não encontrado na tabla IAMC Funcionarios: {id_contacto}")
             abort(404, description="Contacto não encontrado")
         
-        # Crear un objeto o diccionario que simule el acceso por atributo
-        # Esto es útil para mantener la legibilidad del HTML template
+        # Crear un objeto que simule el acceso por atributo usando la nueva estructura IAMC
         class Contacto:
             def __init__(self, data):
-                self.sap = data[0]
-                self.nome = data[1]
-                self.funcao = data[2]
-                self.area = data[3]
-                self.nif = data[4]
-                self.telefone = data[5]
-                self.email = data[6]
-                self.unineg = data[7]
+                self.funcionarioId = data.FuncionarioID
+                self.nome = f"{data.Nome} {data.Apelido}".strip()
+                self.cargo = data.CargoNome or "Sin Cargo"
+                self.departamento = data.DepartamentoNome or "Sin Departamento"
+                self.bi = data.BI or ""
+                self.telefone = data.Telefone or ""
+                self.email = data.Email or ""
+                self.org = "SONANGOL"  # Organización fija
         
-        contacto = Contacto(contacto_data) # Instanciar la clase Contacto con los datos
+        contacto = Contacto(funcionario_data)
 
-        # Generar la página HTML con los datos del contacto
+        # Generar la página HTML con los datos del contacto usando estructura IAMC
         html_template = f"""
         <!DOCTYPE html>
         <html lang="pt">
@@ -236,7 +301,6 @@ def mostrar_contacto():
                 }}
                 .info-section {{
                     margin: 1.5rem 0;
-                    
                 }}
                 .info-section p {{
                     margin: 0.5rem 0;
@@ -265,104 +329,26 @@ def mostrar_contacto():
                     <span>Sonangol</span>
                 </div>
                 <h1>{contacto.nome}</h1>
-                <div class="">
-                    <p><strong>SAP:</strong> {contacto.sap or 'Não especificado'}</p>
-                    <p><strong>Função:</strong> {contacto.funcao or 'Não especificada'}</p>
-                    <p><strong>Direção:</strong> {contacto.area or 'Não especificada'}</p>
-                    <p><strong>U.Neg:</strong> {contacto.unineg or 'Não especificada'}</p>
-                    <p><strong>NIF:</strong> {contacto.nif or 'Não especificado'}</p>
-                    <p><strong>Telefone:</strong> {contacto.telefone or 'Não especificado'}</p>
-                    <p><strong>Email:</strong> {contacto.email or 'Não especificado'}</p>
+                <div class="info-section">
+                    <p><strong>ID Funcionario:</strong> {contacto.funcionarioId}</p>
+                    <p><strong>Cargo:</strong> {contacto.cargo}</p>
+                    <p><strong>Departamento:</strong> {contacto.departamento}</p>
+                    <p><strong>BI:</strong> {contacto.bi}</p>
+                    <p><strong>Telefone:</strong> {contacto.telefone}</p>
+                    <p><strong>Email:</strong> {contacto.email}</p>
+                    <p><strong>Organização:</strong> {contacto.org}</p>
                 </div>
-                <a href="/contacto/vcard?sap={id_contacto}&hash={hash_recebido}" class="import-button">
+                <a href="/contacto/vcard?funcionarioId={id_contacto}&hash={hash_recebido}" class="import-button">
                     Importar Contacto
                 </a>
             </div>
         </body>
         </html>
         """
+
         logging.info(f"Acesso autorizado ao ID {id_contacto} de {request.remote_addr}")
         return render_template_string(html_template)
 
     except Exception as e:
-        logging.error(f"Erro ao processar o pedido para o ID {id_contacto}: {str(e)}")
-        abort(500, description="Erro interno do servidor")
-
-
-def generar_vcard(datos):
-    """Genera contenido vCard con validación básica"""
-    vcard_content = [
-        "BEGIN:VCARD",
-        "VERSION:3.0",
-        f"FN:{datos.get('nome', '')}",
-        f"TITLE:{datos.get('funcao', '')}",
-        f"DEPARTMENT:{datos.get('area', '')}",
-        f"ORG:{datos.get('unineg', '')}",
-        f"TEL;TYPE=WORK,VOICE:{datos.get('telefone', '')}",
-        f"EMAIL:{datos.get('email', '')}",  # Adicionar email
-        "END:VCARD"
-    ]
-    return "data:text/vcard;charset=utf-8," + "%0A".join(vcard_content)
-
-@qrdata_bp.route('/funcionarios', methods=['GET'])
-def listar_funcionarios():
-    """Listado paginado de funcionarios desde externaldb"""
-    # ...consultar externaldb y locadb para verificar QR generado...
-    # ...return JSON con datos paginados...
-
-@qrdata_bp.route('/qr/generar', methods=['POST'])
-def generar_qr():
-    """Generar códigos QR para uno o varios funcionarios"""
-    ids = request.json.get('ids', [])
-    from services.qr_service import generar_qr as generar_qr_service
-    try:
-        resultados = generar_qr_service(ids)
-        return jsonify({"resultados": resultados}), 200
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-@qrdata_bp.route('/qr/descargar/<int:contact_id>', methods=['GET'])
-def descargar_qr(contact_id):
-    """Descargar un código QR específico"""
-    with obtener_conexion_local() as conn:
-        cursor = conn.cursor()
-        cursor.execute("SELECT archivo_qr FROM qr_codes WHERE contact_id = %s", (str(contact_id),))
-        result = cursor.fetchone()
-        if not result:
-            abort(404)
-        return send_file(result[0], as_attachment=True)
-
-@qrdata_bp.route('/qr/descargar-multiples', methods=['POST'])
-def descargar_multiples_qr():
-    """Descargar múltiples códigos QR como archivo ZIP"""
-    ids = request.json.get('ids', [])
-    archivos = []
-    with obtener_conexion_local() as conn:
-        cursor = conn.cursor()
-        # Asegúrate de que tu base de datos y pyodbc soporten 'ANY' o usa un enfoque diferente para multiples IDs
-        # Si no, tendrás que construir la consulta dinámicamente o hacer múltiples consultas.
-        # Por ejemplo, para PostgreSQL: WHERE contact_id = ANY(%s)
-        # Para SQL Server: WHERE contact_id IN (?) con una tupla de IDs
-        # Aquí, por simplicidad, asumiré que 'ANY' o 'IN' funciona.
-        placeholders = ','.join(['?'] * len(ids))
-        cursor.execute(f"SELECT archivo_qr FROM qr_codes WHERE contact_id IN ({placeholders})", tuple(str(id) for id in ids))
-        archivos = [row[0] for row in cursor.fetchall()]
-    
-    zip_filename = "qr_codes.zip"
-    with zipfile.ZipFile(zip_filename, 'w') as zipf:
-        for archivo in archivos:
-            zipf.write(archivo)
-    return send_file(zip_filename, as_attachment=True)
-
-@qrdata_bp.route('/qr/eliminar/<int:contact_id>', methods=['DELETE'])
-def eliminar_qr(contact_id):
-    """Eliminar un código QR específico"""
-    with obtener_conexion_local() as conn:
-        cursor = conn.cursor()
-        cursor.execute("DELETE FROM qr_codes WHERE contact_id = %s RETURNING archivo_qr", (str(contact_id),))
-        result = cursor.fetchone()
-        if not result:
-            abort(404)
-        os.remove(result[0])
-        conn.commit()
-    return jsonify({"message": "QR eliminado exitosamente"})
+        logging.error(f"Erro ao mostrar contacto: {str(e)}")
+        abort(500, description=f"Erro interno: {str(e)}")

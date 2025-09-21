@@ -30,7 +30,7 @@ def obtener_puerto_servidor():
     try:
         with obtener_conexion_local() as conn:
             cursor = conn.cursor()
-            cursor.execute("SELECT value FROM settings WHERE key = 'serverPort'")
+            cursor.execute("SELECT value FROM settings WHERE [key] = 'serverPort'")
             result = cursor.fetchone()
             if not result:
                 raise ValueError("No se encontró la configuración 'serverPort' en la tabla settings.")
@@ -44,7 +44,7 @@ def obtener_domain_servidor():
     try:
         with obtener_conexion_local() as conn:
             cursor = conn.cursor()
-            cursor.execute("SELECT value FROM settings WHERE key = 'serverDomain'")
+            cursor.execute("SELECT value FROM settings WHERE [key] = 'serverDomain'")
             result = cursor.fetchone()
             if not result:
                 raise ValueError("No se encontró la configuración 'serverDomain' en la tabla settings.")

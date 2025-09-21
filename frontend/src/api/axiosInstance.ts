@@ -80,7 +80,7 @@ axiosInstance.interceptors.response.use(
         const { data } = await axios.post<TokenResponse>(
           '/auth/refresh',
           { refresh_token: refreshToken },
-          { baseURL: import.meta.env.VITE_API_URL }
+          { baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5001' }
         );
 
         localStorage.setItem('access_token', data.access_token);

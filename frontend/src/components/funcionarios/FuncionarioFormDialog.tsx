@@ -163,10 +163,11 @@ const FuncionarioFormDialog: React.FC<FuncionarioFormDialogProps> = ({
 
     try {
       setUploadingFoto(true);
-      const response = await uploadFoto(funcionario.funcionarioID, fotoFile);
+      const funcionarioId = funcionario.funcionarioID || funcionario.FuncionarioID || funcionario.id;
+      const response = await uploadFoto(funcionarioId, fotoFile);
       if (response.success) {
         setFotoFile(null);
-        await loadFoto(funcionario.funcionarioID);
+        await loadFoto(funcionarioId);
       }
     } catch (error) {
       console.error('Erro ao fazer upload da foto:', error);
@@ -179,7 +180,8 @@ const FuncionarioFormDialog: React.FC<FuncionarioFormDialogProps> = ({
     if (!funcionario) return;
 
     try {
-      const response = await deleteFoto(funcionario.funcionarioID);
+      const funcionarioId = funcionario.funcionarioID || funcionario.FuncionarioID || funcionario.id;
+      const response = await deleteFoto(funcionarioId);
       if (response.success) {
         setFotoUrl('');
         setFotoFile(null);
@@ -213,35 +215,21 @@ const FuncionarioFormDialog: React.FC<FuncionarioFormDialogProps> = ({
 
     try {
       setLoading(true);
-
-      // Mapear dados do frontend (camelCase) para backend (PascalCase)
-      const submitData = {
-        Nome: formData.nome,
-        Apelido: formData.apelido,
-        BI: formData.bi,
-        DataNascimento: formData.dataNascimento || undefined,
-        Sexo: formData.sexo || undefined,
-        EstadoCivil: formData.estadoCivil || undefined,
-        Email: formData.email || undefined,
-        Telefone: formData.telefone || undefined,
-        Endereco: formData.endereco || undefined,
-        DataAdmissao: formData.dataAdmissao,
-        EstadoFuncionario: formData.estadoFuncionario,
-        CargoID: formData.cargoID || undefined,
-        DepartamentoID: formData.departamentoID || undefined,
-      };
-
+      
       let response;
       if (isEdit && funcionario) {
-        response = await updateFuncionario(funcionario.funcionarioID || funcionario.FuncionarioID, submitData);
+        // Para edición, usar el ID correcto (puede ser FuncionarioID o funcionarioID)
+        const funcionarioId = funcionario.funcionarioID || funcionario.FuncionarioID || funcionario.id;
+        response = await updateFuncionario(funcionarioId, formData as any);
       } else {
-        response = await createFuncionario(submitData);
+        // Para creación, usar los campos tal como están en formData
+        response = await createFuncionario(formData as any);
       }
 
       if (response.success) {
         // Se há foto para upload e é um novo funcionário ou edição bem-sucedida
         if (fotoFile && response.data) {
-          const funcionarioId = response.data.FuncionarioID || response.data.funcionarioID;
+          const funcionarioId = response.data.funcionarioID || response.data.FuncionarioID || response.data.id;
           await uploadFoto(funcionarioId, fotoFile);
         }
 
@@ -470,7 +458,7 @@ const FuncionarioFormDialog: React.FC<FuncionarioFormDialogProps> = ({
                   <Select
                     value={formData.departamentoID || ''}
                     label="Departamento"
-                    onChange={(e) => handleInputChange('departamentoID', e.target.value || undefined)}
+                    onChange={(e) => handleInputChange('departamentoID', e.target.value ? Number(e.target.value) : undefined)}
                   >
                     <MenuItem value="">
                       <em>Selecionar</em>
@@ -490,7 +478,7 @@ const FuncionarioFormDialog: React.FC<FuncionarioFormDialogProps> = ({
                   <Select
                     value={formData.cargoID || ''}
                     label="Cargo"
-                    onChange={(e) => handleInputChange('cargoID', e.target.value || undefined)}
+                    onChange={(e) => handleInputChange('cargoID', e.target.value ? Number(e.target.value) : undefined)}
                   >
                     <MenuItem value="">
                       <em>Selecionar</em>

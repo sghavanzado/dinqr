@@ -8,6 +8,7 @@ export interface BaseEntity {
 // Funcionário
 export interface Funcionario extends BaseEntity {
   funcionarioID: number;
+  FuncionarioID?: number; // Campo PascalCase del backend
   nome: string;
   apelido: string;
   bi: string;
@@ -22,6 +23,21 @@ export interface Funcionario extends BaseEntity {
   foto?: string;
   cargoID?: number;
   departamentoID?: number;
+  // Campos PascalCase del backend
+  Nome?: string;
+  Apelido?: string;
+  BI?: string;
+  DataNascimento?: string;
+  Sexo?: 'M' | 'F' | 'O';
+  EstadoCivil?: string;
+  Email?: string;
+  Telefone?: string;
+  Endereco?: string;
+  DataAdmissao?: string;
+  EstadoFuncionario?: 'Activo' | 'Inactivo' | 'Suspenso';
+  Foto?: string;
+  CargoID?: number;
+  DepartamentoID?: number;
 }
 
 export interface FuncionarioFormData {

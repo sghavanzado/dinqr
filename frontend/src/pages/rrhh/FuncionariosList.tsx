@@ -21,10 +21,12 @@ import type {
 } from '../../types/rrhh';
 import { 
   getFuncionarios, 
-  getDepartamentos, 
-  getCargos,
   deleteFuncionario
 } from '../../services/api/funcionarios';
+import { 
+  getDepartamentos, 
+  getCargos
+} from '../../services/api/rrhh';
 
 // Import modular components
 import DataTable from '../../components/funcionarios/DataTable';
@@ -185,15 +187,22 @@ const FuncionariosList: React.FC = () => {
   ];
 
   useEffect(() => {
-    // Test backend connection first
-    testBackendConnection();
-    loadData();
-  }, [currentPage, rowsPerPage, searchTerm, filters]);
+    const initializeData = async () => {
+      // Cargar departamentos y cargos PRIMERO y esperar
+      await Promise.all([loadDepartamentos(), loadCargos()]);
+      // Solo después cargar funcionários
+      await loadData();
+    };
+    
+    initializeData();
+  }, []);
 
   useEffect(() => {
-    loadDepartamentos();
-    loadCargos();
-  }, []);
+    // Solo recargar funcionários si ya tenemos departamentos y cargos cargados
+    if (departamentos.length > 0 && cargos.length > 0) {
+      loadData();
+    }
+  }, [currentPage, rowsPerPage, searchTerm, filters]);
 
   const loadData = async () => {
     try {
@@ -221,7 +230,6 @@ const FuncionariosList: React.FC = () => {
       }
 
       const response = await getFuncionarios(queryFilters);
-      console.log('📊 Resposta do backend:', response);
       
       // Verificar se a resposta tem a estrutura esperada
       if (typeof response !== 'object' || response === null) {
@@ -234,16 +242,18 @@ const FuncionariosList: React.FC = () => {
         const funcionariosData = response.data || [];
         const totalData = response.total || 0;
         
-        console.log('✅ Dados recebidos:', funcionariosData);
-        console.log('📋 Total de funcionários:', totalData);
-        
         // Processar dados para adicionar campos calculados
-        const funcionariosProcessados = funcionariosData.map((f: any) => ({
-          ...f,
-          nomeCompleto: `${f.Nome || ''} ${f.Apelido || ''}`.trim(),
-          // Garantir que existe um campo de ID para a tabela
-          id: f.FuncionarioID || f.funcionarioID || f.id
-        }));
+        const funcionariosProcessados = funcionariosData.map((f: any) => {
+          return {
+            ...f,
+            nomeCompleto: `${f.Nome || ''} ${f.Apelido || ''}`.trim(),
+            // Garantir que existe um campo de ID para a tabela
+            id: f.FuncionarioID || f.funcionarioID || f.id,
+            // Usar los nomes de cargo e departamento que já vêm do backend
+            departamento: { nome: f.DepartamentoNome || 'Não especificado' },
+            cargo: { nome: f.CargoNome || 'Não especificado' }
+          };
+        });
         
         setFuncionarios(funcionariosProcessados);
         setTotalCount(totalData);
@@ -293,7 +303,6 @@ const FuncionariosList: React.FC = () => {
       }
     } catch (error) {
       console.error('Erro ao carregar cargos:', error);
-      // Usar warning em vez de error para ser menos disruptivo
       showNotification('Cargos não disponíveis (backend precisa ser reiniciado)', 'warning');
     }
   };
@@ -413,53 +422,6 @@ const FuncionariosList: React.FC = () => {
   };
 
   // Test function to verify backend connectivity
-  const testBackendConnection = async () => {
-    console.log('🧪 Testando conexão com backend...');
-    
-    try {
-      // Test 1: Status endpoint
-      const statusUrl = 'http://localhost:5000/api/iamc/status';
-      console.log(`🔗 Testando: ${statusUrl}`);
-      
-      const statusResponse = await fetch(statusUrl);
-      console.log(`📡 Status response: ${statusResponse.status}`);
-      
-      if (statusResponse.ok) {
-        const statusData = await statusResponse.json();
-        console.log('✅ Status data:', statusData);
-      }
-      
-      // Test 2: Funcionarios endpoint
-      const funcUrl = 'http://localhost:5000/api/iamc/funcionarios';
-      console.log(`🔗 Testando: ${funcUrl}`);
-      
-      const funcResponse = await fetch(funcUrl);
-      console.log(`📡 Funcionarios response: ${funcResponse.status}`);
-      
-      if (funcResponse.ok) {
-        const funcData = await funcResponse.json();
-        console.log('✅ Funcionarios data structure:', {
-          type: typeof funcData,
-          keys: Object.keys(funcData),
-          success: funcData.success,
-          dataType: typeof funcData.data,
-          dataLength: Array.isArray(funcData.data) ? funcData.data.length : 'not array',
-          total: funcData.total
-        });
-        
-        if (funcData.data && funcData.data.length > 0) {
-          console.log('👤 Primeiro funcionário:', funcData.data[0]);
-        }
-      } else {
-        const errorText = await funcResponse.text();
-        console.error('❌ Funcionarios error:', errorText);
-      }
-      
-    } catch (error) {
-      console.error('❌ Erro no teste de conexão:', error);
-    }
-  };
-
   return (
     <Box sx={{ p: 3 }}>
       <Card>

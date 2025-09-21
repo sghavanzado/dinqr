@@ -29,7 +29,7 @@ class QRRequestSchema(Schema):
 
 @qr_bp.route('/funcionarios', methods=['GET'])
 def listar_funcionarios():
-    """Listado de funcionarios desde la base de datos IAMC."""
+    """Listado de funcionarios desde la tabla IAMC Funcionarios."""
     page = request.args.get('page', 1, type=int)
     per_page = request.args.get('per_page', 10, type=int)
     filtro = request.args.get('filtro', '', type=str)
@@ -45,52 +45,85 @@ def listar_funcionarios():
             conn_local = obtener_conexion_local()
             cursor = conn_local.cursor()
             cursor.execute("SELECT contact_id FROM qr_codes")
-            qr_generated_ids = [row[0] for row in cursor.fetchall()]
+            qr_generated_ids = [int(row[0]) for row in cursor.fetchall()]  # Convertir a int
             logging.info(f"IDs de funcionarios con QR obtenidos: {qr_generated_ids}")
         except Exception as e:
             logging.error(f"Error al consultar IDs de funcionarios con QR en la base de datos IAMC: {str(e)}")
             return jsonify({"error": "Error interno del servidor"}), 500
+        finally:
+            if conn_local:
+                conn_local.close()
+                
         # Si no hay IDs en qr_generated_ids, devolver lista vacía
         if not qr_generated_ids:
             logging.info("No se encontraron IDs de funcionarios con QR en la base de datos IAMC.")
             return jsonify([])
 
-        # Consultar funcionarios desde la base de datos empresadb (tabla sonacard)
+        # Consultar funcionarios desde la tabla IAMC Funcionarios con JOINs y paginación
         try:
-            with obtener_conexion_remota() as conn:  # empresadb para sonacard
-                cursor = conn.cursor()
-                placeholders = ",".join("?" for _ in qr_generated_ids)  # Crear placeholders dinámicos
-                query = f"""
-                    SELECT sap, nome, funcao, area, nif, telefone, email, unineg
-                    FROM sonacard
-                    WHERE sap IN ({placeholders})
-                    AND nome LIKE ?
-                    ORDER BY sap
-                    OFFSET ? ROWS FETCH NEXT ? ROWS ONLY
-                """
-                logging.info(f"Ejecutando consulta SQL: {query}")
-                cursor.execute(query, (*qr_generated_ids, f"%{filtro}%", (page - 1) * per_page, per_page))
-                funcionarios = cursor.fetchall()
-                logging.info(f"Funcionarios obtenidos: {len(funcionarios)} registros")
+            from extensions import IAMCSession
+            from models.iamc_funcionarios_new import Funcionario, Cargo, Departamento
+            
+            session = IAMCSession()
+            
+            # Calcular offset
+            offset = (page - 1) * per_page
+            
+            # Consulta con JOINs, filtro y paginación
+            query = session.query(
+                Funcionario.FuncionarioID,
+                Funcionario.Nome,
+                Funcionario.Apelido,
+                Funcionario.Email,
+                Funcionario.Telefone,
+                Cargo.Nome.label('CargoNome'),
+                Departamento.Nome.label('DepartamentoNome'),
+                Funcionario.CargoID,
+                Funcionario.DepartamentoID
+            ).outerjoin(
+                Cargo, Funcionario.CargoID == Cargo.CargoID
+            ).outerjoin(
+                Departamento, Funcionario.DepartamentoID == Departamento.DepartamentoID
+            ).filter(
+                Funcionario.FuncionarioID.in_(qr_generated_ids)
+            )
+            
+            # Aplicar filtro de búsqueda si existe
+            if filtro:
+                query = query.filter(
+                    Funcionario.Nome.ilike(f"%{filtro}%") | 
+                    Funcionario.Apelido.ilike(f"%{filtro}%") |
+                    Cargo.Nome.ilike(f"%{filtro}%") |
+                    Departamento.Nome.ilike(f"%{filtro}%")
+                )
+            
+            funcionarios = query.order_by(Funcionario.FuncionarioID).offset(offset).limit(per_page).all()
+            logging.info(f"Funcionarios obtenidos desde IAMC: {len(funcionarios)} registros")
+            
         except Exception as e:
-            logging.error(f"Error al consultar funcionarios desde la base de datos empresadb: {str(e)}")
+            logging.error(f"Error al consultar funcionarios desde la tabla IAMC: {str(e)}")
             return jsonify({"error": "Error interno del servidor"}), 500
+        finally:
+            if 'session' in locals():
+                session.close()
 
         # Combinar datos y agregar estado de QR
         try:
             result = [
                 {
-                    "id": funcionario[0],
-                    "nome": funcionario[1],
-                    "funcao": funcionario[2],
-                    "area": funcionario[3],
-                    "nif": funcionario[4],
-                    "telefone": funcionario[5],
-                    "email": funcionario[6],
-                    "unineg": funcionario[7],
+                    "id": func.FuncionarioID,
+                    "funcionarioId": func.FuncionarioID,
+                    "nome": func.Nome,
+                    "apelido": func.Apelido or 'Não especificado',
+                    "email": func.Email or 'Não especificado',
+                    "telefone": func.Telefone or 'Não especificado',
+                    "cargo": func.CargoNome or 'Não especificado',
+                    "cargoId": func.CargoID,
+                    "departamento": func.DepartamentoNome or 'Não especificado',
+                    "departamentoId": func.DepartamentoID,
                     "qrGenerated": True
                 }
-                for funcionario in funcionarios
+                for func in funcionarios
             ]
         except Exception as e:
             logging.error(f"Error al procesar los datos de funcionarios: {str(e)}")
@@ -104,7 +137,7 @@ def listar_funcionarios():
 
 @qr_bp.route('/funcionarios-sin-qr', methods=['GET'])
 def listar_funcionarios_sin_qr():
-    """Listado de funcionarios que no tienen un código QR generado."""
+    """Listado de funcionarios que no tienen un código QR generado - usando tabla IAMC."""
     try:
         # Consultar IDs de funcionarios con QR en la base de datos IAMC
         conn_local = None
@@ -112,44 +145,67 @@ def listar_funcionarios_sin_qr():
             conn_local = obtener_conexion_local()
             cursor = conn_local.cursor()
             cursor.execute("SELECT contact_id FROM qr_codes")
-            qr_generated_ids = [row[0] for row in cursor.fetchall()]
+            qr_generated_ids = [int(row[0]) for row in cursor.fetchall()]  # Convertir a int
         except Exception as e:
             logging.error(f"Error al consultar QR codes: {str(e)}")
             qr_generated_ids = []
+        finally:
+            if conn_local:
+                conn_local.close()
 
-        # Consultar funcionarios desde la base de datos empresadb que no tienen QR
-        with obtener_conexion_remota() as conn:  # empresadb para sonacard
-            cursor = conn.cursor()
+        # Consultar funcionarios desde la tabla IAMC que no tienen QR
+        try:
+            from extensions import IAMCSession
+            from models.iamc_funcionarios_new import Funcionario, Cargo, Departamento
+            
+            session = IAMCSession()
+            
+            # Consulta con JOINs para funcionarios sin QR
+            query = session.query(
+                Funcionario.FuncionarioID,
+                Funcionario.Nome,
+                Funcionario.Apelido,
+                Funcionario.Email,
+                Funcionario.Telefone,
+                Cargo.Nome.label('CargoNome'),
+                Departamento.Nome.label('DepartamentoNome'),
+                Funcionario.CargoID,
+                Funcionario.DepartamentoID
+            ).outerjoin(
+                Cargo, Funcionario.CargoID == Cargo.CargoID
+            ).outerjoin(
+                Departamento, Funcionario.DepartamentoID == Departamento.DepartamentoID
+            )
+            
             if qr_generated_ids:
-                placeholders = ",".join("?" for _ in qr_generated_ids)
-                query = f"""
-                    SELECT sap, nome, funcao, area, nif, telefone, email, unineg
-                    FROM sonacard
-                    WHERE sap NOT IN ({placeholders})
-                """
-                logging.info(f"Ejecutando consulta SQL: {query}")
-                cursor.execute(query, tuple(qr_generated_ids))
-            else:
-                # Si no hay IDs en qr_generated_ids, devolver todos los funcionarios
-                query = """
-                    SELECT sap, nome, funcao, area, nif, telefone, email, unineg
-                    FROM sonacard
-                """
-                cursor.execute(query)
-            funcionarios = cursor.fetchall()
+                # Excluir funcionarios que ya tienen QR
+                query = query.filter(~Funcionario.FuncionarioID.in_(qr_generated_ids))
+            
+            funcionarios = query.order_by(Funcionario.FuncionarioID).all()
+            logging.info(f"Funcionarios sin QR obtenidos desde IAMC: {len(funcionarios)} registros")
+            
+        except Exception as e:
+            logging.error(f"Error al consultar funcionarios sin QR desde IAMC: {str(e)}")
+            return jsonify({"error": "Error interno del servidor"}), 500
+        finally:
+            if 'session' in locals():
+                session.close()
 
         result = [
             {
-                "id": funcionario[0],
-                "nome": funcionario[1],
-                "funcao": funcionario[2],
-                "area": funcionario[3],
-                "nif": funcionario[4],
-                "telefone": funcionario[5],
-                "email": funcionario[6],
-                "unineg": funcionario[7],
+                "id": func.FuncionarioID,
+                "funcionarioId": func.FuncionarioID,
+                "nome": func.Nome,
+                "apelido": func.Apelido or 'Não especificado',
+                "email": func.Email or 'Não especificado',
+                "telefone": func.Telefone or 'Não especificado',
+                "cargo": func.CargoNome or 'Não especificado',
+                "cargoId": func.CargoID,
+                "departamento": func.DepartamentoNome or 'Não especificado',
+                "departamentoId": func.DepartamentoID,
+                "qrGenerated": False
             }
-            for funcionario in funcionarios
+            for func in funcionarios
         ]
 
         return jsonify(result)
@@ -184,6 +240,16 @@ def generar_codigos_qr_estaticos():
         logging.error(f"Error al generar códigos QR estáticos: {str(e)}")
         return jsonify({"error": "Error interno del servidor"}), 500
 
+@qr_bp.route('/generar/<int:funcionario_id>', methods=['POST'])
+def generar_codigo_qr_individual(funcionario_id):
+    """Generar código QR para un funcionario específico."""
+    try:
+        result = generar_qr([funcionario_id])
+        return jsonify(result[0] if result else {"error": "No se pudo generar el código QR"})
+    except Exception as e:
+        logging.error(f"Error al generar código QR para funcionario {funcionario_id}: {str(e)}")
+        return jsonify({"error": "Error interno del servidor"}), 500
+
 @qr_bp.route('/descargar/<int:contact_id>', methods=['GET'])
 def descargar_codigo_qr(contact_id):
     """Descargar un código QR específico."""
@@ -202,12 +268,20 @@ def eliminar_codigo_qr(contact_id):
 
 @qr_bp.route('/funcionarios/total', methods=['GET'])
 def obtener_total_funcionarios_endpoint():
-    """Obtener la cantidad total de funcionarios desde la base de datos IAMC."""
+    """Obtener la cantidad total de funcionarios desde la tabla IAMC Funcionarios."""
     try:
-        total = obtener_total_funcionarios()
-        return jsonify({"total": total})
+        from extensions import IAMCSession
+        from models.iamc_funcionarios_new import Funcionario
+        
+        session = IAMCSession()
+        try:
+            total = session.query(Funcionario).count()
+            return jsonify({"total": total})
+        finally:
+            session.close()
+            
     except Exception as e:
-        logging.error(f"Error al obtener el total de funcionarios: {str(e)}")
+        logging.error(f"Error al obtener el total de funcionarios desde IAMC: {str(e)}")
         return jsonify({"error": "Error interno del servidor"}), 500
 
 @qr_bp.route('/funcionarios/total-con-qr', methods=['GET'])
@@ -227,17 +301,21 @@ def obtener_total_funcionarios_con_qr_endpoint():
 
 @qr_bp.route('/generar-todos', methods=['POST'])
 def generar_todos_codigos_qr():
-    """Generar códigos QR para todos los funcionarios en la base de datos externa."""
-    conn_remota = None
+    """Generar códigos QR para todos los funcionarios en la tabla IAMC Funcionarios."""
     try:
-        # Obtener todos los IDs de funcionarios desde la base de datos empresadb
-        conn_remota = obtener_conexion_remota()  # empresadb para sonacard
-        cursor = conn_remota.cursor()
-        cursor.execute("SELECT sap FROM sonacard")
-        ids = [row[0] for row in cursor.fetchall()]
+        # Obtener todos los IDs de funcionarios desde la tabla IAMC Funcionarios
+        from extensions import IAMCSession
+        from models.iamc_funcionarios_new import Funcionario
+        
+        session = IAMCSession()
+        try:
+            funcionarios = session.query(Funcionario.FuncionarioID).all()
+            ids = [func.FuncionarioID for func in funcionarios]
+        finally:
+            session.close()
 
         if not ids:
-            return jsonify({"message": "No hay funcionarios en la base de datos externa."}), 200
+            return jsonify({"message": "No hay funcionarios en la tabla IAMC Funcionarios."}), 200
 
         # Procesar en lotes de 200 para evitar problemas de memoria o tiempo de ejecución
         batch_size = 200  # Tamaño del lote
@@ -251,13 +329,10 @@ def generar_todos_codigos_qr():
     except Exception as e:
         logging.error(f"Error al generar códigos QR para todos los funcionarios: {str(e)}")
         return jsonify({"error": "Error interno del servidor"}), 500
-    finally:
-        if conn_remota:
-            conn_remota.close()  # Asegurar que la conexión remota se cierre correctamente
 
 @qr_bp.route('/funcionarios-com-qr', methods=['GET'])
 def listar_funcionarios_com_qr():
-    """Listado de funcionarios que SÍ tienen un código QR generado (sin paginación backend)."""
+    """Listado de funcionarios que SÍ tienen un código QR generado - usando tabla IAMC Funcionarios."""
     try:
         # Consultar IDs de funcionarios con QR en la base de datos IAMC
         conn_local = None
@@ -265,50 +340,74 @@ def listar_funcionarios_com_qr():
             conn_local = obtener_conexion_local()
             cursor = conn_local.cursor()
             cursor.execute("SELECT contact_id FROM qr_codes")
-            qr_generated_ids = [row[0] for row in cursor.fetchall()]
+            qr_generated_ids = [int(row[0]) for row in cursor.fetchall()]  # Convertir a int
             logging.info(f"IDs de funcionarios con QR obtenidos: {qr_generated_ids}")
         except Exception as e:
             logging.error(f"Error al consultar IDs de funcionarios con QR en la base de datos IAMC: {str(e)}")
             return jsonify({"error": "Error interno del servidor"}), 500
+        finally:
+            if conn_local:
+                conn_local.close()
+        
         # Si no hay IDs en qr_generated_ids, devolver lista vacía
         if not qr_generated_ids:
             logging.info("No se encontraron IDs de funcionarios con QR en la base de datos IAMC.")
             return jsonify([])
 
-        # Consultar funcionarios desde la base de datos empresadb que SÍ tienen QR
+        # Consultar funcionarios desde la tabla IAMC Funcionarios con JOINs
         try:
-            with obtener_conexion_remota() as conn:  # empresadb para sonacard
-                cursor = conn.cursor()
-                placeholders = ",".join("?" for _ in qr_generated_ids)
-                query = f"""
-                    SELECT sap, nome, funcao, area, nif, telefone, email, unineg
-                    FROM sonacard
-                    WHERE sap IN ({placeholders})
-                    ORDER BY sap
-                """
-                logging.info(f"Ejecutando consulta SQL para funcionarios COM QR: {query}")
-                cursor.execute(query, tuple(qr_generated_ids))
-                funcionarios = cursor.fetchall()
-                logging.info(f"Funcionarios con QR obtenidos: {len(funcionarios)} registros")
+            from extensions import IAMCSession
+            session = IAMCSession()
+            
+            # Importar modelos IAMC
+            from models.iamc_funcionarios_new import Funcionario, Cargo, Departamento
+            
+            # Consulta con JOINs para obtener nombres de Cargo y Departamento
+            query = session.query(
+                Funcionario.FuncionarioID,
+                Funcionario.Nome,
+                Funcionario.Apelido,
+                Funcionario.Email,
+                Funcionario.Telefone,
+                Cargo.Nome.label('CargoNome'),
+                Departamento.Nome.label('DepartamentoNome'),
+                Funcionario.CargoID,
+                Funcionario.DepartamentoID
+            ).outerjoin(
+                Cargo, Funcionario.CargoID == Cargo.CargoID
+            ).outerjoin(
+                Departamento, Funcionario.DepartamentoID == Departamento.DepartamentoID
+            ).filter(
+                Funcionario.FuncionarioID.in_(qr_generated_ids)
+            ).order_by(Funcionario.FuncionarioID)
+            
+            funcionarios = query.all()
+            logging.info(f"Funcionarios con QR obtenidos desde IAMC: {len(funcionarios)} registros")
+            
         except Exception as e:
-            logging.error(f"Error al consultar funcionarios con QR desde la base de datos empresadb: {str(e)}")
+            logging.error(f"Error al consultar funcionarios con QR desde la base de datos IAMC: {str(e)}")
             return jsonify({"error": "Error interno del servidor"}), 500
+        finally:
+            if 'session' in locals():
+                session.close()
 
-        # Procesar datos
+        # Procesar datos con la nueva estructura IAMC
         try:
             result = [
                 {
-                    "id": funcionario[0],
-                    "nome": funcionario[1],
-                    "funcao": funcionario[2],
-                    "area": funcionario[3],
-                    "nif": funcionario[4],
-                    "telefone": funcionario[5],
-                    "email": funcionario[6],
-                    "unineg": funcionario[7],
+                    "id": func.FuncionarioID,
+                    "funcionarioId": func.FuncionarioID,
+                    "nome": func.Nome,
+                    "apelido": func.Apelido or 'Não especificado',
+                    "email": func.Email or 'Não especificado',
+                    "telefone": func.Telefone or 'Não especificado', 
+                    "cargo": func.CargoNome or 'Não especificado',
+                    "cargoId": func.CargoID,
+                    "departamento": func.DepartamentoNome or 'Não especificado',
+                    "departamentoId": func.DepartamentoID,
                     "qrGenerated": True
                 }
-                for funcionario in funcionarios
+                for func in funcionarios
             ]
         except Exception as e:
             logging.error(f"Error al procesar los datos de funcionarios con QR: {str(e)}")

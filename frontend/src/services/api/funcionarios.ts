@@ -27,12 +27,9 @@ export const getFuncionarios = async (filters?: FuncionarioFilter): Promise<Pagi
   }
   
   const url = `${API_BASE}/funcionarios?${params}`;
-  console.log('🌐 Fazendo requisição para:', url);
   
   try {
     const response = await axios.get(url);
-    console.log('📡 Status da resposta:', response.status);
-    console.log('📄 Dados da resposta:', response.data);
     return response.data;
   } catch (error) {
     console.error('❌ Erro na requisição:', error);

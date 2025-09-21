@@ -136,7 +136,7 @@ def obtener_configuracion_servidor():
     """Obtener configuración del servidor desde la base de datos."""
     with obtener_conexion_local() as conn:
         cursor = conn.cursor()
-        cursor.execute("SELECT key, value FROM settings WHERE key IN ('serverDomain', 'serverPort')")
+        cursor.execute("SELECT [key], value FROM settings WHERE [key] IN ('serverDomain', 'serverPort')")
         config = {row[0]: row[1] for row in cursor.fetchall()}
         return config.get('serverDomain', '127.0.0.1'), int(config.get('serverPort', 5000))
 

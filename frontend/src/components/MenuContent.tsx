@@ -47,29 +47,35 @@ type ExtendedTreeItemProps = {
 
 const ITEMS: TreeViewBaseItem<ExtendedTreeItemProps>[] = [
   {
-    id: '1',
-    label: 'Dashboard',
-    icon: DashboardIcon,
-    to: '/dashboard',
-  },
-  {
-    id: '2',
-    label: 'IMPRESSÃO',
-    icon: PeopleOutlineOutlinedIcon,
-    children: [
-      {
-        id: '2.1',
-        label: 'Gerar Code',
-        icon: ReceiptLongOutlinedIcon,
-        to: '/qrcode',
-      },
-    ],
-  },
-  {
     id: '3',
     label: 'RRHH',
     icon: PeopleOutlineOutlinedIcon,
     children: [
+      {
+        id: '3.0',
+        label: 'Impressão',
+        icon: PeopleOutlineOutlinedIcon,
+        children: [
+          {
+            id: '3.0.1',
+            label: 'Impressão Dashboard',
+            icon: DashboardIcon,
+            to: '/dashboard',
+          },
+          {
+            id: '3.0.2',
+            label: 'Gerar Code',
+            icon: ReceiptLongOutlinedIcon,
+            to: '/qrcode',
+          },
+          {
+            id: '3.0.3',
+            label: 'Passes de Funcionários',
+            icon: ReceiptLongOutlinedIcon,
+            to: '/rrhh/passes',
+          },
+        ],
+      },
       {
         id: '3.1',
         label: 'Dashboard RRHH',
@@ -350,8 +356,8 @@ const MenuContent = () => {
         apiRef={apiRef}
         onSelectedItemsChange={(_, itemIds) => handleSelectedItemsChange(itemIds)} // Ignore the event parameter
         multiSelect={false}
-        defaultExpandedItems={['1', '1.1']}
-        defaultSelectedItems="1.1"
+        defaultExpandedItems={['3', '3.0']}
+        defaultSelectedItems="3.0.1"
         sx={{ height: 'fit-content', flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
         slots={{ item: CustomTreeItem }}
       />

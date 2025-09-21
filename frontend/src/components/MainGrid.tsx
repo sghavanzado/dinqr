@@ -36,7 +36,7 @@ import ServerStatus from './ServerStatus';
 import StatCard from './StatCard';
 import type { StatCardProps } from './StatCard';
 import axiosInstance from '../api/axiosInstance';
-import type { Funcionario } from '../types/Funcionario';
+import type { DashboardFuncionario } from '../types/Funcionario';
 
 export default function MainGrid() {
   // =============================================
@@ -49,7 +49,7 @@ export default function MainGrid() {
   // =============================================
   // 📋 ESTADOS PARA LA TABLA DE FUNCIONARIOS
   // =============================================
-  const [funcionariosComQR, setFuncionariosComQR] = useState<Funcionario[]>([]);
+  const [funcionariosComQR, setFuncionariosComQR] = useState<DashboardFuncionario[]>([]);
   const [selectedIds, setSelectedIds] = useState<number[]>([]);            // IDs de funcionarios seleccionados
   const [loading, setLoading] = useState(false);                          // Estado de carga
   const [filter, setFilter] = useState('');                               // Texto de filtro/búsqueda
@@ -78,8 +78,10 @@ export default function MainGrid() {
   const filteredFuncionariosComQR = funcionariosComQR.filter(
     (funcionario) =>
       funcionario.nome.toLowerCase().includes(filter.toLowerCase()) ||
-      funcionario.funcao?.toLowerCase().includes(filter.toLowerCase()) ||
-      funcionario.area?.toLowerCase().includes(filter.toLowerCase())
+      funcionario.apelido.toLowerCase().includes(filter.toLowerCase()) ||
+      funcionario.cargo?.toLowerCase().includes(filter.toLowerCase()) ||
+      funcionario.departamento?.toLowerCase().includes(filter.toLowerCase()) ||
+      funcionario.email?.toLowerCase().includes(filter.toLowerCase())
   );
 
   // 🔥 CALCULAR TOTAL DE PÁGINAS BASADO EN FUNCIONARIOS FILTRADOS
@@ -92,16 +94,16 @@ export default function MainGrid() {
   );
 
   // =============================================
-  // 🔄 FUNCIÓN PARA OBTENER ESTADÍSTICAS DEL DASHBOARD
+  // 🔄 FUNÇÃO PARA OBTENER ESTADÍSTICAS DEL DASHBOARD
   // =============================================
   const fetchDashboardData = async () => {
     try {
-      // Obtener total de funcionarios
+      // Obtener total de funcionarios desde QR endpoints (ahora usando IAMC)
       const totalResponse = await axiosInstance.get('/qr/funcionarios/total');
       const total = totalResponse.data.total;
       setTotalFuncionarios(total);
 
-      // Obtener total de funcionarios con QR
+      // Obtener total de funcionarios con QR desde QR endpoints
       const qrResponse = await axiosInstance.get('/qr/funcionarios/total-con-qr');
       const totalConQR = qrResponse.data.total;
       setTotalFuncionariosComQR(totalConQR);
@@ -119,11 +121,11 @@ export default function MainGrid() {
   const fetchFuncionarios = async () => {
     setLoading(true);
     try {
-      // 🔥 USAR NUEVO ENDPOINT SIN PAGINACIÓN BACKEND
+      // 🔥 USAR ENDPOINT QR ORIGINAL (ahora modificado para usar datos IAMC)
       const response = await axiosInstance.get('/qr/funcionarios-com-qr');
       if (response.status === 200) {
-        setFuncionariosComQR(response.data); // Ahora recibe TODOS los funcionarios con QR
-        console.log('Funcionarios com QR cargados:', response.data.length);
+        setFuncionariosComQR(response.data); // Ahora recibe datos IAMC con joins
+        console.log('Funcionarios com QR cargados desde IAMC:', response.data.length);
       } else {
         console.error('Unexpected response:', response);
         alert('Erro ao carregar funcionários com QR. Verifique o console para mais detalhes.');
@@ -201,7 +203,7 @@ export default function MainGrid() {
   // =============================================
   // 👤 HANDLER PARA MOSTRAR TARJETA DE CONTACTO
   // =============================================
-  const handleViewContactCard = (funcionario: Funcionario) => {
+  const handleViewContactCard = (funcionario: DashboardFuncionario) => {
     const logoUrl = '/static/images/sonangol-logo.png';
     const headerBackgroundColor = '#F4CF0A';
     // Generar HTML para la tarjeta de contacto
@@ -215,13 +217,12 @@ export default function MainGrid() {
           Sociedade Nacional de Combustíveis de Angola
         </div>
         <div style="padding: 20px; text-align: left;">
-        <p><strong>Nome:</strong> ${funcionario.nome}</p>
-          <p><strong>SAP:</strong> ${funcionario.id}</p>
-          <p><strong>Função:</strong> ${funcionario.funcao || 'Não especificada'}</p>
-          <p><strong>Direção:</strong> ${funcionario.area || 'Não especificada'}</p>
-          <p><strong>U.Neg:</strong> ${funcionario.unineg || 'Não especificada'}</p>
-          <p><strong>NIF:</strong> ${funcionario.nif || 'Não especificado'}</p>
-          <p><strong>Telefone:</strong> ${funcionario.telefone || 'Não especificado'}</p>
+        <p><strong>Nome:</strong> ${funcionario.nome} ${funcionario.apelido}</p>
+          <p><strong>ID:</strong> ${funcionario.funcionarioId}</p>
+          <p><strong>Email:</strong> ${funcionario.email}</p>
+          <p><strong>Telefone:</strong> ${funcionario.telefone}</p>
+          <p><strong>Cargo:</strong> ${funcionario.cargo || 'Não especificado'}</p>
+          <p><strong>Departamento:</strong> ${funcionario.departamento || 'Não especificado'}</p>
         </div>
       </div>
     `;
@@ -332,7 +333,7 @@ export default function MainGrid() {
         {/* Barra de búsqueda */}
         <TextField
           fullWidth
-          placeholder="Pesquisar por nome, função ou direção..."
+          placeholder="Pesquisar por nome, apelido, cargo, departamento ou email..."
           value={filter}
           onChange={(e) => {
             setFilter(e.target.value);
@@ -365,22 +366,25 @@ export default function MainGrid() {
                       />
                     </TableCell>
                     <TableCell>
-                      <strong>SAP</strong>
+                      <strong>ID</strong>
                     </TableCell>
                     <TableCell>
                       <strong>Nome</strong>
                     </TableCell>
                     <TableCell>
-                      <strong>Função</strong>
+                      <strong>Apelido</strong>
                     </TableCell>
                     <TableCell>
-                      <strong>Direção</strong>
-                    </TableCell>
-                    <TableCell>
-                      <strong>NIF</strong>
+                      <strong>Email</strong>
                     </TableCell>
                     <TableCell>
                       <strong>Telefone</strong>
+                    </TableCell>
+                    <TableCell>
+                      <strong>Cargo</strong>
+                    </TableCell>
+                    <TableCell>
+                      <strong>Departamento</strong>
                     </TableCell>
                     <TableCell align="center">
                       <strong>Ações</strong>
@@ -403,20 +407,23 @@ export default function MainGrid() {
                             onChange={(e) => handleRowCheckboxChange(funcionario.id, e.target.checked)}
                           />
                         </TableCell>
-                        <TableCell>{funcionario.id}</TableCell>
+                        <TableCell>{funcionario.funcionarioId}</TableCell>
                         <TableCell>
-                          <Box>
-                            <Typography variant="body2" fontWeight="bold">
-                              {funcionario.nome}
-                            </Typography>
-                          </Box>
+                          <Typography variant="body2" fontWeight="bold">
+                            {funcionario.nome}
+                          </Typography>
                         </TableCell>
                         <TableCell>
-                          <Chip label={funcionario.funcao || 'Não especificada'} size="small" />
+                          <Typography variant="body2">
+                            {funcionario.apelido}
+                          </Typography>
                         </TableCell>
-                        <TableCell>{funcionario.area || 'Não especificada'}</TableCell>
-                        <TableCell>{funcionario.nif || 'Não especificado'}</TableCell>
-                        <TableCell>{funcionario.telefone || 'Não especificado'}</TableCell>
+                        <TableCell>{funcionario.email}</TableCell>
+                        <TableCell>{funcionario.telefone}</TableCell>
+                        <TableCell>
+                          <Chip label={funcionario.cargo} size="small" />
+                        </TableCell>
+                        <TableCell>{funcionario.departamento}</TableCell>
                         <TableCell align="center">
                           <Box sx={{ display: 'flex', gap: 0.5 }}>
                             <IconButton size="small" onClick={() => handleViewQR(funcionario.id)} title="Visualizar QR">
@@ -445,7 +452,7 @@ export default function MainGrid() {
                     ))
                   ) : (
                     <TableRow>
-                      <TableCell colSpan={8} align="center">
+                      <TableCell colSpan={9} align="center">
                         <Box sx={{ py: 4 }}>
                           <QrCodeIcon sx={{ fontSize: 64, color: 'text.secondary', mb: 2 }} />
                           <Typography variant="h6" color="text.secondary">

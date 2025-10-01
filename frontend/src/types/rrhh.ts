@@ -38,6 +38,11 @@ export interface Funcionario extends BaseEntity {
   Foto?: string;
   CargoID?: number;
   DepartamentoID?: number;
+  // Campos procesados por el frontend
+  CargoNome?: string;
+  DepartamentoNome?: string;
+  cargo?: { nome: string };
+  departamento?: { nome: string };
 }
 
 export interface FuncionarioFormData {

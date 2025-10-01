@@ -1,0 +1,104 @@
+2025-10-01 15:01:04,334 INFO: Permissions and roles initialized successfully.
+2025-10-01 15:01:04,336 INFO: Permissions initialized successfully
+2025-10-01 15:02:14,854 INFO: Cargados 5 contactos desde la tabla IAMC Funcionarios
+2025-10-01 15:02:14,858 INFO: Orígenes CORS permitidos: ['https://localhost', 'https://localhost:443', 'https://127.0.0.1', 'https://localhost:9000', 'https://127.0.1:9000']
+2025-10-01 15:02:14,860 INFO: ==================================================
+2025-10-01 15:02:14,863 INFO: DINQR Backend Application Starting
+2025-10-01 15:02:14,863 INFO: ==================================================
+2025-10-01 15:02:14,865 INFO: Environment: production
+2025-10-01 15:02:14,866 INFO: Debug mode: False
+2025-10-01 15:02:14,866 INFO: Database URI: localhost/IAMC (SQL Server)
+2025-10-01 15:02:14,871 INFO: IAMC SQL Server connection initialized successfully
+2025-10-01 15:02:14,919 INFO: Permissions and roles initialized successfully.
+2025-10-01 15:02:14,920 INFO: Permissions initialized successfully
+2025-10-01 15:04:16,680 INFO: Cargados 5 contactos desde la tabla IAMC Funcionarios
+2025-10-01 15:04:16,684 INFO: Orígenes CORS permitidos: ['https://localhost', 'https://localhost:443', 'https://127.0.0.1', 'https://localhost:9000', 'https://127.0.1:9000']
+2025-10-01 15:04:16,685 INFO: ==================================================
+2025-10-01 15:04:16,686 INFO: DINQR Backend Application Starting
+2025-10-01 15:04:16,687 INFO: ==================================================
+2025-10-01 15:04:16,688 INFO: Environment: production
+2025-10-01 15:04:16,692 INFO: Debug mode: False
+2025-10-01 15:04:16,694 INFO: Database URI: localhost/IAMC (SQL Server)
+2025-10-01 15:04:16,698 INFO: IAMC SQL Server connection initialized successfully
+2025-10-01 15:04:16,742 INFO: Permissions and roles initialized successfully.
+2025-10-01 15:04:16,744 INFO: Permissions initialized successfully
+2025-10-01 15:05:41,593 INFO: Cargados 5 contactos desde la tabla IAMC Funcionarios
+2025-10-01 15:05:41,608 INFO: Orígenes CORS permitidos: ['https://localhost', 'https://localhost:443', 'https://127.0.0.1', 'https://localhost:9000', 'https://127.0.1:9000']
+2025-10-01 15:05:41,608 INFO: ==================================================
+2025-10-01 15:05:41,608 INFO: DINQR Backend Application Starting
+2025-10-01 15:05:41,608 INFO: ==================================================
+2025-10-01 15:05:41,608 INFO: Environment: production
+2025-10-01 15:05:41,608 INFO: Debug mode: False
+2025-10-01 15:05:41,608 INFO: Database URI: localhost/IAMC (SQL Server)
+2025-10-01 15:05:41,608 INFO: IAMC SQL Server connection initialized successfully
+2025-10-01 15:05:41,655 INFO: Permissions and roles initialized successfully.
+2025-10-01 15:05:41,655 INFO: Permissions initialized successfully
+2025-10-01 15:05:41,780 INFO: Orígenes CORS permitidos: ['https://localhost', 'https://localhost:443', 'https://127.0.0.1', 'https://localhost:9000', 'https://127.0.1:9000']
+2025-10-01 15:05:41,796 INFO: ==================================================
+2025-10-01 15:05:41,796 INFO: DINQR Backend Application Starting
+2025-10-01 15:05:41,796 INFO: ==================================================
+2025-10-01 15:05:41,796 INFO: Environment: production
+2025-10-01 15:05:41,796 INFO: Debug mode: False
+2025-10-01 15:05:41,796 INFO: Database URI: localhost/IAMC (SQL Server)
+2025-10-01 15:05:41,796 INFO: IAMC SQL Server connection initialized successfully
+2025-10-01 15:05:41,827 INFO: Permissions and roles initialized successfully.
+2025-10-01 15:05:41,827 INFO: Permissions initialized successfully
+2025-10-01 15:05:41,858 WARNING: ============================================================
+2025-10-01 15:05:41,858 WARNING: WARNING: Running development server
+2025-10-01 15:05:41,858 WARNING: For production use:
+2025-10-01 15:05:41,858 WARNING:   python waitress_server.py
+2025-10-01 15:05:41,858 WARNING:   python windows_service.py install
+2025-10-01 15:05:41,858 WARNING: ============================================================
+2025-10-01 15:05:41,874 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-10-01 15:05:41,874 INFO: [33mPress CTRL+C to quit[0m
+2025-10-01 15:08:56,342 INFO: Petición: OPTIONS /users/profile desde 127.0.0.1 - args: {} - json: None
+2025-10-01 15:08:56,344 INFO: Petición: OPTIONS /users/profile desde 127.0.0.1 - args: {} - json: None
+2025-10-01 15:08:56,352 INFO: 127.0.0.1 - - [01/Oct/2025 15:08:56] "OPTIONS /users/profile HTTP/1.1" 200 -
+2025-10-01 15:08:56,353 INFO: 127.0.0.1 - - [01/Oct/2025 15:08:56] "OPTIONS /users/profile HTTP/1.1" 200 -
+2025-10-01 15:08:56,658 INFO: Petición: GET /users/profile desde 127.0.0.1 - args: {} - json: None
+2025-10-01 15:08:56,673 INFO: 127.0.0.1 - - [01/Oct/2025 15:08:56] "GET /users/profile HTTP/1.1" 200 -
+2025-10-01 15:08:56,909 INFO: Petición: GET /users/profile desde 127.0.0.1 - args: {} - json: None
+2025-10-01 15:08:56,915 INFO: 127.0.0.1 - - [01/Oct/2025 15:08:56] "GET /users/profile HTTP/1.1" 200 -
+2025-10-01 15:08:57,484 INFO: Petición: OPTIONS /qr/funcionarios/total desde 127.0.0.1 - args: {} - json: None
+2025-10-01 15:08:57,488 INFO: 127.0.0.1 - - [01/Oct/2025 15:08:57] "OPTIONS /qr/funcionarios/total HTTP/1.1" 200 -
+2025-10-01 15:08:57,491 INFO: Petición: GET /qr/funcionarios/total desde 127.0.0.1 - args: {} - json: None
+2025-10-01 15:08:57,535 INFO: 127.0.0.1 - - [01/Oct/2025 15:08:57] "GET /qr/funcionarios/total HTTP/1.1" 200 -
+2025-10-01 15:08:57,785 INFO: Petición: OPTIONS /qr/funcionarios-com-qr desde 127.0.0.1 - args: {} - json: None
+2025-10-01 15:08:57,786 INFO: Petición: OPTIONS /qr/funcionarios/total desde 127.0.0.1 - args: {} - json: None
+2025-10-01 15:08:57,791 INFO: 127.0.0.1 - - [01/Oct/2025 15:08:57] "OPTIONS /qr/funcionarios-com-qr HTTP/1.1" 200 -
+2025-10-01 15:08:57,787 INFO: Petición: OPTIONS /qr/funcionarios-com-qr desde 127.0.0.1 - args: {} - json: None
+2025-10-01 15:08:57,792 INFO: 127.0.0.1 - - [01/Oct/2025 15:08:57] "OPTIONS /qr/funcionarios/total HTTP/1.1" 200 -
+2025-10-01 15:08:57,793 INFO: 127.0.0.1 - - [01/Oct/2025 15:08:57] "OPTIONS /qr/funcionarios-com-qr HTTP/1.1" 200 -
+2025-10-01 15:08:57,851 INFO: Petición: OPTIONS /qr/funcionarios/total-con-qr desde 127.0.0.1 - args: {} - json: None
+2025-10-01 15:08:57,854 INFO: 127.0.0.1 - - [01/Oct/2025 15:08:57] "OPTIONS /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
+2025-10-01 15:08:58,097 INFO: Petición: GET /qr/funcionarios-com-qr desde 127.0.0.1 - args: {} - json: None
+2025-10-01 15:08:58,098 INFO: Petición: GET /qr/funcionarios/total desde 127.0.0.1 - args: {} - json: None
+2025-10-01 15:08:58,105 INFO: 127.0.0.1 - - [01/Oct/2025 15:08:58] "GET /qr/funcionarios/total HTTP/1.1" 200 -
+2025-10-01 15:08:58,107 INFO: IDs de funcionarios con QR obtenidos: [6, 7, 8, 9]
+2025-10-01 15:08:58,112 INFO: Funcionarios con QR obtenidos desde IAMC: 4 registros
+2025-10-01 15:08:58,114 INFO: 127.0.0.1 - - [01/Oct/2025 15:08:58] "GET /qr/funcionarios-com-qr HTTP/1.1" 200 -
+2025-10-01 15:08:58,159 INFO: Petición: GET /qr/funcionarios/total-con-qr desde 127.0.0.1 - args: {} - json: None
+2025-10-01 15:08:58,165 INFO: 127.0.0.1 - - [01/Oct/2025 15:08:58] "GET /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
+2025-10-01 15:08:58,348 INFO: Petición: GET /qr/funcionarios-com-qr desde 127.0.0.1 - args: {} - json: None
+2025-10-01 15:08:58,351 INFO: IDs de funcionarios con QR obtenidos: [6, 7, 8, 9]
+2025-10-01 15:08:58,354 INFO: Funcionarios con QR obtenidos desde IAMC: 4 registros
+2025-10-01 15:08:58,355 INFO: 127.0.0.1 - - [01/Oct/2025 15:08:58] "GET /qr/funcionarios-com-qr HTTP/1.1" 200 -
+2025-10-01 15:08:58,418 INFO: Petición: GET /qr/funcionarios/total-con-qr desde 127.0.0.1 - args: {} - json: None
+2025-10-01 15:08:58,422 INFO: 127.0.0.1 - - [01/Oct/2025 15:08:58] "GET /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
+2025-10-01 15:09:02,543 INFO: Petición: GET /api/iamc/cargos desde 127.0.0.1 - args: {} - json: None
+2025-10-01 15:09:02,543 INFO: Petición: GET /api/iamc/departamentos desde 127.0.0.1 - args: {} - json: None
+2025-10-01 15:09:02,558 INFO: 127.0.0.1 - - [01/Oct/2025 15:09:02] "GET /api/iamc/cargos HTTP/1.1" 200 -
+2025-10-01 15:09:02,558 INFO: 127.0.0.1 - - [01/Oct/2025 15:09:02] "GET /api/iamc/departamentos HTTP/1.1" 200 -
+2025-10-01 15:09:02,723 INFO: Petición: GET /api/iamc/cargos desde 127.0.0.1 - args: {} - json: None
+2025-10-01 15:09:02,728 INFO: 127.0.0.1 - - [01/Oct/2025 15:09:02] "GET /api/iamc/cargos HTTP/1.1" 200 -
+2025-10-01 15:09:02,867 INFO: Petición: GET /api/iamc/departamentos desde 127.0.0.1 - args: {} - json: None
+2025-10-01 15:09:02,868 INFO: Petición: GET /api/iamc/status desde 127.0.0.1 - args: {} - json: None
+2025-10-01 15:09:02,871 INFO: 127.0.0.1 - - [01/Oct/2025 15:09:02] "GET /api/iamc/status HTTP/1.1" 200 -
+2025-10-01 15:09:02,871 INFO: 127.0.0.1 - - [01/Oct/2025 15:09:02] "GET /api/iamc/departamentos HTTP/1.1" 200 -
+2025-10-01 15:09:02,929 INFO: Petición: GET /api/iamc/funcionarios desde 127.0.0.1 - args: {'page': '1', 'per_page': '10'} - json: None
+2025-10-01 15:09:02,938 INFO: 127.0.0.1 - - [01/Oct/2025 15:09:02] "GET /api/iamc/funcionarios?page=1&per_page=10 HTTP/1.1" 200 -
+2025-10-01 15:09:03,181 INFO: Petición: GET /api/iamc/status desde 127.0.0.1 - args: {} - json: None
+2025-10-01 15:09:03,184 INFO: 127.0.0.1 - - [01/Oct/2025 15:09:03] "GET /api/iamc/status HTTP/1.1" 200 -
+2025-10-01 15:09:03,188 INFO: Petición: GET /api/iamc/funcionarios desde 127.0.0.1 - args: {'page': '1', 'per_page': '10'} - json: None
+2025-10-01 15:09:03,194 INFO: 127.0.0.1 - - [01/Oct/2025 15:09:03] "GET /api/iamc/funcionarios?page=1&per_page=10 HTTP/1.1" 200 -

@@ -18,7 +18,6 @@ import {
   DialogContent,
   DialogActions,
   CircularProgress,
-  Grid,
   Paper,
   IconButton,
 } from '@mui/material';
@@ -32,26 +31,15 @@ import {
   Badge as BadgeIcon,
 } from '@mui/icons-material';
 import type { Funcionario } from '../../types/rrhh';
+import { 
+  gerarPasse, 
+  previewPasse, 
+  getPassesConfig,
+  type PassConfig,
+  type PassRequest 
+} from '../../services/api/passes';
 
-interface PassConfig {
-  temas_disponiveis: Array<{
-    id: string;
-    nome: string;
-    cor_primaria: string;
-  }>;
-  formatos_saida: Array<{
-    id: string;
-    nome: string;
-    descricao: string;
-  }>;
-  dimensoes: {
-    formato: string;
-    largura_mm: number;
-    altura_mm: number;
-    dpi_recomendado: number;
-  };
-  validade_padrao_dias: number;
-}
+
 
 interface EmployeePassProps {
   funcionario: Funcionario;
@@ -87,14 +75,10 @@ const EmployeePass: React.FC<EmployeePassProps> = ({
 
   const loadConfig = async () => {
     try {
-      const response = await fetch('/api/iamc/passes/configuracao');
-      if (response.ok) {
-        const data = await response.json();
-        setConfig(data.data);
-      } else {
-        throw new Error('Erro ao carregar configuração');
-      }
+      const configData = await getPassesConfig();
+      setConfig(configData);
     } catch (error) {
+      console.error('Erro ao carregar configuração de passes:', error);
       showNotification('Erro ao carregar configuração de passes', 'error');
     }
   };
@@ -106,46 +90,34 @@ const EmployeePass: React.FC<EmployeePassProps> = ({
   const handleGerarPasse = async () => {
     setLoading(true);
     try {
-      const requestData = {
-        funcionario_id: funcionario.funcionarioID,
+      const requestData: PassRequest = {
+        funcionario_id: funcionario.FuncionarioID || funcionario.funcionarioID || funcionario.id,
         incluir_qr: incluirQr,
-        tema: tema,
+        tema: tema as any,
         formato_saida: formatoSaida
       };
 
-      const response = await fetch('/api/iamc/passes/gerar', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(requestData),
-      });
+      const blob = await gerarPasse(requestData);
 
-      if (response.ok) {
-        if (formatoSaida === 'pdf') {
-          // Download PDF
-          const blob = await response.blob();
-          const url = window.URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = `passe_${funcionario.nome?.replace(/\s+/g, '_')}_${funcionario.funcionarioID}.pdf`;
-          document.body.appendChild(a);
-          a.click();
-          window.URL.revokeObjectURL(url);
-          document.body.removeChild(a);
-          
-          showNotification('Passe gerado e transferido com sucesso!', 'success');
-        } else {
-          // Mostrar preview HTML
-          const html = await response.text();
-          const blob = new Blob([html], { type: 'text/html' });
-          const url = window.URL.createObjectURL(blob);
-          setPreviewUrl(url);
-          setPreviewOpen(true);
-        }
+      if (formatoSaida === 'pdf') {
+        // Download PDF
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `passe_${(funcionario.Nome || funcionario.nome || 'funcionario').replace(/\s+/g, '_')}_${funcionario.FuncionarioID || funcionario.funcionarioID || funcionario.id}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+        
+        showNotification('Passe gerado e transferido com sucesso!', 'success');
       } else {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Erro ao gerar passe');
+        // Mostrar preview HTML (convertir blob a HTML)
+        const html = await blob.text();
+        const htmlBlob = new Blob([html], { type: 'text/html' });
+        const url = window.URL.createObjectURL(htmlBlob);
+        setPreviewUrl(url);
+        setPreviewOpen(true);
       }
     } catch (error) {
       console.error('Erro:', error);
@@ -161,18 +133,17 @@ const EmployeePass: React.FC<EmployeePassProps> = ({
   const handlePreview = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`/api/iamc/passes/preview/${funcionario.funcionarioID}`);
+      const funcionarioId = funcionario.FuncionarioID || funcionario.funcionarioID || funcionario.id;
+      const blob = await previewPasse(funcionarioId);
       
-      if (response.ok) {
-        const html = await response.text();
-        const blob = new Blob([html], { type: 'text/html' });
-        const url = window.URL.createObjectURL(blob);
-        setPreviewUrl(url);
-        setPreviewOpen(true);
-      } else {
-        throw new Error('Erro ao gerar pré-visualização');
-      }
+      // Convertir blob a HTML para preview
+      const html = await blob.text();
+      const htmlBlob = new Blob([html], { type: 'text/html' });
+      const url = window.URL.createObjectURL(htmlBlob);
+      setPreviewUrl(url);
+      setPreviewOpen(true);
     } catch (error) {
+      console.error('Erro ao gerar pré-visualização:', error);
       showNotification('Erro ao gerar pré-visualização', 'error');
     } finally {
       setLoading(false);
@@ -202,7 +173,7 @@ const EmployeePass: React.FC<EmployeePassProps> = ({
             Gerar Passe de Funcionário
           </Typography>
           <Typography variant="body2" color="textSecondary">
-            {funcionario.nome} {funcionario.apelido} - ID: {funcionario.funcionarioID}
+            {funcionario.Nome || funcionario.nome} {funcionario.Apelido || funcionario.apelido} - ID: {funcionario.FuncionarioID || funcionario.funcionarioID || funcionario.id}
           </Typography>
         </Box>
         {onClose && (
@@ -217,32 +188,32 @@ const EmployeePass: React.FC<EmployeePassProps> = ({
         <Typography variant="h6" gutterBottom>
           Dados do Funcionário
         </Typography>
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={6}>
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2 }}>
+          <Box>
             <Typography variant="body2" color="textSecondary">Nome Completo</Typography>
             <Typography variant="body1" fontWeight="medium">
-              {funcionario.nome} {funcionario.apelido}
+              {funcionario.Nome || funcionario.nome} {funcionario.Apelido || funcionario.apelido}
             </Typography>
-          </Grid>
-          <Grid item xs={12} sm={6}>
+          </Box>
+          <Box>
             <Typography variant="body2" color="textSecondary">ID</Typography>
             <Typography variant="body1" fontWeight="medium">
-              {funcionario.funcionarioID}
+              {funcionario.FuncionarioID || funcionario.funcionarioID || funcionario.id}
             </Typography>
-          </Grid>
-          <Grid item xs={12} sm={6}>
+          </Box>
+          <Box>
             <Typography variant="body2" color="textSecondary">Cargo</Typography>
             <Typography variant="body1" fontWeight="medium">
-              {funcionario.cargoID ? `ID: ${funcionario.cargoID}` : 'N/A'}
+              {funcionario.cargo?.nome || funcionario.CargoNome || (funcionario.cargoID ? `ID: ${funcionario.cargoID}` : 'N/A')}
             </Typography>
-          </Grid>
-          <Grid item xs={12} sm={6}>
+          </Box>
+          <Box>
             <Typography variant="body2" color="textSecondary">Departamento</Typography>
             <Typography variant="body1" fontWeight="medium">
-              {funcionario.departamentoID ? `ID: ${funcionario.departamentoID}` : 'N/A'}
+              {funcionario.departamento?.nome || funcionario.DepartamentoNome || (funcionario.departamentoID ? `ID: ${funcionario.departamentoID}` : 'N/A')}
             </Typography>
-          </Grid>
-        </Grid>
+          </Box>
+        </Box>
       </Paper>
 
       {/* Configurações do Passe */}
@@ -253,71 +224,67 @@ const EmployeePass: React.FC<EmployeePassProps> = ({
             <Typography variant="h6">Configurações do Passe</Typography>
           </Box>
 
-          <Grid container spacing={3}>
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 3 }}>
             {/* Tema */}
-            <Grid item xs={12} sm={6}>
-              <FormControl fullWidth>
-                <InputLabel>Tema</InputLabel>
-                <Select
-                  value={tema}
-                  label="Tema"
-                  onChange={(e) => setTema(e.target.value)}
-                >
-                  {config?.temas_disponiveis.map((t) => (
-                    <MenuItem key={t.id} value={t.id}>
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <Box
-                          sx={{
-                            width: 16,
-                            height: 16,
-                            borderRadius: '50%',
-                            bgcolor: t.cor_primaria,
-                          }}
-                        />
-                        {t.nome}
-                      </Box>
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
+            <FormControl fullWidth>
+              <InputLabel>Tema</InputLabel>
+              <Select
+                value={tema}
+                label="Tema"
+                onChange={(e) => setTema(e.target.value)}
+              >
+                {config?.temas_disponiveis.map((t) => (
+                  <MenuItem key={t.id} value={t.id}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <Box
+                        sx={{
+                          width: 16,
+                          height: 16,
+                          borderRadius: '50%',
+                          bgcolor: t.cor_primaria,
+                        }}
+                      />
+                      {t.nome}
+                    </Box>
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
 
             {/* Formato de Saída */}
-            <Grid item xs={12} sm={6}>
-              <FormControl fullWidth>
-                <InputLabel>Formato</InputLabel>
-                <Select
-                  value={formatoSaida}
-                  label="Formato"
-                  onChange={(e) => setFormatoSaida(e.target.value as 'pdf' | 'html')}
-                >
-                  {config?.formatos_saida.map((f) => (
-                    <MenuItem key={f.id} value={f.id}>
-                      {f.nome} - {f.descricao}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
+            <FormControl fullWidth>
+              <InputLabel>Formato</InputLabel>
+              <Select
+                value={formatoSaida}
+                label="Formato"
+                onChange={(e) => setFormatoSaida(e.target.value as 'pdf' | 'html')}
+              >
+                {config?.formatos_saida.map((f) => (
+                  <MenuItem key={f.id} value={f.id}>
+                    {f.nome} - {f.descricao}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
 
-            {/* Incluir QR */}
-            <Grid item xs={12}>
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={incluirQr}
-                    onChange={(e) => setIncluirQr(e.target.checked)}
-                  />
-                }
-                label={
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <QrCodeIcon fontSize="small" />
-                    Incluir Código QR
-                  </Box>
-                }
-              />
-            </Grid>
-          </Grid>
+          {/* Incluir QR */}
+          <Box sx={{ mt: 3 }}>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={incluirQr}
+                  onChange={(e) => setIncluirQr(e.target.checked)}
+                />
+              }
+              label={
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <QrCodeIcon fontSize="small" />
+                  Incluir Código QR
+                </Box>
+              }
+            />
+          </Box>
         </CardContent>
       </Card>
 

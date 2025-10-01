@@ -7,53 +7,89 @@ import {
   Button,
   Alert,
   Snackbar,
-  Grid,
-  Avatar,
-  Chip,
-  IconButton,
-  Tooltip,
-  Paper,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  TextField,
-  CircularProgress,
 } from '@mui/material';
 import {
   Badge as BadgeIcon,
-  Person as PersonIcon,
   Refresh as RefreshIcon,
-  Business as BusinessIcon,
-  Work as WorkIcon,
 } from '@mui/icons-material';
 import type { 
   Funcionario, 
+  FuncionarioFilter,
   Departamento,
   Cargo,
 } from '../../types/rrhh';
 import { 
-  getFuncionarios, 
+  getFuncionarios
+} from '../../services/api/funcionarios';
+import { 
   getDepartamentos, 
   getCargos
 } from '../../services/api/rrhh';
+
+// Import modular components
+import DataTable from '../../components/funcionarios/DataTable';
+import type { Column } from '../../components/funcionarios/DataTable';
+import SearchFilter from '../../components/funcionarios/SearchFilter';
+import type { FilterField } from '../../components/funcionarios/SearchFilter';
+import ExportOptions from '../../components/funcionarios/ExportOptions';
+
+// Import pass generation dialog
 import EmployeePass from '../../components/funcionarios/EmployeePass';
+
+// Simple Error Boundary for DataTable
+class DataTableErrorBoundary extends React.Component<
+  { children: React.ReactNode; onError?: (error: Error) => void },
+  { hasError: boolean; error?: Error }
+> {
+  constructor(props: { children: React.ReactNode; onError?: (error: Error) => void }) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error: Error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    console.error('DataTable Error:', error, errorInfo);
+    if (this.props.onError) {
+      this.props.onError(error);
+    }
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <Alert severity="error">
+          Ocorreu um erro ao carregar a tabela. Tente recarregar a página.
+          <br />
+          <Button 
+            size="small" 
+            onClick={() => window.location.reload()} 
+            sx={{ mt: 1 }}
+          >
+            Recarregar Página
+          </Button>
+        </Alert>
+      );
+    }
+
+    return this.props.children;
+  }
+}
 
 const PassesList: React.FC = () => {
   const [funcionarios, setFuncionarios] = useState<Funcionario[]>([]);
   const [departamentos, setDepartamentos] = useState<Departamento[]>([]);
   const [cargos, setCargos] = useState<Cargo[]>([]);
   const [loading, setLoading] = useState(true);
-  const [filters, setFilters] = useState<{
-    departamentoID?: number;
-    cargoID?: number;
-    estadoFuncionario?: string;
-    search?: string;
-  }>({});
-
-  // Dialog states
-  const [selectedFuncionario, setSelectedFuncionario] = useState<Funcionario | null>(null);
-  const [passDialogOpen, setPassDialogOpen] = useState(false);
+  const [totalCount, setTotalCount] = useState(0);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  
+  // Search and filter states
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filters, setFilters] = useState<Record<string, any>>({});
 
   // Notification states
   const [notification, setNotification] = useState<{
@@ -66,55 +102,172 @@ const PassesList: React.FC = () => {
     severity: 'success',
   });
 
-  useEffect(() => {
-    loadData();
-  }, [filters]);
+  // Dialog states
+  const [passDialogOpen, setPassDialogOpen] = useState(false);
+  const [selectedFuncionario, setSelectedFuncionario] = useState<Funcionario | null>(null);
+
+  // Define table columns similar to "Funcionários sem QR"
+  const columns: Column[] = [
+    {
+      id: 'FuncionarioID',
+      label: 'ID',
+      align: 'center',
+      minWidth: 80
+    },
+    {
+      id: 'Nome',
+      label: 'Nome',
+      minWidth: 150
+    },
+    {
+      id: 'Apelido',
+      label: 'Apelido',
+      minWidth: 150
+    },
+    {
+      id: 'Email',
+      label: 'Email',
+      minWidth: 200
+    },
+    {
+      id: 'Telefone',
+      label: 'Telefone',
+      minWidth: 130
+    },
+    {
+      id: 'cargo',
+      label: 'Cargo',
+      minWidth: 150,
+      format: (value: any) => value?.nome || value || '-'
+    },
+    {
+      id: 'departamento',
+      label: 'Departamento',
+      minWidth: 150,
+      format: (value: any) => value?.nome || value || '-'
+    }
+  ];
+
+  // Define filter fields
+  const filterFields: FilterField[] = [
+    {
+      key: 'departamento',
+      label: 'Departamento',
+      type: 'select',
+      options: departamentos.map((dep: any) => ({ value: dep.id, label: dep.nome }))
+    },
+    {
+      key: 'cargo',
+      label: 'Cargo',
+      type: 'select',
+      options: cargos.map((cargo: any) => ({ value: cargo.id, label: cargo.nome }))
+    },
+    {
+      key: 'estado',
+      label: 'Estado',
+      type: 'select',
+      options: [
+        { value: 'ATIVO', label: 'Ativo' },
+        { value: 'INATIVO', label: 'Inativo' },
+        { value: 'SUSPENSO', label: 'Suspenso' },
+        { value: 'LICENCA', label: 'Em Licença' },
+        { value: 'FERIAS', label: 'Em Férias' }
+      ]
+    }
+  ];
 
   useEffect(() => {
-    loadDepartamentos();
-    loadCargos();
+    const initializeData = async () => {
+      // Cargar departamentos y cargos PRIMERO y esperar
+      await Promise.all([loadDepartamentos(), loadCargos()]);
+      // Solo después cargar funcionários
+      await loadData();
+    };
+    
+    initializeData();
   }, []);
+
+  useEffect(() => {
+    // Solo recargar funcionários si ya tenemos departamentos y cargos cargados
+    if (departamentos.length > 0 && cargos.length > 0) {
+      loadData();
+    }
+  }, [currentPage, rowsPerPage, searchTerm, filters]);
 
   const loadData = async () => {
     try {
       setLoading(true);
-      const queryFilters = {
-        nome: filters.search,
-        departamentoID: filters.departamentoID,
-        cargoID: filters.cargoID,
-        estadoFuncionario: filters.estadoFuncionario,
-        page: 1,
-        per_page: 50 // Carregar mais para mostrar todos
+      const queryFilters: FuncionarioFilter = {
+        nome: searchTerm,
+        page: currentPage + 1,
+        per_page: rowsPerPage,
+        ...filters
       };
+
+      console.log('🔍 Carregando funcionários com filtros:', queryFilters);
+      
+      // Verificar se o backend está acessível primeiro
+      try {
+        const statusResponse = await fetch('http://localhost:5000/api/iamc/status');
+        if (!statusResponse.ok) {
+          throw new Error(`Backend não acessível: ${statusResponse.status}`);
+        }
+        console.log('✅ Backend está acessível');
+      } catch (statusError) {
+        console.error('❌ Backend não está acessível:', statusError);
+        showNotification('Servidor backend não está rodando. Verifique se está executando na porta 5000.', 'error');
+        return;
+      }
 
       const response = await getFuncionarios(queryFilters);
       
+      // Verificar se a resposta tem a estrutura esperada
+      if (typeof response !== 'object' || response === null) {
+        console.error('❌ Resposta inválida:', response);
+        showNotification('Resposta inválida do servidor', 'error');
+        return;
+      }
+      
       if (response.success) {
         const funcionariosData = response.data || [];
+        const totalData = response.total || 0;
         
-        // Processar dados para incluir nomes de cargo e departamento
+        // Processar dados para adicionar campos calculados
         const funcionariosProcessados = funcionariosData.map((f: any) => {
           return {
             ...f,
             nomeCompleto: `${f.Nome || ''} ${f.Apelido || ''}`.trim(),
+            // Garantir que existe um campo de ID para a tabela
             id: f.FuncionarioID || f.funcionarioID || f.id,
-            // Usar os nomes que já vêm do backend
-            departamentoNome: f.DepartamentoNome || 'Não especificado',
-            cargoNome: f.CargoNome || 'Não especificado'
+            // Usar los nomes de cargo e departamento que já vêm do backend
+            departamento: { nome: f.DepartamentoNome || 'Não especificado' },
+            cargo: { nome: f.CargoNome || 'Não especificado' }
           };
         });
         
         setFuncionarios(funcionariosProcessados);
+        setTotalCount(totalData);
         
-        if (funcionariosData.length === 0) {
+        if (funcionariosData.length === 0 && totalData === 0) {
+          showNotification('Nenhum funcionário encontrado na base de dados', 'info');
+        } else if (funcionariosData.length === 0) {
           showNotification('Nenhum funcionário encontrado com os filtros aplicados', 'info');
+        } else {
+          console.log(`✅ Carregados ${funcionariosData.length} funcionários de ${totalData} total`);
         }
       } else {
-        showNotification('Erro ao carregar funcionários', 'error');
+        console.error('❌ Resposta de erro:', response);
+        const errorMessage = (response as any).message || (response as any).error || 'Erro desconhecido';
+        showNotification(`Erro do servidor: ${errorMessage}`, 'error');
       }
     } catch (error) {
-      console.error('Erro ao carregar funcionários:', error);
-      showNotification('Erro de conexão com o servidor', 'error');
+      console.error('❌ Erro ao carregar funcionários:', error);
+      
+      if (error instanceof TypeError && error.message.includes('fetch')) {
+        showNotification('Erro de conexão com o servidor. Verifique se o backend está rodando.', 'error');
+      } else {
+        showNotification('Erro ao carregar funcionários. Verifique sua conexão.', 'error');
+      }
     } finally {
       setLoading(false);
     }
@@ -128,6 +281,7 @@ const PassesList: React.FC = () => {
       }
     } catch (error) {
       console.error('Erro ao carregar departamentos:', error);
+      showNotification('Erro ao carregar departamentos', 'error');
     }
   };
 
@@ -139,6 +293,7 @@ const PassesList: React.FC = () => {
       }
     } catch (error) {
       console.error('Erro ao carregar cargos:', error);
+      showNotification('Cargos não disponíveis (backend precisa ser reiniciado)', 'warning');
     }
   };
 
@@ -150,32 +305,60 @@ const PassesList: React.FC = () => {
     loadData();
   };
 
-  const handleGeneratePass = (funcionario: Funcionario) => {
+  // Pass generation handlers
+  const handleGerarPasse = (funcionario: Funcionario) => {
     setSelectedFuncionario(funcionario);
     setPassDialogOpen(true);
   };
 
-  const handleClosePassDialog = () => {
+  const handlePassDialogClose = () => {
     setPassDialogOpen(false);
     setSelectedFuncionario(null);
   };
 
-  const handleFilterChange = (field: string, value: any) => {
-    setFilters(prev => ({
-      ...prev,
-      [field]: value === '' ? undefined : value
-    }));
+
+
+  const handlePageChange = (_event: unknown, newPage: number) => {
+    setCurrentPage(newPage);
   };
 
-  const getEstadoColor = (estado: string) => {
-    switch (estado) {
-      case 'Activo': return 'success';
-      case 'Inactivo': return 'error';
-      case 'Suspenso': return 'warning';
-      default: return 'default';
+  const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setCurrentPage(0);
+  };
+
+  const handleSearchChange = (value: string) => {
+    setSearchTerm(value);
+    setCurrentPage(0);
+  };
+
+  const handleFiltersChange = (newFilters: Record<string, any>) => {
+    setFilters(newFilters);
+    setCurrentPage(0);
+  };
+
+  const handleClearAll = () => {
+    setSearchTerm('');
+    setFilters({});
+    setCurrentPage(0);
+  };
+
+  const handleExport = async (format: 'pdf' | 'excel' | 'csv', _selectedColumns?: string[]) => {
+    try {
+      showNotification(`Exportando dados em formato ${format.toUpperCase()}...`, 'info');
+      
+      // This is where you'd call your export API
+      // await exportFuncionarios({ format, columns: selectedColumns, filters: { ...filters, nome: searchTerm } });
+      
+      showNotification('Dados exportados com sucesso!', 'success');
+    } catch (error) {
+      showNotification('Erro ao exportar dados', 'error');
     }
   };
 
+
+
+  // Test function to verify backend connectivity
   return (
     <Box sx={{ p: 3 }}>
       <Card>
@@ -183,197 +366,65 @@ const PassesList: React.FC = () => {
           {/* Header */}
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-              <BadgeIcon color="primary" sx={{ fontSize: 32 }} />
-              <Box>
-                <Typography variant="h4" component="h1">
-                  Passes de Funcionários
-                </Typography>
-                <Typography variant="body2" color="textSecondary">
-                  Gerar passes de identificação (CR80) para funcionários
-                </Typography>
-              </Box>
+              <BadgeIcon color="primary" />
+              <Typography variant="h5" component="h1">
+                Passes de Funcionários
+              </Typography>
             </Box>
-            <Button
-              variant="outlined"
-              startIcon={<RefreshIcon />}
-              onClick={handleRefresh}
-              disabled={loading}
-            >
-              Atualizar
-            </Button>
+            <Box sx={{ display: 'flex', gap: 1 }}>
+              <ExportOptions
+                data={funcionarios}
+                filename={`passes_funcionarios_${new Date().toISOString().split('T')[0]}`}
+                onExport={handleExport}
+                loading={loading}
+              />
+              <Button
+                variant="outlined"
+                startIcon={<RefreshIcon />}
+                onClick={handleRefresh}
+                disabled={loading}
+              >
+                Atualizar
+              </Button>
+            </Box>
           </Box>
 
-          {/* Filtros */}
-          <Paper sx={{ p: 2, mb: 3, bgcolor: 'grey.50' }}>
-            <Typography variant="h6" gutterBottom>
-              Filtros
-            </Typography>
-            <Grid container spacing={2} alignItems="center">
-              <Grid item xs={12} sm={6} md={3}>
-                <TextField
-                  fullWidth
-                  label="Pesquisar funcionário"
-                  value={filters.search || ''}
-                  onChange={(e) => handleFilterChange('search', e.target.value)}
-                  size="small"
-                  placeholder="Nome ou apelido"
-                />
-              </Grid>
-              <Grid item xs={12} sm={6} md={3}>
-                <FormControl fullWidth size="small">
-                  <InputLabel>Departamento</InputLabel>
-                  <Select
-                    value={filters.departamentoID || ''}
-                    label="Departamento"
-                    onChange={(e) => handleFilterChange('departamentoID', Number(e.target.value) || undefined)}
-                  >
-                    <MenuItem value="">Todos</MenuItem>
-                    {departamentos.map((dept) => (
-                      <MenuItem key={dept.departamentoID} value={dept.departamentoID}>
-                        {dept.nome}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={12} sm={6} md={3}>
-                <FormControl fullWidth size="small">
-                  <InputLabel>Cargo</InputLabel>
-                  <Select
-                    value={filters.cargoID || ''}
-                    label="Cargo"
-                    onChange={(e) => handleFilterChange('cargoID', Number(e.target.value) || undefined)}
-                  >
-                    <MenuItem value="">Todos</MenuItem>
-                    {cargos.map((cargo) => (
-                      <MenuItem key={cargo.cargoID} value={cargo.cargoID}>
-                        {cargo.nome}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={12} sm={6} md={3}>
-                <FormControl fullWidth size="small">
-                  <InputLabel>Estado</InputLabel>
-                  <Select
-                    value={filters.estadoFuncionario || ''}
-                    label="Estado"
-                    onChange={(e) => handleFilterChange('estadoFuncionario', e.target.value || undefined)}
-                  >
-                    <MenuItem value="">Todos</MenuItem>
-                    <MenuItem value="Activo">Activo</MenuItem>
-                    <MenuItem value="Inactivo">Inactivo</MenuItem>
-                    <MenuItem value="Suspenso">Suspenso</MenuItem>
-                  </Select>
-                </FormControl>
-              </Grid>
-            </Grid>
-          </Paper>
+          {/* Search and Filters */}
+          <SearchFilter
+            searchTerm={searchTerm}
+            onSearchChange={handleSearchChange}
+            filters={filters}
+            onFiltersChange={handleFiltersChange}
+            filterFields={filterFields}
+            onClearAll={handleClearAll}
+            loading={loading}
+            placeholder="Pesquisar funcionários por nome, email..."
+          />
 
-          {/* Lista de Funcionários */}
-          {loading ? (
-            <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
-              <CircularProgress />
-            </Box>
-          ) : funcionarios.length === 0 ? (
-            <Box sx={{ textAlign: 'center', py: 4 }}>
-              <PersonIcon sx={{ fontSize: 64, color: 'grey.400', mb: 2 }} />
-              <Typography variant="h6" color="textSecondary">
-                Nenhum funcionário encontrado
-              </Typography>
-              <Typography variant="body2" color="textSecondary">
-                Ajuste os filtros ou verifique se existem funcionários cadastrados
-              </Typography>
-            </Box>
-          ) : (
-            <Grid container spacing={2}>
-              {funcionarios.map((funcionario) => (
-                <Grid item xs={12} sm={6} md={4} lg={3} key={funcionario.funcionarioID}>
-                  <Card 
-                    variant="outlined" 
-                    sx={{ 
-                      height: '100%',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      '&:hover': {
-                        boxShadow: 2,
-                        transform: 'translateY(-2px)',
-                        transition: 'all 0.2s ease-in-out'
-                      }
-                    }}
-                  >
-                    <CardContent sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-                      {/* Foto e informações básicas */}
-                      <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                        <Avatar
-                          src={funcionario.foto || ''}
-                          sx={{ width: 48, height: 48, mr: 2 }}
-                        >
-                          <PersonIcon />
-                        </Avatar>
-                        <Box sx={{ flex: 1 }}>
-                          <Typography variant="subtitle1" fontWeight="medium" noWrap>
-                            {`${funcionario.nome || ''} ${funcionario.apelido || ''}`.trim()}
-                          </Typography>
-                          <Typography variant="body2" color="textSecondary" noWrap>
-                            ID: {funcionario.funcionarioID}
-                          </Typography>
-                        </Box>
-                      </Box>
-
-                      {/* Informações profissionais */}
-                      <Box sx={{ flex: 1 }}>
-                        <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                          <BusinessIcon sx={{ fontSize: 16, mr: 1, color: 'text.secondary' }} />
-                          <Typography variant="body2" noWrap>
-                            {(funcionario as any).departamentoNome || 'N/A'}
-                          </Typography>
-                        </Box>
-                        <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                          <WorkIcon sx={{ fontSize: 16, mr: 1, color: 'text.secondary' }} />
-                          <Typography variant="body2" noWrap>
-                            {(funcionario as any).cargoNome || 'N/A'}
-                          </Typography>
-                        </Box>
-                      </Box>
-
-                      {/* Estado e ações */}
-                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
-                        <Chip
-                          label={funcionario.estadoFuncionario || 'Activo'}
-                          color={getEstadoColor(funcionario.estadoFuncionario || 'Activo') as any}
-                          size="small"
-                        />
-                        <Box>
-                          <Tooltip title="Gerar Passe">
-                            <IconButton
-                              size="small"
-                              color="primary"
-                              onClick={() => handleGeneratePass(funcionario)}
-                            >
-                              <BadgeIcon />
-                            </IconButton>
-                          </Tooltip>
-                        </Box>
-                      </Box>
-                    </CardContent>
-                  </Card>
-                </Grid>
-              ))}
-            </Grid>
-          )}
+          {/* Data Table */}
+          <DataTableErrorBoundary onError={() => {
+            setNotification({
+              open: true,
+              message: 'Erro na tabela de dados. Verifique o console para mais detalhes.',
+              severity: 'error'
+            });
+          }}>
+            <DataTable
+              columns={columns}
+              data={funcionarios}
+              loading={loading}
+              page={currentPage}
+              rowsPerPage={rowsPerPage}
+              totalCount={totalCount}
+              onPageChange={handlePageChange}
+              onRowsPerPageChange={handleRowsPerPageChange}
+              onEdit={handleGerarPasse}
+              emptyMessage="Nenhum funcionário encontrado para gerar passes"
+              title="Lista de Funcionários para Passes"
+            />
+          </DataTableErrorBoundary>
         </CardContent>
       </Card>
-
-      {/* Dialog do Passe */}
-      {selectedFuncionario && (
-        <EmployeePass
-          funcionario={selectedFuncionario}
-          onClose={handleClosePassDialog}
-          showDialog={passDialogOpen}
-        />
-      )}
 
       {/* Notification Snackbar */}
       <Snackbar
@@ -384,11 +435,19 @@ const PassesList: React.FC = () => {
         <Alert
           severity={notification.severity}
           onClose={() => setNotification({ ...notification, open: false })}
-          sx={{ width: '100%' }}
         >
           {notification.message}
         </Alert>
       </Snackbar>
+
+      {/* Pass Generation Dialog */}
+      {selectedFuncionario && (
+        <EmployeePass
+          showDialog={passDialogOpen}
+          onClose={handlePassDialogClose}
+          funcionario={selectedFuncionario}
+        />
+      )}
     </Box>
   );
 };

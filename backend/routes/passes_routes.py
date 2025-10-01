@@ -26,10 +26,10 @@ passes_bp = Blueprint('passes', __name__)
 class PassRequestSchema(Schema):
     """Schema para validação de requisições de geração de passe"""
     funcionario_id = fields.Integer(required=True)
-    incluir_qr = fields.Boolean(missing=True)
-    data_validade = fields.Date(missing=None)
-    tema = fields.String(missing='default', validate=lambda x: x in ['default', 'dark', 'green', 'orange'])
-    formato_saida = fields.String(missing='pdf', validate=lambda x: x in ['pdf', 'html'])
+    incluir_qr = fields.Boolean(load_default=True)
+    data_validade = fields.Date(load_default=None, allow_none=True)
+    tema = fields.String(load_default='default', validate=lambda x: x in ['default', 'dark', 'green', 'orange'])
+    formato_saida = fields.String(load_default='pdf', validate=lambda x: x in ['pdf', 'html'])
 
 def gerar_qr_funcionario(funcionario_data):
     """Gera código QR com dados do funcionário"""

@@ -14,10 +14,16 @@ const AppWrapper = () => {
 
   useEffect(() => {
     if (!loading && isInitialLoad) {
+      const currentPath = window.location.pathname;
       if (token) {
-        navigate('/dashboard'); // Redirect to dashboard only on initial load
+        // Only redirect to dashboard if user is at root path
+        if (currentPath === '/' || currentPath === '') {
+          navigate('/dashboard');
+        }
+        // If user has token but is at a specific path, let them stay there
       } else {
-        navigate('/'); // Redirect to login if no token
+        // If no token, redirect to login regardless of path
+        navigate('/');
       }
       setIsInitialLoad(false); // Prevent further redirects
     }

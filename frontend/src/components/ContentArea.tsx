@@ -20,6 +20,7 @@ import ComponentShowcase from '../pages/rrhh/ComponentShowcase';
 import RRHHSimple from '../pages/rrhh/RRHHSimple';
 import StatusChecker from '../components/rrhh/StatusChecker';
 import PassesList from '../pages/rrhh/PassesList';
+import PassesConfig from '../pages/rrhh/PassesConfig';
 
 const ContentArea = () => {
   return (
@@ -159,6 +160,14 @@ const ContentArea = () => {
         element={
           <ProtectedRoute>
             <PassesList />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/rrhh/passes/configuracao"
+        element={
+          <ProtectedRoute>
+            <PassesConfig />
           </ProtectedRoute>
         }
       />

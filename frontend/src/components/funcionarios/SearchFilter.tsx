@@ -181,7 +181,7 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
           </Typography>
           <Grid container spacing={3}>
             {filterFields.map((field) => (
-              <Grid item xs={12} sm={6} md={4} key={field.key}>
+              <Grid xs={12} sm={6} md={4} key={field.key}>
                 {field.type === 'select' ? (
                   <FormControl fullWidth>
                     <InputLabel>{field.label}</InputLabel>

@@ -4,8 +4,12 @@ export interface PassRequest {
   funcionario_id: number;
   incluir_qr?: boolean;
   data_validade?: string;
+  // Campos legados (compatibilidade)
   tema?: 'default' | 'dark' | 'green' | 'orange';
   formato_saida?: 'pdf' | 'html';
+  // Novos campos avançados
+  tema_id?: number;
+  formato_id?: number;
 }
 
 export interface PassConfig {

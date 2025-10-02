@@ -38,6 +38,8 @@ import {
   type PassConfig,
   type PassRequest 
 } from '../../services/api/passes';
+import type { ConfiguracaoAvancada } from '../../services/api/passesConfigTypes';
+import { configuracaoAvancadaService } from '../../services/api/passesConfig';
 
 
 
@@ -53,9 +55,10 @@ const EmployeePass: React.FC<EmployeePassProps> = ({
   showDialog = false
 }) => {
   const [config, setConfig] = useState<PassConfig | null>(null);
-  const [tema, setTema] = useState('default');
+  const [configAvancada, setConfigAvancada] = useState<ConfiguracaoAvancada | null>(null);
+  const [temaId, setTemaId] = useState<number>(1);
+  const [formatoId, setFormatoId] = useState<number>(1);
   const [incluirQr, setIncluirQr] = useState(true);
-  const [formatoSaida, setFormatoSaida] = useState<'pdf' | 'html'>('pdf');
   const [loading, setLoading] = useState(false);
   const [notification, setNotification] = useState<{
     open: boolean;
@@ -75,8 +78,20 @@ const EmployeePass: React.FC<EmployeePassProps> = ({
 
   const loadConfig = async () => {
     try {
-      const configData = await getPassesConfig();
+      const [configData, configAvancadaData] = await Promise.all([
+        getPassesConfig(),
+        configuracaoAvancadaService.obter()
+      ]);
       setConfig(configData);
+      setConfigAvancada(configAvancadaData);
+      
+      // Definir defaults baseados na configuração avançada, apenas se ainda não estão definidos
+      if (configAvancadaData?.temas_disponiveis?.length > 0 && temaId === 1) {
+        setTemaId(configAvancadaData.temas_disponiveis[0].id);
+      }
+      if (configAvancadaData?.formatos_saida?.length > 0 && formatoId === 1) {
+        setFormatoId(configAvancadaData.formatos_saida[0].id);
+      }
     } catch (error) {
       console.error('Erro ao carregar configuração de passes:', error);
       showNotification('Erro ao carregar configuração de passes', 'error');
@@ -93,13 +108,17 @@ const EmployeePass: React.FC<EmployeePassProps> = ({
       const requestData: PassRequest = {
         funcionario_id: funcionario.FuncionarioID || funcionario.funcionarioID || funcionario.id,
         incluir_qr: incluirQr,
-        tema: tema as any,
-        formato_saida: formatoSaida
+        tema_id: temaId,
+        formato_id: formatoId
       };
 
       const blob = await gerarPasse(requestData);
+      
+      // Determinar o formato baseado na configuração selecionada
+      const formatoSelecionado = configAvancada?.formatos_saida?.find(f => f.id === formatoId);
+      const extensao = formatoSelecionado?.extensao || 'pdf';
 
-      if (formatoSaida === 'pdf') {
+      if (extensao === 'pdf') {
         // Download PDF
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -158,8 +177,8 @@ const EmployeePass: React.FC<EmployeePassProps> = ({
     }
   };
 
-  const getTemaColor = (temaId: string) => {
-    const tema = config?.temas_disponiveis.find(t => t.id === temaId);
+  const getTemaColor = (temaIdParam: number) => {
+    const tema = configAvancada?.temas_disponiveis?.find((t: any) => t.id === temaIdParam);
     return tema?.cor_primaria || '#1976d2';
   };
 
@@ -227,13 +246,13 @@ const EmployeePass: React.FC<EmployeePassProps> = ({
           <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 3 }}>
             {/* Tema */}
             <FormControl fullWidth>
-              <InputLabel>Tema</InputLabel>
+              <InputLabel>Tema Visual</InputLabel>
               <Select
-                value={tema}
-                label="Tema"
-                onChange={(e) => setTema(e.target.value)}
+                value={configAvancada?.temas_disponiveis?.find(t => t.id === temaId) ? temaId : ''}
+                label="Tema Visual"
+                onChange={(e) => setTemaId(e.target.value as number)}
               >
-                {config?.temas_disponiveis.map((t) => (
+                {configAvancada?.temas_disponiveis?.map((t) => (
                   <MenuItem key={t.id} value={t.id}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                       <Box
@@ -245,25 +264,35 @@ const EmployeePass: React.FC<EmployeePassProps> = ({
                         }}
                       />
                       {t.nome}
+                      <Typography variant="caption" color="text.secondary" sx={{ ml: 1 }}>
+                        ({t.layout_tipo})
+                      </Typography>
                     </Box>
                   </MenuItem>
-                ))}
+                )) || []}
               </Select>
             </FormControl>
 
             {/* Formato de Saída */}
             <FormControl fullWidth>
-              <InputLabel>Formato</InputLabel>
+              <InputLabel>Formato de Saída</InputLabel>
               <Select
-                value={formatoSaida}
-                label="Formato"
-                onChange={(e) => setFormatoSaida(e.target.value as 'pdf' | 'html')}
+                value={configAvancada?.formatos_saida?.find(f => f.id === formatoId) ? formatoId : ''}
+                label="Formato de Saída"
+                onChange={(e) => setFormatoId(e.target.value as number)}
               >
-                {config?.formatos_saida.map((f) => (
+                {configAvancada?.formatos_saida?.map((f) => (
                   <MenuItem key={f.id} value={f.id}>
-                    {f.nome} - {f.descricao}
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                        {f.nome}
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        ({f.extensao?.toUpperCase()} - {f.largura}×{f.altura}mm)
+                      </Typography>
+                    </Box>
                   </MenuItem>
-                ))}
+                )) || []}
               </Select>
             </FormControl>
           </Box>
@@ -319,7 +348,7 @@ const EmployeePass: React.FC<EmployeePassProps> = ({
           startIcon={loading ? <CircularProgress size={16} /> : <PrintIcon />}
           onClick={handleGerarPasse}
           disabled={loading}
-          sx={{ bgcolor: getTemaColor(tema) }}
+          sx={{ bgcolor: getTemaColor(temaId) }}
         >
           {loading ? 'A Gerar...' : 'Gerar Passe'}
         </Button>
@@ -381,7 +410,11 @@ const EmployeePass: React.FC<EmployeePassProps> = ({
             variant="contained"
             startIcon={<DownloadIcon />}
             onClick={() => {
-              setFormatoSaida('pdf');
+              // Encontrar o formato PDF padrão
+              const formatoPdf = configAvancada?.formatos_saida?.find((f: any) => f.extensao === 'pdf');
+              if (formatoPdf) {
+                setFormatoId(formatoPdf.id);
+              }
               handleGerarPasse();
             }}
           >

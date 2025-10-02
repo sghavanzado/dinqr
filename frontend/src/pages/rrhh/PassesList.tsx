@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Box,
   Card,
@@ -11,6 +12,7 @@ import {
 import {
   Badge as BadgeIcon,
   Refresh as RefreshIcon,
+  Settings as SettingsIcon,
 } from '@mui/icons-material';
 import type { 
   Funcionario, 
@@ -79,6 +81,7 @@ class DataTableErrorBoundary extends React.Component<
 }
 
 const PassesList: React.FC = () => {
+  const navigate = useNavigate();
   const [funcionarios, setFuncionarios] = useState<Funcionario[]>([]);
   const [departamentos, setDepartamentos] = useState<Departamento[]>([]);
   const [cargos, setCargos] = useState<Cargo[]>([]);
@@ -372,6 +375,14 @@ const PassesList: React.FC = () => {
               </Typography>
             </Box>
             <Box sx={{ display: 'flex', gap: 1 }}>
+              <Button
+                variant="contained"
+                startIcon={<SettingsIcon />}
+                onClick={() => navigate('/rrhh/passes/configuracao')}
+                sx={{ mr: 1 }}
+              >
+                Configurações
+              </Button>
               <ExportOptions
                 data={funcionarios}
                 filename={`passes_funcionarios_${new Date().toISOString().split('T')[0]}`}

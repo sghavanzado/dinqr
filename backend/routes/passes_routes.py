@@ -25,9 +25,28 @@ from controllers.iamc_funcionarios_controller_new import FuncionarioController
 from utils.api_helpers import success_response, error_response
 from sqlalchemy import text
 from extensions import get_iamc_session
-from utils.db_utils import obtener_conexion_local
+# from utils.db_utils import obtener_conexao_local  # Temporarily commented out
+import pyodbc
+import os
 
 passes_bp = Blueprint('passes', __name__)
+
+# Local database connection function
+def obtener_conexao_local():
+    """Obtener una conexión a la base de datos IAMC (MSSQL)."""
+    try:
+        return pyodbc.connect(
+            f"DRIVER={{ODBC Driver 17 for SQL Server}};"
+            f"SERVER={os.environ.get('DB_SERVER', 'localhost')};"
+            f"DATABASE=IAMC;"
+            f"UID=sa;"
+            f"PWD=Global2020;"
+            f"TrustServerCertificate=yes",
+            timeout=10
+        )
+    except Exception as e:
+        logging.error(f"Error al conectar con la base de datos IAMC: {str(e)}")
+        raise ConnectionError(f"Error al conectar con la base de datos IAMC: {str(e)}")
 
 class PassRequestSchema(Schema):
     """Schema para validação de requisições de geração de passe"""
@@ -75,6 +94,8 @@ class TemaConfigSchema(Schema):
     fundo_opacidade = fields.Float(load_default=1.0, validate=lambda x: 0.0 <= x <= 1.0)
     # Estado
     ativo = fields.Boolean(load_default=True)
+    # Design visual (CardDesigner JSON)
+    design = fields.Dict(load_default=None, allow_none=True)
 
 class FormatoConfigSchema(Schema):
     """Schema para configuração de formatos com medidas padrão"""
@@ -492,19 +513,139 @@ def preview_passe(funcionario_id):
     Gera pré-visualização do passe em HTML
     """
     try:
-        # Preparar dados para preview
+        # Validar entrada
+        schema = PassRequestSchema()
+        
+        # Preparar dados para preview com valores padrão
         preview_data = {
             'funcionario_id': funcionario_id,
             'incluir_qr': True,
-            'formato_saida': 'html'
+            'tema_id': 1,  # Tema padrão
+            'formato_id': 1  # Formato padrão
         }
         
-        # Reutilizar lógica de geração
-        request.json = preview_data
-        return gerar_passe()
+        # Validar dados
+        try:
+            data = schema.load(preview_data)
+        except ValidationError as err:
+            return error_response("Dados inválidos para preview", details=err.messages), 400
+
+        # Obter dados do funcionário
+        funcionario_response = FuncionarioController.obter_por_id(funcionario_id)
+        
+        if funcionario_response[1] != 200:
+            return error_response("Funcionário não encontrado"), 404
+            
+        funcionario_data = funcionario_response[0].json.get('data', {})
+        
+        # Preparar dados para o template
+        template_data = {
+            'funcionario_id': funcionario_data.get('funcionarioID'),
+            'funcionario_nome': f"{funcionario_data.get('nome', '')} {funcionario_data.get('apelido', '')}".strip(),
+            'cargo': funcionario_data.get('cargo', 'N/A'),
+            'departamento': funcionario_data.get('departamento', 'N/A'),
+            'empresa_nome': 'DINQR SYSTEM',
+            'data_emissao': datetime.now().strftime('%d/%m/%Y'),
+            'data_validade': (datetime.now() + timedelta(days=365)).strftime('%d/%m/%Y'),
+            'foto_url': obter_foto_funcionario(funcionario_id),
+            'logo_url': '/static/images/sonangol-logo.png',
+            'tema': f"theme-{data['tema_id']}" if data['tema_id'] != 1 else ''
+        }
+        
+        # Gerar QR code se solicitado
+        if data['incluir_qr']:
+            qr_url = gerar_qr_funcionario(funcionario_data)
+            if qr_url:
+                template_data['qr_url'] = qr_url
+            else:
+                template_data['qr_url'] = '/static/images/qr-placeholder.png'
+        else:
+            template_data['qr_url'] = '/static/images/qr-placeholder.png'
+        
+        # Renderizar template HTML para preview
+        html_content = render_template('employee_pass_template.html', **template_data)
+        
+        # Retornar HTML diretamente
+        response = make_response(html_content)
+        response.headers['Content-Type'] = 'text/html; charset=utf-8'
+        return response
         
     except Exception as e:
+        import traceback
+        full_error = traceback.format_exc()
         logging.error(f"Erro ao gerar preview: {str(e)}")
+        logging.error(f"Stack trace completo: {full_error}")
+        return error_response(f"Erro interno do servidor: {str(e)}"), 500
+
+@passes_bp.route('/preview-new/<int:funcionario_id>', methods=['GET'])
+def preview_passe_new(funcionario_id):
+    """
+    GET /api/iamc/passes/preview-new/{funcionario_id}
+    Nova versão do endpoint de pré-visualização do passe em HTML
+    """
+    try:
+        # Validar entrada
+        schema = PassRequestSchema()
+        
+        # Preparar dados para preview com valores padrão
+        preview_data = {
+            'funcionario_id': funcionario_id,
+            'incluir_qr': True,
+            'tema_id': 1,  # Tema padrão
+            'formato_id': 1  # Formato padrão
+        }
+        
+        # Validar dados
+        try:
+            data = schema.load(preview_data)
+        except ValidationError as err:
+            return error_response("Dados inválidos para preview", details=err.messages), 400
+
+        # Obter dados do funcionário
+        funcionario_response = FuncionarioController.obter_por_id(funcionario_id)
+        
+        if funcionario_response[1] != 200:
+            return error_response("Funcionário não encontrado"), 404
+            
+        funcionario_data = funcionario_response[0].json.get('data', {})
+        
+        # Preparar dados para o template
+        template_data = {
+            'funcionario_id': funcionario_data.get('funcionarioID'),
+            'funcionario_nome': f"{funcionario_data.get('nome', '')} {funcionario_data.get('apelido', '')}".strip(),
+            'cargo': funcionario_data.get('cargo', 'N/A'),
+            'departamento': funcionario_data.get('departamento', 'N/A'),
+            'empresa_nome': 'DINQR SYSTEM',
+            'data_emissao': datetime.now().strftime('%d/%m/%Y'),
+            'data_validade': (datetime.now() + timedelta(days=365)).strftime('%d/%m/%Y'),
+            'foto_url': obter_foto_funcionario(funcionario_id),
+            'logo_url': '/static/images/sonangol-logo.png',
+            'tema': f"theme-{data['tema_id']}" if data['tema_id'] != 1 else ''
+        }
+        
+        # Gerar QR code se solicitado
+        if data['incluir_qr']:
+            qr_url = gerar_qr_funcionario(funcionario_data)
+            if qr_url:
+                template_data['qr_url'] = qr_url
+            else:
+                template_data['qr_url'] = '/static/images/qr-placeholder.png'
+        else:
+            template_data['qr_url'] = '/static/images/qr-placeholder.png'
+        
+        # Renderizar template HTML para preview
+        html_content = render_template('employee_pass_template.html', **template_data)
+        
+        # Retornar HTML diretamente
+        response = make_response(html_content)
+        response.headers['Content-Type'] = 'text/html; charset=utf-8'
+        return response
+        
+    except Exception as e:
+        import traceback
+        full_error = traceback.format_exc()
+        logging.error(f"Erro ao gerar preview novo: {str(e)}")
+        logging.error(f"Stack trace completo: {full_error}")
         return error_response(f"Erro interno do servidor: {str(e)}"), 500
 
 @passes_bp.route('/configuracao', methods=['GET'])
@@ -516,7 +657,7 @@ def obter_configuracao():
     try:
         criar_tabelas_configuracao()
         
-        conn = obtener_conexion_local()
+        conn = obtener_conexao_local()
         cursor = conn.cursor()
         
         # Obter temas ativos
@@ -563,6 +704,12 @@ def obter_configuracao():
         configuracao = {
             'temas_disponiveis': temas_disponiveis,
             'formatos_saida': formatos_saida,
+            'dimensoes': {
+                'formato': 'CR80',
+                'largura_mm': 85.6,
+                'altura_mm': 54.0,
+                'dpi_recomendado': 300
+            },
             'medidas_padrao': MEDIDAS_PADRAO,
             'opcoes_layout': [
                 {'id': 'horizontal', 'nome': 'Horizontal', 'descricao': 'Layout tradicional'},
@@ -592,11 +739,77 @@ def obter_configuracao():
         logging.error(f"Erro ao obter configuração: {str(e)}")
         return error_response(f"Erro interno do servidor: {str(e)}"), 500
 
+@passes_bp.route('/configuracao-safe', methods=['GET'])
+def obter_configuracao_safe():
+    """
+    GET /api/iamc/passes/configuracao-safe
+    Safe version of configuration endpoint with better error handling
+    """
+    try:
+        # Return a minimal configuration to get the frontend working
+        configuracao = {
+            'temas_disponiveis': [
+                {
+                    'id': 1,
+                    'nome': 'Tema Padrão',
+                    'cor_primaria': '#1976d2',
+                    'cor_secundaria': '#ffffff',
+                    'cor_texto': '#000000',
+                    'layout_tipo': 'horizontal'
+                }
+            ],
+            'formatos_saida': [
+                {
+                    'id': 1,
+                    'nome': 'PDF Padrão',
+                    'extensao': 'pdf',
+                    'descricao': 'Formato padrão PDF',
+                    'largura': 85.6,
+                    'altura': 53.98,
+                    'dpi': 300
+                }
+            ],
+            'dimensoes': {
+                'formato': 'CR80',
+                'largura_mm': 85.6,
+                'altura_mm': 54.0,
+                'dpi_recomendado': 300
+            },
+            'medidas_padrao': {
+                'CR80': {'largura': 85.6, 'altura': 53.98, 'descricao': 'Cartão de crédito padrão'},
+                'A4': {'largura': 210.0, 'altura': 297.0, 'descricao': 'Papel A4'}
+            },
+            'opcoes_layout': [
+                {'id': 'horizontal', 'nome': 'Horizontal', 'descricao': 'Layout tradicional'},
+                {'id': 'vertical', 'nome': 'Vertical', 'descricao': 'Layout em crachá'}
+            ],
+            'opcoes_fonte': [
+                {'id': 'Helvetica', 'nome': 'Helvetica'},
+                {'id': 'Helvetica-Bold', 'nome': 'Helvetica Bold'}
+            ],
+            'opcoes_fundo': [
+                {'id': 'solido', 'nome': 'Cor Sólida'},
+                {'id': 'gradiente', 'nome': 'Gradiente'}
+            ],
+            'validade_padrao_dias': 365,
+            'versao_api': '2.0'
+        }
+        
+        logging.info("Configuração safe retornada com sucesso")
+        return success_response(configuracao)
+        
+    except Exception as e:
+        import traceback
+        full_error = traceback.format_exc()
+        logging.error(f"Erro na configuração safe: {str(e)}")
+        logging.error(f"Stack trace: {full_error}")
+        return error_response(f"Erro interno: {str(e)}"), 500
+
 # Funções auxiliares para configurações avançadas
 def criar_tabelas_configuracao():
     """Cria tabelas de configuração avançada se não existirem"""
     try:
-        conn = obtener_conexion_local()
+        conn = obtener_conexao_local()
         cursor = conn.cursor()
         
         # Tabela para temas avançados
@@ -641,7 +854,9 @@ def criar_tabelas_configuracao():
                 -- Estado
                 ativo BIT DEFAULT 1,
                 data_criacao DATETIME DEFAULT GETDATE(),
-                data_atualizacao DATETIME DEFAULT GETDATE()
+                data_atualizacao DATETIME DEFAULT GETDATE(),
+                -- Design visual (CardDesigner JSON)
+                design NVARCHAR(MAX) DEFAULT NULL
             )
         """)
         
@@ -667,23 +882,24 @@ def criar_tabelas_configuracao():
             )
         """)
         
-        # Inserir temas padrão se a tabela está vazia
-        cursor.execute("SELECT COUNT(*) FROM pass_temas_avancado")
-        if cursor.fetchone()[0] == 0:
-            temas_padrao = [
-                ('Corporativo Azul', '#1976d2', '#e3f2fd', '#000000', '#bbbbbb', 'horizontal', 'Helvetica-Bold', 12, 15.0, 'solido', '#ffffff', 1.0),
-                ('Executivo Escuro', '#37474f', '#263238', '#ffffff', '#666666', 'horizontal', 'Helvetica-Bold', 12, 15.0, 'gradiente', '#37474f', 0.9),
-                ('Moderno Verde', '#2e7d32', '#c8e6c9', '#000000', '#4caf50', 'compact', 'Helvetica', 11, 12.0, 'solido', '#f1f8e9', 1.0),
-                ('Elegante Cinza', '#616161', '#f5f5f5', '#000000', '#9e9e9e', 'vertical', 'Times-Bold', 12, 18.0, 'gradiente', '#fafafa', 0.95)
-            ]
-            
-            for tema in temas_padrao:
-                cursor.execute("""
-                    INSERT INTO pass_temas_avancado 
-                    (nome, cor_primaria, cor_secundaria, cor_texto, cor_borda, layout_tipo, 
-                     fonte_titulo, tamanho_fonte_titulo, tamanho_logo, fundo_tipo, fundo_cor, fundo_opacidade)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                """, tema)
+        # Migração: Adicionar campo design se não existir
+        try:
+            cursor.execute("""
+                IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS 
+                              WHERE TABLE_NAME = 'pass_temas_avancado' AND COLUMN_NAME = 'design')
+                BEGIN
+                    ALTER TABLE pass_temas_avancado ADD design NVARCHAR(MAX) DEFAULT NULL
+                END
+            """)
+            conn.commit()
+        except Exception as e:
+            logging.warning(f"Erro ao adicionar campo design: {e}")
+        
+        # Comentado: Inserir temas padrão automaticamente causa problemas
+        # quando o usuário borra todos os temas, eles se recrean automáticamente
+        # cursor.execute("SELECT COUNT(*) FROM pass_temas_avancado")
+        # if cursor.fetchone()[0] == 0:
+        #     # Solo insertar temas por defecto en primera instalación, no automáticamente
         
         # Inserir formatos padrão se a tabela está vazia
         cursor.execute("SELECT COUNT(*) FROM pass_formatos_avancado")
@@ -750,7 +966,7 @@ def aplicar_tema_ao_pdf(canvas_obj, tema_config, template_data):
 def obter_tema_por_id(tema_id):
     """Obtém configuração completa de um tema por ID"""
     try:
-        conn = obtener_conexion_local()
+        conn = obtener_conexao_local()
         cursor = conn.cursor()
         
         cursor.execute("""
@@ -759,7 +975,7 @@ def obter_tema_por_id(tema_id):
                    fonte_titulo, tamanho_fonte_titulo, fonte_nome, tamanho_fonte_nome,
                    fonte_cargo, tamanho_fonte_cargo, fonte_info, tamanho_fonte_info,
                    mostrar_logo, posicao_logo, tamanho_logo, mostrar_qr_borda, qr_tamanho, qr_posicao,
-                   fundo_tipo, fundo_cor, fundo_cor_gradiente, fundo_imagem_url, fundo_opacidade
+                   fundo_tipo, fundo_cor, fundo_cor_gradiente, fundo_imagem_url, fundo_opacidade, design
             FROM pass_temas_avancado 
             WHERE id = ? AND ativo = 1
         """, (tema_id,))
@@ -768,6 +984,15 @@ def obter_tema_por_id(tema_id):
         conn.close()
         
         if row:
+            # Parse design JSON se existir
+            design = None
+            if row[29]:  # design column
+                try:
+                    import json
+                    design = json.loads(row[29])
+                except:
+                    design = None
+            
             return {
                 'nome': row[0], 'cor_primaria': row[1], 'cor_secundaria': row[2], 'cor_texto': row[3], 'cor_borda': row[4],
                 'layout_tipo': row[5], 'margem_superior': row[6], 'margem_inferior': row[7], 'margem_esquerda': row[8], 'margem_direita': row[9],
@@ -775,7 +1000,7 @@ def obter_tema_por_id(tema_id):
                 'fonte_cargo': row[14], 'tamanho_fonte_cargo': row[15], 'fonte_info': row[16], 'tamanho_fonte_info': row[17],
                 'mostrar_logo': bool(row[18]), 'posicao_logo': row[19], 'tamanho_logo': row[20], 'mostrar_qr_borda': bool(row[21]), 
                 'qr_tamanho': row[22], 'qr_posicao': row[23], 'fundo_tipo': row[24], 'fundo_cor': row[25], 
-                'fundo_cor_gradiente': row[26], 'fundo_imagem_url': row[27], 'fundo_opacidade': row[28]
+                'fundo_cor_gradiente': row[26], 'fundo_imagem_url': row[27], 'fundo_opacidade': row[28], 'design': design
             }
         return None
         
@@ -786,7 +1011,7 @@ def obter_tema_por_id(tema_id):
 def obter_formato_por_id(formato_id):
     """Obtém configuração completa de um formato por ID"""
     try:
-        conn = obtener_conexion_local()
+        conn = obtener_conexao_local()
         cursor = conn.cursor()
         
         cursor.execute("""
@@ -820,26 +1045,36 @@ def listar_temas():
     try:
         criar_tabelas_configuracao()
         
-        conn = obtener_conexion_local()
+        conn = obtener_conexao_local()
         cursor = conn.cursor()
         
         cursor.execute("""
             SELECT id, nome, cor_primaria, cor_secundaria, cor_texto, cor_borda,
                    layout_tipo, fonte_titulo, tamanho_fonte_titulo, fundo_tipo, 
-                   fundo_cor, ativo, data_criacao, data_atualizacao
+                   fundo_cor, ativo, data_criacao, data_atualizacao, design
             FROM pass_temas_avancado
             ORDER BY nome
         """)
         
         temas = []
         for row in cursor.fetchall():
+            # Parse design JSON se existir
+            design = None
+            if row[14]:  # design column
+                try:
+                    import json
+                    design = json.loads(row[14])
+                except:
+                    design = None
+            
             temas.append({
                 'id': row[0], 'nome': row[1], 'cor_primaria': row[2], 'cor_secundaria': row[3], 
                 'cor_texto': row[4], 'cor_borda': row[5], 'layout_tipo': row[6], 
                 'fonte_titulo': row[7], 'tamanho_fonte_titulo': row[8], 'fundo_tipo': row[9],
                 'fundo_cor': row[10], 'ativo': bool(row[11]),
                 'data_criacao': row[12].isoformat() if row[12] else None,
-                'data_atualizacao': row[13].isoformat() if row[13] else None
+                'data_atualizacao': row[13].isoformat() if row[13] else None,
+                'design': design
             })
         
         conn.close()
@@ -868,7 +1103,7 @@ def criar_tema():
         
         criar_tabelas_configuracao()
         
-        conn = obtener_conexion_local()
+        conn = obtener_conexao_local()
         cursor = conn.cursor()
         
         # Verificar se nome já existe
@@ -877,6 +1112,12 @@ def criar_tema():
             conn.close()
             return error_response("Já existe um tema com este nome"), 400
         
+        # Preparar design JSON se fornecido
+        design_json = None
+        if 'design' in data and data['design']:
+            import json
+            design_json = json.dumps(data['design'])
+
         # Inserir novo tema
         cursor.execute("""
             INSERT INTO pass_temas_avancado 
@@ -885,9 +1126,9 @@ def criar_tema():
              fonte_titulo, tamanho_fonte_titulo, fonte_nome, tamanho_fonte_nome,
              fonte_cargo, tamanho_fonte_cargo, fonte_info, tamanho_fonte_info,
              mostrar_logo, posicao_logo, tamanho_logo, mostrar_qr_borda, qr_tamanho, qr_posicao,
-             fundo_tipo, fundo_cor, fundo_cor_gradiente, fundo_imagem_url, fundo_opacidade, ativo)
+             fundo_tipo, fundo_cor, fundo_cor_gradiente, fundo_imagem_url, fundo_opacidade, ativo, design)
             OUTPUT INSERTED.id
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (
             data['nome'], data['cor_primaria'], data['cor_secundaria'], data['cor_texto'], data['cor_borda'],
             data['layout_tipo'], data['margem_superior'], data['margem_inferior'], data['margem_esquerda'], data['margem_direita'],
@@ -895,7 +1136,7 @@ def criar_tema():
             data['fonte_cargo'], data['tamanho_fonte_cargo'], data['fonte_info'], data['tamanho_fonte_info'],
             data['mostrar_logo'], data['posicao_logo'], data['tamanho_logo'], data['mostrar_qr_borda'], 
             data['qr_tamanho'], data['qr_posicao'], data['fundo_tipo'], data['fundo_cor'], 
-            data['fundo_cor_gradiente'], data['fundo_imagem_url'], data['fundo_opacidade'], data['ativo']
+            data['fundo_cor_gradiente'], data['fundo_imagem_url'], data['fundo_opacidade'], data['ativo'], design_json
         ))
         
         tema_id = cursor.fetchone()[0]
@@ -918,13 +1159,16 @@ def atualizar_tema(tema_id):
     Atualiza um tema existente
     """
     try:
+        logging.info(f"🔧 Atualizando tema {tema_id} com dados: {request.json}")
+        
         schema = TemaConfigSchema()
         try:
             data = schema.load(request.json or {})
         except ValidationError as err:
+            logging.error(f"❌ Erro de validação para tema {tema_id}: {err.messages}")
             return error_response("Dados inválidos", details=err.messages), 400
         
-        conn = obtener_conexion_local()
+        conn = obtener_conexao_local()
         cursor = conn.cursor()
         
         # Verificar se tema existe
@@ -939,6 +1183,12 @@ def atualizar_tema(tema_id):
             conn.close()
             return error_response("Já existe um tema com este nome"), 400
         
+        # Preparar design JSON se fornecido
+        design_json = None
+        if 'design' in data and data['design']:
+            import json
+            design_json = json.dumps(data['design'])
+
         # Atualizar tema
         cursor.execute("""
             UPDATE pass_temas_avancado 
@@ -948,7 +1198,7 @@ def atualizar_tema(tema_id):
                 fonte_cargo = ?, tamanho_fonte_cargo = ?, fonte_info = ?, tamanho_fonte_info = ?,
                 mostrar_logo = ?, posicao_logo = ?, tamanho_logo = ?, mostrar_qr_borda = ?, qr_tamanho = ?, qr_posicao = ?,
                 fundo_tipo = ?, fundo_cor = ?, fundo_cor_gradiente = ?, fundo_imagem_url = ?, fundo_opacidade = ?,
-                ativo = ?, data_atualizacao = GETDATE()
+                ativo = ?, design = ?, data_atualizacao = GETDATE()
             WHERE id = ?
         """, (
             data['nome'], data['cor_primaria'], data['cor_secundaria'], data['cor_texto'], data['cor_borda'],
@@ -957,7 +1207,7 @@ def atualizar_tema(tema_id):
             data['fonte_cargo'], data['tamanho_fonte_cargo'], data['fonte_info'], data['tamanho_fonte_info'],
             data['mostrar_logo'], data['posicao_logo'], data['tamanho_logo'], data['mostrar_qr_borda'], 
             data['qr_tamanho'], data['qr_posicao'], data['fundo_tipo'], data['fundo_cor'], 
-            data['fundo_cor_gradiente'], data['fundo_imagem_url'], data['fundo_opacidade'], data['ativo'], tema_id
+            data['fundo_cor_gradiente'], data['fundo_imagem_url'], data['fundo_opacidade'], data['ativo'], design_json, tema_id
         ))
         
         conn.commit()
@@ -978,7 +1228,7 @@ def deletar_tema(tema_id):
     Deleta um tema
     """
     try:
-        conn = obtener_conexion_local()
+        conn = obtener_conexao_local()
         cursor = conn.cursor()
         
         # Verificar se tema existe
@@ -1007,7 +1257,7 @@ def obter_tema_endpoint(tema_id):
     Obtém um tema específico com todas as configurações
     """
     try:
-        conn = obtener_conexion_local()
+        conn = obtener_conexao_local()
         cursor = conn.cursor()
         
         cursor.execute("""
@@ -1017,7 +1267,7 @@ def obter_tema_endpoint(tema_id):
                    fonte_cargo, tamanho_fonte_cargo, fonte_info, tamanho_fonte_info,
                    mostrar_logo, posicao_logo, tamanho_logo, mostrar_qr_borda, qr_tamanho, qr_posicao,
                    fundo_tipo, fundo_cor, fundo_cor_gradiente, fundo_imagem_url, fundo_opacidade,
-                   ativo, data_criacao, data_atualizacao
+                   ativo, data_criacao, data_atualizacao, design
             FROM pass_temas_avancado
             WHERE id = ?
         """, (tema_id,))
@@ -1026,6 +1276,15 @@ def obter_tema_endpoint(tema_id):
         if not row:
             conn.close()
             return error_response("Tema não encontrado"), 404
+        
+        # Parse design JSON se existir
+        design = None
+        if row[33]:  # design column
+            try:
+                import json
+                design = json.loads(row[33])
+            except:
+                design = None
         
         tema = {
             'id': row[0], 'nome': row[1], 'cor_primaria': row[2], 'cor_secundaria': row[3], 'cor_texto': row[4], 'cor_borda': row[5],
@@ -1037,7 +1296,8 @@ def obter_tema_endpoint(tema_id):
             'fundo_cor_gradiente': row[27], 'fundo_imagem_url': row[28], 'fundo_opacidade': row[29],
             'ativo': bool(row[30]),
             'data_criacao': row[31].isoformat() if row[31] else None,
-            'data_atualizacao': row[32].isoformat() if row[32] else None
+            'data_atualizacao': row[32].isoformat() if row[32] else None,
+            'design': design
         }
         
         conn.close()
@@ -1059,7 +1319,7 @@ def listar_formatos():
     try:
         criar_tabelas_configuracao()
         
-        conn = obtener_conexion_local()
+        conn = obtener_conexao_local()
         cursor = conn.cursor()
         
         cursor.execute("""
@@ -1106,7 +1366,7 @@ def criar_formato():
         
         criar_tabelas_configuracao()
         
-        conn = obtener_conexion_local()
+        conn = obtener_conexao_local()
         cursor = conn.cursor()
         
         # Verificar se nome já existe
@@ -1152,7 +1412,7 @@ def atualizar_formato(formato_id):
         except ValidationError as err:
             return error_response("Dados inválidos", details=err.messages), 400
         
-        conn = obtener_conexion_local()
+        conn = obtener_conexao_local()
         cursor = conn.cursor()
         
         # Verificar se formato existe
@@ -1196,7 +1456,7 @@ def deletar_formato(formato_id):
     Deletar um formato
     """
     try:
-        conn = obtener_conexion_local()
+        conn = obtener_conexao_local()
         cursor = conn.cursor()
         
         # Verificar se formato existe
@@ -1225,7 +1485,7 @@ def obter_formato_endpoint(formato_id):
     Obtém um formato específico
     """
     try:
-        conn = obtener_conexion_local()
+        conn = obtener_conexao_local()
         cursor = conn.cursor()
         
         cursor.execute("""

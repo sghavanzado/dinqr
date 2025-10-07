@@ -42,6 +42,15 @@ export interface TemaAvancado {
   ativo: boolean;
   data_criacao?: string;
   data_atualizacao?: string;
+  // Design visual (CardDesigner)
+  design?: {
+    id: string;
+    name: string;
+    front: any[];
+    back: any[];
+    createdAt: string;
+    updatedAt: string;
+  };
 }
 
 export interface FormatoAvancado {

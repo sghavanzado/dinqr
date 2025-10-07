@@ -41,6 +41,12 @@ export interface DataTableProps {
   onRowsPerPageChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   emptyMessage?: string;
   title?: string;
+  // Textos customizáveis para botões de ação
+  editButtonText?: string;
+  deleteButtonText?: string;
+  viewButtonText?: string;
+  // Ícone customizável para botão de edição
+  editIcon?: React.ReactNode;
 }
 
 const DataTable: React.FC<DataTableProps> = ({
@@ -59,7 +65,11 @@ const DataTable: React.FC<DataTableProps> = ({
   onPageChange,
   onRowsPerPageChange,
   emptyMessage = 'Nenhum registro encontrado',
-  title
+  title,
+  editButtonText = 'Editar',
+  deleteButtonText = 'Excluir',
+  viewButtonText = 'Ver',
+  editIcon
 }) => {
   const handleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (onSelectionChange && data) {
@@ -222,7 +232,7 @@ const DataTable: React.FC<DataTableProps> = ({
                               size="small"
                               color="primary"
                               onClick={() => onView(row)}
-                              title="Visualizar"
+                              title={viewButtonText}
                             >
                               <ViewIcon />
                             </IconButton>
@@ -232,9 +242,9 @@ const DataTable: React.FC<DataTableProps> = ({
                               size="small"
                               color="primary"
                               onClick={() => onEdit(row)}
-                              title="Editar"
+                              title={editButtonText}
                             >
-                              <EditIcon />
+                              {editIcon || <EditIcon />}
                             </IconButton>
                           )}
                           {onDelete && (
@@ -242,7 +252,7 @@ const DataTable: React.FC<DataTableProps> = ({
                               size="small"
                               color="error"
                               onClick={() => onDelete(row)}
-                              title="Excluir"
+                              title={deleteButtonText}
                             >
                               <DeleteIcon />
                             </IconButton>

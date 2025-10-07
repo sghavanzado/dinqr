@@ -62,16 +62,30 @@ export const gerarPasse = async (request: PassRequest) => {
  */
 export const previewPasse = async (funcionarioId: number) => {
   try {
-    const response = await fetch(`/api/iamc/passes/preview/${funcionarioId}`, {
-      method: 'GET',
-    });
+    // Try the new endpoint first, fallback to old one if it fails
+    let response;
+    try {
+      response = await fetch(`/api/iamc/passes/preview-new/${funcionarioId}`, {
+        method: 'GET',
+      });
+    } catch {
+      // Fallback to original endpoint
+      response = await fetch(`/api/iamc/passes/preview/${funcionarioId}`, {
+        method: 'GET',
+      });
+    }
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    // Return the PDF blob directly
-    return await response.blob();
+    // Check content type - if HTML, return text, if PDF return blob
+    const contentType = response.headers.get('content-type') || '';
+    if (contentType.includes('text/html')) {
+      return await response.text();
+    } else {
+      return await response.blob();
+    }
   } catch (error) {
     console.error('Erro ao gerar preview do passe:', error);
     throw error;
@@ -115,9 +129,27 @@ export const gerarPassesLote = async (funcionarioIds: number[], options?: {
  */
 export const getPassesConfig = async (): Promise<PassConfig> => {
   try {
-    const response = await fetch('/api/iamc/passes/configuracao', {
-      method: 'GET',
-    });
+    // Try the main endpoint first
+    let response;
+    try {
+      response = await fetch('/api/iamc/passes/configuracao', {
+        method: 'GET',
+      });
+    } catch (mainError) {
+      // If main endpoint fails, try the safe fallback
+      console.warn('Main config endpoint failed, trying safe fallback:', mainError);
+      response = await fetch('/api/iamc/passes/configuracao-safe', {
+        method: 'GET',
+      });
+    }
+
+    // If main endpoint returns 500, try safe fallback
+    if (!response.ok && response.status === 500) {
+      console.warn('Main config endpoint returned 500, trying safe fallback');
+      response = await fetch('/api/iamc/passes/configuracao-safe', {
+        method: 'GET',
+      });
+    }
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);

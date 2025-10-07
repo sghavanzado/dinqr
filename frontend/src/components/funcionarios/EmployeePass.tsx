@@ -82,7 +82,21 @@ const EmployeePass: React.FC<EmployeePassProps> = ({
         getPassesConfig(),
         configuracaoAvancadaService.obter()
       ]);
-      setConfig(configData);
+      
+      // Verificar se os dados estão na estrutura esperada
+      const validatedConfig = configData || {
+        temas_disponiveis: [],
+        formatos_saida: [],
+        dimensoes: {
+          formato: 'CR80',
+          largura_mm: 85.6,
+          altura_mm: 54.0,
+          dpi_recomendado: 300
+        },
+        validade_padrao_dias: 365
+      };
+      
+      setConfig(validatedConfig);
       setConfigAvancada(configAvancadaData);
       
       // Definir defaults baseados na configuração avançada, apenas se ainda não estão definidos
@@ -94,7 +108,21 @@ const EmployeePass: React.FC<EmployeePassProps> = ({
       }
     } catch (error) {
       console.error('Erro ao carregar configuração de passes:', error);
-      showNotification('Erro ao carregar configuração de passes', 'error');
+      
+      // Definir configuração de fallback
+      setConfig({
+        temas_disponiveis: [],
+        formatos_saida: [],
+        dimensoes: {
+          formato: 'CR80',
+          largura_mm: 85.6,
+          altura_mm: 54.0,
+          dpi_recomendado: 300
+        },
+        validade_padrao_dias: 365
+      });
+      
+      showNotification('Erro ao carregar configuração de passes. Usando configuração padrão.', 'warning');
     }
   };
 
@@ -153,12 +181,22 @@ const EmployeePass: React.FC<EmployeePassProps> = ({
     setLoading(true);
     try {
       const funcionarioId = funcionario.FuncionarioID || funcionario.funcionarioID || funcionario.id;
-      const blob = await previewPasse(funcionarioId);
+      const result = await previewPasse(funcionarioId);
       
-      // Convertir blob a HTML para preview
-      const html = await blob.text();
-      const htmlBlob = new Blob([html], { type: 'text/html' });
-      const url = window.URL.createObjectURL(htmlBlob);
+      let url: string;
+      
+      // Check if result is a string (HTML) or Blob (PDF)
+      if (typeof result === 'string') {
+        // HTML response - create blob from string
+        const htmlBlob = new Blob([result], { type: 'text/html' });
+        url = window.URL.createObjectURL(htmlBlob);
+      } else {
+        // Blob response (PDF) - convert to HTML for preview
+        const html = await result.text();
+        const htmlBlob = new Blob([html], { type: 'text/html' });
+        url = window.URL.createObjectURL(htmlBlob);
+      }
+      
       setPreviewUrl(url);
       setPreviewOpen(true);
     } catch (error) {
@@ -182,9 +220,19 @@ const EmployeePass: React.FC<EmployeePassProps> = ({
     return tema?.cor_primaria || '#1976d2';
   };
 
-  const PassContent = () => (
-    <Box sx={{ p: 3 }}>
-      {/* Header */}
+  const PassContent = () => {
+    // Show loading state while config is being loaded
+    if (!config && !configAvancada) {
+      return (
+        <Box sx={{ p: 3, display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 200 }}>
+          <Typography>Carregando configurações...</Typography>
+        </Box>
+      );
+    }
+
+    return (
+      <Box sx={{ p: 3 }}>
+        {/* Header */}
       <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
         <BadgeIcon sx={{ mr: 2, fontSize: 32, color: 'primary.main' }} />
         <Box sx={{ flex: 1 }}>
@@ -288,7 +336,7 @@ const EmployeePass: React.FC<EmployeePassProps> = ({
                         {f.nome}
                       </Typography>
                       <Typography variant="caption" color="text.secondary">
-                        ({f.extensao?.toUpperCase()} - {f.largura}×{f.altura}mm)
+                        ({f.extensao?.toUpperCase() || 'PDF'} - {f.largura || 85.6}×{f.altura || 54.0}mm)
                       </Typography>
                     </Box>
                   </MenuItem>
@@ -324,10 +372,10 @@ const EmployeePass: React.FC<EmployeePassProps> = ({
             <strong>Especificações Técnicas:</strong>
           </Typography>
           <Typography variant="body2">
-            Formato: {config.dimensoes.formato} • 
-            Dimensões: {config.dimensoes.largura_mm}mm × {config.dimensoes.altura_mm}mm • 
-            DPI: {config.dimensoes.dpi_recomendado} • 
-            Validade: {config.validade_padrao_dias} dias
+            Formato: {config.dimensoes?.formato || 'CR80'} • 
+            Dimensões: {config.dimensoes?.largura_mm || 85.6}mm × {config.dimensoes?.altura_mm || 54}mm • 
+            DPI: {config.dimensoes?.dpi_recomendado || 300} • 
+            Validade: {config?.validade_padrao_dias || 365} dias
           </Typography>
         </Paper>
       )}
@@ -354,7 +402,8 @@ const EmployeePass: React.FC<EmployeePassProps> = ({
         </Button>
       </Box>
     </Box>
-  );
+    );
+  };
 
   return (
     <>

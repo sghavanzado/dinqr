@@ -97,7 +97,8 @@ const PassesConfig: React.FC = () => {
   const [temaEditando, setTemaEditando] = useState<TemaAvancado | null>(null);
   const [formatoEditando, setFormatoEditando] = useState<FormatoAvancado | null>(null);
   const [designerAberto, setDesignerAberto] = useState(false);
-  const [abaTemaAtiva, setAbaTemaAtiva] = useState(0); // 0 = manual, 1 = designer
+  const [designerInitialDesign, setDesignerInitialDesign] = useState<any>(undefined);
+
 
   // Estados para notificações
   const [snackbar, setSnackbar] = useState({
@@ -213,10 +214,103 @@ const PassesConfig: React.FC = () => {
   // Funções para temas
   const abrirDialogTema = (tema?: TemaAvancado) => {
     if (tema) {
+      // Editando tema existente - definir estado e abrir CardDesigner
+      console.log('🔧 Editando tema existente:', tema);
+      console.log('🎨 Design do tema:', tema.design);
+      
+      // Primeiro, definir o estado
       setTemaEditando(tema);
       setFormTema(tema);
+      
+      // Preparar o design inicial
+      let initialDesign: any = undefined;
+      
+      if (tema.design) {
+        console.log('✅ Tema tiene design guardado - cargando design existente');
+        initialDesign = {
+          id: tema.design.id,
+          name: tema.design.name || tema.nome,
+          front: tema.design.front,
+          back: tema.design.back,
+          createdAt: new Date(tema.design.createdAt),
+          updatedAt: new Date(tema.design.updatedAt)
+        };
+      } else {
+        console.log('⚡ Tema NO tiene design - creando design básico desde propiedades');
+        initialDesign = {
+          // Crear design básico desde las propiedades del tema
+          id: `tema-${tema.id}-design`,
+          name: tema.nome,
+          front: [
+            // Elemento de texto para nombre
+            {
+              id: 'text-nome',
+              type: 'text' as const,
+              name: 'Nome do Funcionário',
+              x: 20,
+              y: 30,
+              width: 200,
+              height: 40,
+              properties: {
+                text: '{{nome}}',
+                fontSize: tema.tamanho_fonte_nome || 10,
+                fontFamily: tema.fonte_nome || 'Helvetica-Bold',
+                fill: tema.cor_texto || '#000000',
+                align: 'left'
+              },
+              asociation: 'nome'
+            },
+            // Elemento de texto para cargo
+            {
+              id: 'text-cargo',
+              type: 'text' as const,
+              name: 'Cargo do Funcionário',
+              x: 20,
+              y: 80,
+              width: 180,
+              height: 30,
+              properties: {
+                text: '{{cargo}}',
+                fontSize: tema.tamanho_fonte_cargo || 8,
+                fontFamily: tema.fonte_cargo || 'Helvetica',
+                fill: tema.cor_texto || '#000000',
+                align: 'left'
+              },
+              asociation: 'cargo'
+            }
+          ],
+          back: [
+            // Fundo
+            {
+              id: 'background',
+              type: 'background' as const,
+              name: 'Fundo',
+              x: 0,
+              y: 0,
+              width: 856,
+              height: 540,
+              properties: {
+                backgroundColor: tema.fundo_cor || '#ffffff'
+              }
+            }
+          ],
+          createdAt: new Date(),
+          updatedAt: new Date()
+        };
+      }
+      
+      setDesignerInitialDesign(initialDesign);
+      
+      // Usar setTimeout para garantir que o estado seja atualizado antes de abrir o designer
+      setTimeout(() => {
+        console.log('🚀 Abrindo CardDesigner para edição com design:', initialDesign);
+        setDesignerAberto(true);
+      }, 100);
     } else {
+      // Criando novo tema - abrir dialog primeiro
+      console.log('🆕 Criando novo tema');
       setTemaEditando(null);
+      setDesignerInitialDesign(undefined);
       setFormTema({
         nome: '',
         cor_primaria: '#1976d2',
@@ -249,14 +343,14 @@ const PassesConfig: React.FC = () => {
         fundo_opacidade: 1.0,
         ativo: true
       });
+      setDialogTemaAberto(true);
     }
-    setDialogTemaAberto(true);
   };
 
   const fecharDialogTema = () => {
     setDialogTemaAberto(false);
+    setDesignerAberto(false);
     setTemaEditando(null);
-    setAbaTemaAtiva(0); // Reset para a aba de configuração manual
   };
 
   const salvarTema = async () => {
@@ -608,283 +702,54 @@ const PassesConfig: React.FC = () => {
           {temaEditando ? 'Editar Tema' : 'Novo Tema'}
         </DialogTitle>
         <DialogContent>
-          <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 2 }}>
-            <Tabs
-              value={abaTemaAtiva}
-              onChange={(_, newValue) => setAbaTemaAtiva(newValue)}
-              aria-label="tema tabs"
-            >
-              <Tab label="Configuração Manual" {...a11yProps(0)} />
-              <Tab label="Designer Visual" {...a11yProps(1)} />
-            </Tabs>
+          {/* Campo para nome do tema */}
+          <Box sx={{ mb: 3, mt: 2 }}>
+            <TextField
+              fullWidth
+              label="Nome do Tema"
+              value={formTema.nome || ''}
+              onChange={(e) => setFormTema({ ...formTema, nome: e.target.value })}
+              required
+              placeholder="Digite o nome do tema"
+            />
           </Box>
 
-          {/* Aba Configuração Manual */}
-          <TabPanel value={abaTemaAtiva} index={0}>
-          <Grid container spacing={3} sx={{ mt: 1 }}>
-            {/* Informações Básicas */}
-            <Grid item xs={12}>
-              <Typography variant="h6" gutterBottom>
-                Informações Básicas
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <TextField
-                fullWidth
-                label="Nome do Tema"
-                value={formTema.nome || ''}
-                onChange={(e) => setFormTema({ ...formTema, nome: e.target.value })}
-                required
-              />
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <FormControl fullWidth>
-                <InputLabel>Layout</InputLabel>
-                <Select
-                  value={formTema.layout_tipo || 'horizontal'}
-                  onChange={(e) => setFormTema({ ...formTema, layout_tipo: e.target.value as any })}
-                >
-                  <MenuItem value="horizontal">Horizontal</MenuItem>
-                  <MenuItem value="vertical">Vertical</MenuItem>
-                  <MenuItem value="compact">Compacto</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-
-            {/* Cores */}
-            <Grid item xs={12}>
-              <Typography variant="h6" gutterBottom>
-                Cores
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={3}>
-              <TextField
-                fullWidth
-                type="color"
-                label="Cor Primária"
-                value={formTema.cor_primaria || '#1976d2'}
-                onChange={(e) => setFormTema({ ...formTema, cor_primaria: e.target.value })}
-              />
-            </Grid>
-            <Grid item xs={12} md={3}>
-              <TextField
-                fullWidth
-                type="color"
-                label="Cor Secundária"
-                value={formTema.cor_secundaria || '#ffffff'}
-                onChange={(e) => setFormTema({ ...formTema, cor_secundaria: e.target.value })}
-              />
-            </Grid>
-            <Grid item xs={12} md={3}>
-              <TextField
-                fullWidth
-                type="color"
-                label="Cor do Texto"
-                value={formTema.cor_texto || '#000000'}
-                onChange={(e) => setFormTema({ ...formTema, cor_texto: e.target.value })}
-              />
-            </Grid>
-            <Grid item xs={12} md={3}>
-              <TextField
-                fullWidth
-                type="color"
-                label="Cor da Borda"
-                value={formTema.cor_borda || '#cccccc'}
-                onChange={(e) => setFormTema({ ...formTema, cor_borda: e.target.value })}
-              />
-            </Grid>
-
-            {/* Margens */}
-            <Grid item xs={12}>
-              <Typography variant="h6" gutterBottom>
-                Margens (mm)
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={3}>
-              <TextField
-                fullWidth
-                type="number"
-                label="Margem Superior"
-                value={formTema.margem_superior || 5.0}
-                onChange={(e) => setFormTema({ ...formTema, margem_superior: parseFloat(e.target.value) })}
-                inputProps={{ step: 0.1, min: 0 }}
-              />
-            </Grid>
-            <Grid item xs={12} md={3}>
-              <TextField
-                fullWidth
-                type="number"
-                label="Margem Inferior"
-                value={formTema.margem_inferior || 5.0}
-                onChange={(e) => setFormTema({ ...formTema, margem_inferior: parseFloat(e.target.value) })}
-                inputProps={{ step: 0.1, min: 0 }}
-              />
-            </Grid>
-            <Grid item xs={12} md={3}>
-              <TextField
-                fullWidth
-                type="number"
-                label="Margem Esquerda"
-                value={formTema.margem_esquerda || 5.0}
-                onChange={(e) => setFormTema({ ...formTema, margem_esquerda: parseFloat(e.target.value) })}
-                inputProps={{ step: 0.1, min: 0 }}
-              />
-            </Grid>
-            <Grid item xs={12} md={3}>
-              <TextField
-                fullWidth
-                type="number"
-                label="Margem Direita"
-                value={formTema.margem_direita || 5.0}
-                onChange={(e) => setFormTema({ ...formTema, margem_direita: parseFloat(e.target.value) })}
-                inputProps={{ step: 0.1, min: 0 }}
-              />
-            </Grid>
-
-            {/* Tipografia */}
-            <Grid item xs={12}>
-              <Typography variant="h6" gutterBottom>
-                Tipografia
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <FormControl fullWidth>
-                <InputLabel>Fonte do Título</InputLabel>
-                <Select
-                  value={formTema.fonte_titulo || 'Helvetica-Bold'}
-                  onChange={(e) => setFormTema({ ...formTema, fonte_titulo: e.target.value })}
-                >
-                  {configuracao?.opcoes_fonte?.map((fonte) => (
-                    <MenuItem key={fonte.id} value={fonte.id}>
-                      {fonte.nome}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <TextField
-                fullWidth
-                type="number"
-                label="Tamanho Fonte Título"
-                value={formTema.tamanho_fonte_titulo || 12}
-                onChange={(e) => setFormTema({ ...formTema, tamanho_fonte_titulo: parseInt(e.target.value) })}
-                inputProps={{ min: 6, max: 24 }}
-              />
-            </Grid>
-
-            {/* Elementos Gráficos */}
-            <Grid item xs={12}>
-              <Typography variant="h6" gutterBottom>
-                Elementos Gráficos
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={formTema.mostrar_logo || false}
-                    onChange={(e) => setFormTema({ ...formTema, mostrar_logo: e.target.checked })}
-                  />
+          {/* Designer Visual */}
+          <Box sx={{ 
+            display: 'flex', 
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '50vh',
+            gap: 2,
+            border: '2px dashed #e0e0e0',
+            borderRadius: 2,
+            backgroundColor: '#fafafa'
+          }}>
+            <PaletteIcon sx={{ fontSize: 48, color: 'primary.main' }} />
+            <Typography variant="h6" color="text.secondary">
+              Designer Visual de Passes
+            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 2, textAlign: 'center', maxWidth: 400 }}>
+              Use o designer visual para criar o layout do seu passe de forma interativa. 
+              Adicione elementos, configure cores, posições e associe campos de funcionários.
+            </Typography>
+            <Button
+              variant="contained"
+              size="large"
+              onClick={() => {
+                // Preparar design inicial para novo tema se necessário
+                if (!designerInitialDesign) {
+                  setDesignerInitialDesign(undefined);
                 }
-                label="Mostrar Logo"
-              />
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={formTema.mostrar_qr_borda || false}
-                    onChange={(e) => setFormTema({ ...formTema, mostrar_qr_borda: e.target.checked })}
-                  />
-                }
-                label="Mostrar Borda do QR"
-              />
-            </Grid>
-
-            {/* Fundo */}
-            <Grid item xs={12}>
-              <Typography variant="h6" gutterBottom>
-                Configuração de Fundo
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <FormControl fullWidth>
-                <InputLabel>Tipo de Fundo</InputLabel>
-                <Select
-                  value={formTema.fundo_tipo || 'solido'}
-                  onChange={(e) => setFormTema({ ...formTema, fundo_tipo: e.target.value as any })}
-                >
-                  <MenuItem value="solido">Cor Sólida</MenuItem>
-                  <MenuItem value="gradiente">Gradiente</MenuItem>
-                  <MenuItem value="imagem">Imagem</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <TextField
-                fullWidth
-                type="color"
-                label="Cor de Fundo"
-                value={formTema.fundo_cor || '#ffffff'}
-                onChange={(e) => setFormTema({ ...formTema, fundo_cor: e.target.value })}
-              />
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <TextField
-                fullWidth
-                type="number"
-                label="Opacidade"
-                value={formTema.fundo_opacidade || 1.0}
-                onChange={(e) => setFormTema({ ...formTema, fundo_opacidade: parseFloat(e.target.value) })}
-                inputProps={{ step: 0.1, min: 0, max: 1 }}
-              />
-            </Grid>
-
-            {/* Estado */}
-            <Grid item xs={12}>
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={formTema.ativo !== false}
-                    onChange={(e) => setFormTema({ ...formTema, ativo: e.target.checked })}
-                  />
-                }
-                label="Tema Ativo"
-              />
-            </Grid>
-          </Grid>
-          </TabPanel>
-
-          {/* Aba Designer Visual */}
-          <TabPanel value={abaTemaAtiva} index={1}>
-            <Box sx={{ 
-              display: 'flex', 
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              height: '60vh',
-              gap: 2 
-            }}>
-              <Typography variant="h6" color="text.secondary">
-                Designer Visual de Passes
-              </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 2, textAlign: 'center' }}>
-                Use o designer visual para criar o layout do seu passe de forma interativa
-              </Typography>
-              <Button
-                variant="contained"
-                size="large"
-                onClick={() => {
-                  // Abrir o CardDesigner como um dialog separado
-                  setDesignerAberto(true);
-                }}
-                startIcon={<PaletteIcon />}
-              >
-                Abrir Designer Visual
-              </Button>
-            </Box>
-          </TabPanel>
+                // Abrir o CardDesigner como um dialog separado
+                setDesignerAberto(true);
+              }}
+              startIcon={<PaletteIcon />}
+            >
+              Abrir Designer Visual
+            </Button>
+          </Box>
         </DialogContent>
         <DialogActions>
           <Button onClick={fecharDialogTema} startIcon={<CancelIcon />}>
@@ -899,15 +764,79 @@ const PassesConfig: React.FC = () => {
       {/* Dialog - CardDesigner */}
       <CardDesigner
         open={designerAberto}
-        onClose={() => setDesignerAberto(false)}
-        onSave={(design) => {
-          console.log('Design do passe salvo:', design);
-          // Aqui você pode converter o design para o formato do tema
-          // e atualizar o formTema conforme necessário
+        onClose={() => {
           setDesignerAberto(false);
-          // Opcional: mostrar mensagem de sucesso
+          setTemaEditando(null);
+          setDesignerInitialDesign(undefined);
         }}
-        initialDesign={undefined} // Pode ser preenchido com dados existentes
+        onSave={async (design) => {
+          console.log('Design do passe salvo:', design);
+          
+          try {
+            // Atualizar o tema com o novo design - manter apenas campos válidos
+            const temaAtualizado = {
+              nome: formTema.nome,
+              cor_primaria: formTema.cor_primaria,
+              cor_secundaria: formTema.cor_secundaria,
+              cor_texto: formTema.cor_texto,
+              cor_borda: formTema.cor_borda,
+              layout_tipo: formTema.layout_tipo,
+              margem_superior: formTema.margem_superior,
+              margem_inferior: formTema.margem_inferior,
+              margem_esquerda: formTema.margem_esquerda,
+              margem_direita: formTema.margem_direita,
+              fonte_titulo: formTema.fonte_titulo,
+              tamanho_fonte_titulo: formTema.tamanho_fonte_titulo,
+              fonte_nome: formTema.fonte_nome,
+              tamanho_fonte_nome: formTema.tamanho_fonte_nome,
+              fonte_cargo: formTema.fonte_cargo,
+              tamanho_fonte_cargo: formTema.tamanho_fonte_cargo,
+              fonte_info: formTema.fonte_info,
+              tamanho_fonte_info: formTema.tamanho_fonte_info,
+              mostrar_logo: formTema.mostrar_logo,
+              posicao_logo: formTema.posicao_logo,
+              tamanho_logo: formTema.tamanho_logo,
+              mostrar_qr_borda: formTema.mostrar_qr_borda,
+              qr_tamanho: formTema.qr_tamanho,
+              qr_posicao: formTema.qr_posicao,
+              fundo_tipo: formTema.fundo_tipo,
+              fundo_cor: formTema.fundo_cor,
+              fundo_cor_gradiente: formTema.fundo_cor_gradiente,
+              fundo_imagem_url: formTema.fundo_imagem_url,
+              fundo_opacidade: formTema.fundo_opacidade,
+              ativo: formTema.ativo !== false, // Default to true
+              design: {
+                id: design.id,
+                name: design.name,
+                front: design.front,
+                back: design.back,
+                createdAt: design.createdAt.toISOString(),
+                updatedAt: design.updatedAt.toISOString()
+              }
+            };
+
+            console.log('🚀 Enviando tema atualizado para backend:', temaAtualizado);
+
+            if (temaEditando) {
+              // Editando tema existente
+              await temasAvancadosService.atualizar(temaEditando.id!, temaAtualizado as TemaAvancado);
+              mostrarSnackbar('Tema e design atualizados com sucesso!', 'success');
+            } else {
+              // Criando novo tema
+              await temasAvancadosService.criar(temaAtualizado as TemaAvancado);
+              mostrarSnackbar('Tema e design criados com sucesso!', 'success');
+            }
+
+            setDesignerAberto(false);
+            setTemaEditando(null);
+            setDesignerInitialDesign(undefined);
+            carregarDados(); // Recarregar lista de temas
+          } catch (error) {
+            console.error('Erro ao salvar tema com design:', error);
+            mostrarSnackbar('Erro ao salvar tema e design', 'error');
+          }
+        }}
+        initialDesign={designerInitialDesign}
       />
 
       {/* Dialog - Formato */}
@@ -923,12 +852,12 @@ const PassesConfig: React.FC = () => {
         <DialogContent>
           <Grid container spacing={3} sx={{ mt: 1 }}>
             {/* Informações Básicas */}
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <Typography variant="h6" gutterBottom>
                 Informações Básicas
               </Typography>
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <TextField
                 fullWidth
                 label="Nome do Formato"
@@ -937,7 +866,7 @@ const PassesConfig: React.FC = () => {
                 required
               />
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <FormControl fullWidth>
                 <InputLabel>Extensão</InputLabel>
                 <Select
@@ -951,7 +880,7 @@ const PassesConfig: React.FC = () => {
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <TextField
                 fullWidth
                 label="Descrição"
@@ -963,7 +892,7 @@ const PassesConfig: React.FC = () => {
             </Grid>
 
             {/* Medidas Padrão */}
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <Typography variant="h6" gutterBottom>
                 Medidas Padrão Disponíveis
               </Typography>
@@ -982,12 +911,12 @@ const PassesConfig: React.FC = () => {
             </Grid>
 
             {/* Dimensões */}
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <Typography variant="h6" gutterBottom>
                 Dimensões
               </Typography>
             </Grid>
-            <Grid item xs={12} md={4}>
+            <Grid size={{ xs: 12, md: 4 }}>
               <TextField
                 fullWidth
                 type="number"
@@ -997,7 +926,7 @@ const PassesConfig: React.FC = () => {
                 inputProps={{ step: 0.1, min: 1 }}
               />
             </Grid>
-            <Grid item xs={12} md={4}>
+            <Grid size={{ xs: 12, md: 4 }}>
               <TextField
                 fullWidth
                 type="number"
@@ -1007,7 +936,7 @@ const PassesConfig: React.FC = () => {
                 inputProps={{ step: 0.1, min: 1 }}
               />
             </Grid>
-            <Grid item xs={12} md={4}>
+            <Grid size={{ xs: 12, md: 4 }}>
               <FormControl fullWidth>
                 <InputLabel>Orientação</InputLabel>
                 <Select
@@ -1021,12 +950,12 @@ const PassesConfig: React.FC = () => {
             </Grid>
 
             {/* Qualidade */}
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <Typography variant="h6" gutterBottom>
                 Configurações de Qualidade
               </Typography>
             </Grid>
-            <Grid item xs={12} md={4}>
+            <Grid size={{ xs: 12, md: 4 }}>
               <TextField
                 fullWidth
                 type="number"
@@ -1036,7 +965,7 @@ const PassesConfig: React.FC = () => {
                 inputProps={{ min: 72, max: 600 }}
               />
             </Grid>
-            <Grid item xs={12} md={4}>
+            <Grid size={{ xs: 12, md: 4 }}>
               <TextField
                 fullWidth
                 type="number"
@@ -1046,7 +975,7 @@ const PassesConfig: React.FC = () => {
                 inputProps={{ min: 1, max: 100 }}
               />
             </Grid>
-            <Grid item xs={12} md={4}>
+            <Grid size={{ xs: 12, md: 4 }}>
               <FormControlLabel
                 control={
                   <Switch
@@ -1059,7 +988,7 @@ const PassesConfig: React.FC = () => {
             </Grid>
 
             {/* Estado */}
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <FormControlLabel
                 control={
                   <Switch
@@ -1073,7 +1002,7 @@ const PassesConfig: React.FC = () => {
 
             {/* Preview das dimensões */}
             {formFormato.largura && formFormato.altura && (
-              <Grid item xs={12}>
+              <Grid size={{ xs: 12 }}>
                 <Typography variant="body2" color="text.secondary">
                   Preview: {formFormato.largura} × {formFormato.altura} mm
                   ({passesConfigUtils.mmToPixels(formFormato.largura, formFormato.dpi || 300)} × {passesConfigUtils.mmToPixels(formFormato.altura, formFormato.dpi || 300)} px)

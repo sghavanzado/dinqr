@@ -133,11 +133,11 @@ const TextElement: React.FC<{
         y={element.y}
         width={element.width}
         height={element.height}
-        text={element.properties.text || 'Texto'}
-        fontSize={element.properties.fontSize || 16}
-        fontFamily={element.properties.fontFamily || 'Arial'}
-        fill={element.properties.fill || '#000000'}
-        align={element.properties.align || 'left'}
+        text={element.properties?.text || 'Texto'}
+        fontSize={element.properties?.fontSize || 16}
+        fontFamily={element.properties?.fontFamily || 'Arial'}
+        fill={element.properties?.fill || '#000000'}
+        align={element.properties?.align || 'left'}
         draggable
         onClick={onSelect}
         onTap={onSelect}
@@ -488,6 +488,16 @@ const CardDesigner: React.FC<CardDesignerProps> = ({
   // Estados da interface
   const [designName, setDesignName] = useState(design.name);
 
+  // Actualizar design cuando initialDesign cambio
+  useEffect(() => {
+    if (initialDesign && initialDesign.id !== design.id) {
+      console.log('🔄 CardDesigner: Actualizando design con initialDesign:', initialDesign);
+      setDesign(initialDesign);
+      setDesignName(initialDesign.name);
+      setSelectedElementId(null);
+    }
+  }, [initialDesign, design.id]);
+
   // Elementos da face atual
   const currentElements = design[currentSide];
   const selectedElement = currentElements.find(el => el.id === selectedElementId);
@@ -530,8 +540,8 @@ const CardDesigner: React.FC<CardDesignerProps> = ({
       id: generateId(),
       type,
       name: generateElementName(type),
-      x: 50,
-      y: 50,
+      x: type === 'text' ? 100 : 50,
+      y: type === 'text' ? 100 : 50,
       width: type === 'text' ? 200 : 100,
       height: type === 'text' ? 40 : 100,
       properties: {
@@ -541,6 +551,8 @@ const CardDesigner: React.FC<CardDesignerProps> = ({
           fontFamily: 'Arial',
           fill: '#000000',
           align: 'left',
+          fontStyle: 'normal',
+          textDecoration: '',
         }),
         ...(type === 'image' && {
           src: '',
@@ -554,13 +566,21 @@ const CardDesigner: React.FC<CardDesignerProps> = ({
       ...properties,
     };
 
-    setDesign(prev => ({
-      ...prev,
-      [currentSide]: [...prev[currentSide], newElement],
-      updatedAt: new Date(),
-    }));
+    console.log('🎯 CardDesigner: Adicionando elemento:', newElement);
+    console.log('🎯 Design atual antes da adição:', design);
+
+    setDesign(prev => {
+      const newDesign = {
+        ...prev,
+        [currentSide]: [...prev[currentSide], newElement],
+        updatedAt: new Date(),
+      };
+      console.log('🎯 Novo design após adição:', newDesign);
+      return newDesign;
+    });
 
     setSelectedElementId(newElement.id);
+    console.log('🎯 Elemento selecionado:', newElement.id);
   };
 
   const deleteElement = (elementId: string) => {
@@ -645,7 +665,10 @@ const CardDesigner: React.FC<CardDesignerProps> = ({
 
   // Renderização dos elementos no canvas
   const renderElements = () => {
+    console.log('🎨 Renderizando elementos:', currentElements);
     return currentElements.map(element => {
+      console.log(`🎨 Renderizando elemento ${element.type}:`, element);
+      
       if (element.type === 'background') {
         return (
           <BackgroundElement
@@ -659,6 +682,7 @@ const CardDesigner: React.FC<CardDesignerProps> = ({
       }
 
       if (element.type === 'text') {
+        console.log('🎨 Renderizando elemento de texto:', element);
         return (
           <TextElement
             key={element.id}
@@ -923,8 +947,11 @@ const CardDesigner: React.FC<CardDesignerProps> = ({
                         >
                           <MenuItem value="Arial">Arial</MenuItem>
                           <MenuItem value="Helvetica">Helvetica</MenuItem>
+                          <MenuItem value="Helvetica-Bold">Helvetica Bold</MenuItem>
                           <MenuItem value="Times New Roman">Times New Roman</MenuItem>
                           <MenuItem value="Courier New">Courier New</MenuItem>
+                          <MenuItem value="Georgia">Georgia</MenuItem>
+                          <MenuItem value="Verdana">Verdana</MenuItem>
                         </Select>
                       </FormControl>
 

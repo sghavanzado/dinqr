@@ -430,6 +430,8 @@ const PassesList: React.FC = () => {
               onPageChange={handlePageChange}
               onRowsPerPageChange={handleRowsPerPageChange}
               onEdit={handleGerarPasse}
+              editButtonText="Gerar Passe"
+              editIcon={<BadgeIcon />}
               emptyMessage="Nenhum funcionário encontrado para gerar passes"
               title="Lista de Funcionários para Passes"
             />

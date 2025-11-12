@@ -1,3 +1,13 @@
+"""
+SIGA - Sistema Integral de Gestión de Accesos
+Modelos de Usuario y Autenticación
+
+Desarrollado por: Ing. Maikel Cuao
+Email: maikel@hotmail.com
+Fecha: 2025
+Descripción: Modelos de datos para usuarios, roles, permisos y auditoría.
+"""
+
 from extensions import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin

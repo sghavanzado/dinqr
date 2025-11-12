@@ -1,14 +1,12 @@
-# config.py
+"""
+SIGA - Sistema Integral de Gestión de Accesos
+Configuración del Sistema
 
-import os
-from datetime import timedelta
-from dotenv import load_dotenv
-import pyodbc
-import psycopg2
-
-load_dotenv()  # Cargar variables de entorno desde .env
-
-# config.py
+Desarrollado por: Ing. Maikel Cuao
+Email: maikel@hotmail.com
+Fecha: 2025
+Descripción: Archivo de configuración central para el backend Flask.
+"""
 
 import os
 from datetime import timedelta
@@ -45,7 +43,7 @@ class Config:
     }
     
     # Configuración CORS
-    _CORS_ORIGINS_RAW = os.environ.get('CORS_ORIGINS', 'https://localhost,https://localhost:443,https://127.0.0.1,https://localhost:9000,https://127.0.0.1:9000')
+    _CORS_ORIGINS_RAW = os.environ.get('CORS_ORIGINS', 'https://localhost,https://localhost:443,https://127.0.0.1,https://localhost:9000,https://127.0.0.1:9000,https://localhost:5137')
     CORS_ORIGINS = [o.strip() for o in _CORS_ORIGINS_RAW.split(',') if o.strip()]
     CORS_SUPPORTS_CREDENTIALS = True
     CORS_EXPOSE_HEADERS = ['Content-Type', 'X-Total-Count', 'X-Requested-With', 'Authorization'] 

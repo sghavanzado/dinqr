@@ -1,3 +1,13 @@
+"""
+SIGA - Sistema Integral de Gestión de Accesos
+Extensiones de Flask
+
+Desarrollado por: Ing. Maikel Cuao
+Email: maikel@hotmail.com
+Fecha: 2025
+Descripción: Inicialización de extensiones compartidas de Flask.
+"""
+
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate  # Importar Flask-Migrate

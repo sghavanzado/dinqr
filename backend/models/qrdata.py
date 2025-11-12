@@ -1,3 +1,13 @@
+"""
+SIGA - Sistema Integral de Gestión de Accesos
+Modelo de Datos QR
+
+Desarrollado por: Ing. Maikel Cuao
+Email: maikel@hotmail.com
+Fecha: 2025
+Descripción: Modelo para almacenar información de códigos QR generados.
+"""
+
 from extensions import db
 
 class QRCode(db.Model):

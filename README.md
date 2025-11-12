@@ -1,6 +1,10 @@
-# DINQR - Sistema de Generación de Códigos QR
+# SIGA - Sistema Integral de Gestión de Accesos
 
-Una aplicación web completa para la generación y gestión de códigos QR, construida con Flask (backend) y React con TypeScript (frontend).
+**Desarrollado por:** Ing. Maikel Cuao  
+**Email:** maikel@hotmail.com  
+**Año:** 2025
+
+Una aplicación web completa construida con Flask (backend) y React con TypeScript (frontend).
 
 ## 📋 Descripción del Proyecto
 

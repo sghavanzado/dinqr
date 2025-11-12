@@ -1,3 +1,13 @@
+"""
+SIGA - Sistema Integral de Gestión de Accesos
+Servicios de Generación de QR
+
+Desarrollado por: Ing. Maikel Cuao
+Email: maikel@hotmail.com
+Fecha: 2025
+Descripción: Lógica de negocio para la generación de códigos QR.
+"""
+
 def obtener_tabela():
     """Obtener el nombre de la tabla a consultar en la base de datos remota (campo 'tabela' en settings)."""
     with obtener_conexion_local() as conn:
@@ -219,7 +229,7 @@ def generar_qr(ids):
                 qr_url = f"https://{server_domain}:{server_port}/contacto?sap={sap}&hash={firma}"
                 qr.add_data(qr_url)
                 qr.make(fit=True)
-                archivo_qr = os.path.join(output_folder, f"qr_{sap}.png")
+                archivo_qr = os.path.join(output_folder, f"{sap}.png")
                 qr.make_image(fill_color="black", back_color="white").save(archivo_qr)
 
                 # Guardar datos en la tabla qr_codes

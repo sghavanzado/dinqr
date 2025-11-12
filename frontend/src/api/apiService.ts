@@ -1,4 +1,12 @@
-// apiService.ts
+/**
+ * SIGA - Sistema Integral de Gestión de Accesos
+ * Servicios de API
+ * 
+ * Desarrollado por: Ing. Maikel Cuao
+ * Email: maikel@hotmail.com
+ * Fecha: 2025
+ * Descripción: Servicios para consumir los endpoints de la API REST.
+ */
 
 import axiosInstance from './axiosInstance';
 

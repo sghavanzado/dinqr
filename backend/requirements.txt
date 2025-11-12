@@ -1,3 +1,12 @@
+# ============================================================================
+# SIGA - Sistema Integral de Gestión de Accesos
+# Dependencias del Backend
+#
+# Desarrollado por: Ing. Maikel Cuao
+# Email: maikel@hotmail.com
+# Año: 2025
+# ============================================================================
+
 alembic==1.14.0
 aniso8601==9.0.1
 asgiref==3.8.1

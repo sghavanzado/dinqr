@@ -1,4 +1,12 @@
-// axiosInstance.ts
+/**
+ * SIGA - Sistema Integral de Gestión de Accesos
+ * Instancia Configurada de Axios
+ * 
+ * Desarrollado por: Ing. Maikel Cuao
+ * Email: maikel@hotmail.com
+ * Fecha: 2025
+ * Descripción: Configuración centralizada de Axios con interceptores.
+ */
 
 import axios, { AxiosError} from 'axios';
 import type { AxiosInstance, AxiosResponse, InternalAxiosRequestConfig, AxiosRequestConfig} from 'axios';

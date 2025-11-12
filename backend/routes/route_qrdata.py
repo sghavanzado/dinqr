@@ -1,3 +1,13 @@
+"""
+SIGA - Sistema Integral de Gestión de Accesos
+Rutas de Gestión de QR y Contactos
+
+Desarrollado por: Ing. Maikel Cuao
+Email: maikel@hotmail.com
+Fecha: 2025
+Descripción: Endpoints para visualización y descarga de tarjetas vCard.
+"""
+
 from flask import Blueprint, request, render_template_string, abort, send_file, jsonify
 import hmac
 import hashlib

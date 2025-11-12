@@ -1,7 +1,11 @@
 # Manual de Desarrollador
 
+**Desarrollado por:** Ing. Maikel Cuao  
+**Email:** maikel@hotmail.com  
+**Año:** 2025
+
 ## Introducción
-DINQR es una aplicación web completa para la generación y gestión de códigos QR, construida con Flask (backend) y React con TypeScript (frontend). El sistema permite la gestión de usuarios con roles y permisos, la generación de códigos QR personalizados, la configuración del servidor desde una interfaz web, autenticación segura mediante JWT, y una API RESTful documentada con Swagger. La interfaz de usuario es moderna y utiliza Material-UI.
+SIGA es una aplicación web completa construida con Flask (backend) y React con TypeScript (frontend). El sistema permite la gestión de usuarios con roles y permisos, autenticación segura mediante JWT, y una API RESTful documentada con Swagger. La interfaz de usuario es moderna y utiliza Material-UI.
 
 ## Resumen del Funcionamiento por Módulo
 

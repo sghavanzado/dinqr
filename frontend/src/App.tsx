@@ -1,3 +1,13 @@
+/**
+ * SIGA - Sistema Integral de Gestión de Accesos
+ * Componente Principal de la Aplicación
+ * 
+ * Desarrollado por: Ing. Maikel Cuao
+ * Email: maikel@hotmail.com
+ * Fecha: 2025
+ * Descripción: Componente raíz que gestiona el routing y autenticación.
+ */
+
 import { useEffect, useState } from 'react';
 import { useNavigate, Routes, Route } from 'react-router-dom';
 import { Box } from '@mui/material';

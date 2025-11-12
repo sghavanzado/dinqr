@@ -1,64 +1,117 @@
-2025-09-08 15:20:08,378 INFO: Petición: OPTIONS /qr/funcionarios/total desde 127.0.0.1 - args: {} - json: None
-2025-09-08 15:20:08,403 INFO: 127.0.0.1 - - [08/Sep/2025 15:20:08] "OPTIONS /qr/funcionarios/total HTTP/1.1" 200 -
-2025-09-08 15:20:08,555 INFO: Petición: GET /qr/funcionarios/total desde 127.0.0.1 - args: {} - json: None
-2025-09-08 15:20:08,558 INFO: Conexión obtenida del pool. Activas: 2, Inactivas: 198
-2025-09-08 15:20:08,892 INFO: 127.0.0.1 - - [08/Sep/2025 15:20:08] "GET /qr/funcionarios/total HTTP/1.1" 200 -
-2025-09-08 15:20:08,887 INFO: Petición: OPTIONS /qr/funcionarios-com-qr desde 127.0.0.1 - args: {} - json: None
-2025-09-08 15:20:08,921 INFO: 127.0.0.1 - - [08/Sep/2025 15:20:08] "OPTIONS /qr/funcionarios-com-qr HTTP/1.1" 200 -
-2025-09-08 15:20:09,243 INFO: Petición: OPTIONS /qr/funcionarios/total-con-qr desde 127.0.0.1 - args: {} - json: None
-2025-09-08 15:20:09,296 INFO: 127.0.0.1 - - [08/Sep/2025 15:20:09] "OPTIONS /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
-2025-09-08 15:20:09,304 INFO: Petición: GET /qr/funcionarios-com-qr desde 127.0.0.1 - args: {} - json: None
-2025-09-08 15:20:09,429 INFO: Conexión obtenida del pool. Activas: 3, Inactivas: 197
-2025-09-08 15:20:09,536 INFO: IDs de funcionarios con QR obtenidos: ['102', '107', '109', '106', '111', '11', '113', '114', '118', '119', '120', '122', '125', '128', '13', '132', '133', '227', '43', '5000011', '5000012', '5000013', '5000018', '5000030', '500005', '5000054', '5000055', '74', '130', '131', '134', '135', '136', '137', '138', '139', '140', '14002', '14005', '14007', '14008', '14009', '14014', '14015', '14020', '142', '148', '15', '15002', '15004', '15005', '15006', '15007', '15008', '15010', '15011', '15021', '15023', '15024', '15025', '15030', '15034', '15037', '15039', '15042', '15043', '15045', '15046', '15047', '15048', '15049', '15050', '15051', '15052', '15053', '15054', '15062', '15064', '15065', '15068', '15079', '15083', '15084', '15087', '15088', '15089', '15092', '15095', '151', '152', '153', '156', '157', '16001', '16002', '16011', '16012', '16023', '16024', '16026', '161', '165', '166', '168', '17', '170', '17001', '17003', '17004', '17005', '17010', '17011', '17016', '17026', '171', '172', '173', '174', '175', '176', '177', '18001', '18002', '18006', '18007', '18023', '18026', '18027', '182', '184', '185', '188', '189', '190', '19002', '19003', '19004', '19005', '19006', '19008', '191', '194', '195', '196', '197', '20', '200001', '20001', '20003']
-2025-09-08 15:20:09,542 INFO: Conexión liberada al pool. Activas: 2, Inactivas: 198
-2025-09-08 15:20:09,543 INFO: Ejecutando consulta SQL para funcionarios COM QR: 
+2025-11-12 17:23:08,176 INFO: 127.0.0.1 - - [12/Nov/2025 17:23:08] "OPTIONS /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
+2025-11-12 17:23:08,464 INFO: Petición: GET /qr/funcionarios-com-qr desde 127.0.0.1 - args: {} - json: None
+2025-11-12 17:23:08,466 INFO: Petición: GET /qr/funcionarios/total desde 127.0.0.1 - args: {} - json: None
+2025-11-12 17:23:08,483 INFO: Petición: GET /qr/funcionarios/total-con-qr desde 127.0.0.1 - args: {} - json: None
+2025-11-12 17:23:08,494 INFO: Conexión obtenida del pool. Activas: 14, Inactivas: 186
+2025-11-12 17:23:08,494 INFO: Conexión obtenida del pool. Activas: 15, Inactivas: 185
+2025-11-12 17:23:08,507 INFO: Conexión obtenida del pool. Activas: 16, Inactivas: 184
+2025-11-12 17:23:08,531 INFO: Conexión liberada al pool. Activas: 15, Inactivas: 185
+2025-11-12 17:23:08,532 INFO: IDs de funcionarios con QR obtenidos: ['102', '118', '122']
+2025-11-12 17:23:08,533 INFO: 127.0.0.1 - - [12/Nov/2025 17:23:08] "GET /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
+2025-11-12 17:23:08,534 INFO: Conexión liberada al pool. Activas: 14, Inactivas: 186
+2025-11-12 17:23:08,535 INFO: Ejecutando consulta SQL para funcionarios COM QR: 
                     SELECT sap, nome, funcao, area, nif, telefone, email, unineg
                     FROM sonacard
-                    WHERE sap IN (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+                    WHERE sap IN (?,?,?)
                     ORDER BY sap
                 
-2025-09-08 15:20:09,548 INFO: Petición: GET /qr/funcionarios/total-con-qr desde 127.0.0.1 - args: {} - json: None
-2025-09-08 15:20:09,556 INFO: Funcionarios con QR obtenidos: 149 registros
-2025-09-08 15:20:09,556 INFO: Conexión obtenida del pool. Activas: 3, Inactivas: 197
-2025-09-08 15:20:09,559 INFO: Conexión liberada al pool. Activas: 2, Inactivas: 198
-2025-09-08 15:20:09,560 INFO: 127.0.0.1 - - [08/Sep/2025 15:20:09] "GET /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
-2025-09-08 15:20:09,561 INFO: 127.0.0.1 - - [08/Sep/2025 15:20:09] "GET /qr/funcionarios-com-qr HTTP/1.1" 200 -
-2025-09-08 15:20:34,228 INFO: Petición: OPTIONS /qr/funcionarios-sin-qr desde 127.0.0.1 - args: {} - json: None
-2025-09-08 15:20:35,881 INFO: 127.0.0.1 - - [08/Sep/2025 15:20:35] "OPTIONS /qr/funcionarios-sin-qr HTTP/1.1" 200 -
-2025-09-08 15:20:35,588 INFO: Petición: OPTIONS /qr/funcionarios desde 127.0.0.1 - args: {'page': '1', 'per_page': '10', 'filtro': ''} - json: None
-2025-09-08 15:20:39,265 INFO: 127.0.0.1 - - [08/Sep/2025 15:20:39] "OPTIONS /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
-2025-09-08 15:20:37,919 INFO: Petición: GET /qr/funcionarios-sin-qr desde 127.0.0.1 - args: {} - json: None
-2025-09-08 15:20:39,777 INFO: Conexión obtenida del pool. Activas: 3, Inactivas: 197
-2025-09-08 15:20:39,945 INFO: Conexión liberada al pool. Activas: 2, Inactivas: 198
-2025-09-08 15:20:39,963 INFO: Ejecutando consulta SQL: 
+2025-11-12 17:23:08,539 INFO: 127.0.0.1 - - [12/Nov/2025 17:23:08] "GET /qr/funcionarios/total HTTP/1.1" 200 -
+2025-11-12 17:23:08,540 INFO: Funcionarios con QR obtenidos: 3 registros
+2025-11-12 17:23:08,543 INFO: 127.0.0.1 - - [12/Nov/2025 17:23:08] "GET /qr/funcionarios-com-qr HTTP/1.1" 200 -
+2025-11-12 17:23:08,712 INFO: Petición: GET /qr/funcionarios-com-qr desde 127.0.0.1 - args: {} - json: None
+2025-11-12 17:23:08,715 INFO: Conexión obtenida del pool. Activas: 15, Inactivas: 185
+2025-11-12 17:23:08,719 INFO: IDs de funcionarios con QR obtenidos: ['102', '118', '122']
+2025-11-12 17:23:08,719 INFO: Conexión liberada al pool. Activas: 14, Inactivas: 186
+2025-11-12 17:23:08,720 INFO: Ejecutando consulta SQL para funcionarios COM QR: 
                     SELECT sap, nome, funcao, area, nif, telefone, email, unineg
                     FROM sonacard
-                    WHERE sap NOT IN (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
-                
-2025-09-08 15:20:40,225 INFO: Petición: GET /qr/funcionarios desde 127.0.0.1 - args: {'page': '1', 'per_page': '10', 'filtro': ''} - json: None
-2025-09-08 15:20:40,350 INFO: Conexión obtenida del pool. Activas: 3, Inactivas: 197
-2025-09-08 15:20:40,368 INFO: 127.0.0.1 - - [08/Sep/2025 15:20:40] "GET /qr/funcionarios-sin-qr HTTP/1.1" 200 -
-2025-09-08 15:20:40,597 INFO: IDs de funcionarios con QR obtenidos: ['102', '107', '109', '106', '111', '11', '113', '114', '118', '119', '120', '122', '125', '128', '13', '132', '133', '227', '43', '5000011', '5000012', '5000013', '5000018', '5000030', '500005', '5000054', '5000055', '74', '130', '131', '134', '135', '136', '137', '138', '139', '140', '14002', '14005', '14007', '14008', '14009', '14014', '14015', '14020', '142', '148', '15', '15002', '15004', '15005', '15006', '15007', '15008', '15010', '15011', '15021', '15023', '15024', '15025', '15030', '15034', '15037', '15039', '15042', '15043', '15045', '15046', '15047', '15048', '15049', '15050', '15051', '15052', '15053', '15054', '15062', '15064', '15065', '15068', '15079', '15083', '15084', '15087', '15088', '15089', '15092', '15095', '151', '152', '153', '156', '157', '16001', '16002', '16011', '16012', '16023', '16024', '16026', '161', '165', '166', '168', '17', '170', '17001', '17003', '17004', '17005', '17010', '17011', '17016', '17026', '171', '172', '173', '174', '175', '176', '177', '18001', '18002', '18006', '18007', '18023', '18026', '18027', '182', '184', '185', '188', '189', '190', '19002', '19003', '19004', '19005', '19006', '19008', '191', '194', '195', '196', '197', '20', '200001', '20001', '20003']
-2025-09-08 15:20:40,625 INFO: Conexión liberada al pool. Activas: 2, Inactivas: 198
-2025-09-08 15:20:40,628 INFO: Ejecutando consulta SQL: 
-                    SELECT sap, nome, funcao, area, nif, telefone, email, unineg
-                    FROM sonacard
-                    WHERE sap IN (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
-                    AND nome LIKE ?
+                    WHERE sap IN (?,?,?)
                     ORDER BY sap
-                    OFFSET ? ROWS FETCH NEXT ? ROWS ONLY
                 
-2025-09-08 15:20:40,638 INFO: Funcionarios obtenidos: 10 registros
-2025-09-08 15:20:40,649 INFO: 127.0.0.1 - - [08/Sep/2025 15:20:40] "GET /qr/funcionarios?page=1&per_page=10&filtro= HTTP/1.1" 200 -
-2025-09-08 15:21:50,631 INFO: Petición: OPTIONS /qr/funcionarios/total desde 127.0.0.1 - args: {} - json: None
-2025-09-08 15:21:50,767 INFO: 127.0.0.1 - - [08/Sep/2025 15:21:50] "OPTIONS /qr/funcionarios/total HTTP/1.1" 200 -
-2025-09-08 15:21:50,765 INFO: Petición: OPTIONS /qr/funcionarios-com-qr desde 127.0.0.1 - args: {} - json: None
-2025-09-08 15:21:50,777 INFO: 127.0.0.1 - - [08/Sep/2025 15:21:50] "OPTIONS /qr/funcionarios-com-qr HTTP/1.1" 200 -
-2025-09-08 15:21:51,105 INFO: Petición: GET /qr/funcionarios/total desde 127.0.0.1 - args: {} - json: None
-2025-09-08 15:21:51,107 INFO: Petición: GET /qr/funcionarios-com-qr desde 127.0.0.1 - args: {} - json: None
-2025-09-08 15:21:51,113 INFO: Conexión obtenida del pool. Activas: 3, Inactivas: 197
-2025-09-08 15:21:51,163 INFO: 127.0.0.1 - - [08/Sep/2025 15:21:51] "GET /qr/funcionarios/total HTTP/1.1" 200 -
-2025-09-08 15:21:51,178 INFO: Petición: OPTIONS /qr/funcionarios/total-con-qr desde 127.0.0.1 - args: {} - json: None
-2025-09-08 15:21:51,180 INFO: 127.0.0.1 - - [08/Sep/2025 15:21:51] "OPTIONS /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
-2025-09-08 15:21:51,243 INFO: Conexión obtenida del pool. Activas: 4, Inactivas: 196
-2025-09-08 15:21:51,289 INFO: IDs de funcionarios con QR obtenidos: ['102', '107', '109', '106', '111', '11', '113', '114', '118', '119', '120', '122', '125', '128', '13', '132', '133', '227', '43', '5000011', '5000012', '5000013', '5000018', '5000030', '500005', '5000054', '5000055', '74', '130', '131', '134', '135', '136', '137', '138', '139', '140', '14002', '14005', '14007', '14008', '14009', '14014', '14015', '14020', '142', '148', '15', '15002', '15004', '15005', '15006', '15007', '15008', '15010', '15011', '15021', '15023', '15024', '15025', '15030', '15034', '15037', '15039', '15042', '15043', '15045', '15046', '15047', '15048', '15049', '15050', '15051', '15052', '15053', '15054', '15062', '15064', '15065', '15068', '15079', '15083', '15084', '15087', '15088', '15089', '15092', '15095', '151', '152', '153', '156', '157', '16001', '16002', '16011', '16012', '16023', '16024', '16026', '161', '165', '166', '168', '17', '170', '17001', '17003', '17004', '17005', '17010', '17011', '17016', '17026', '171', '172', '173', '174', '175', '176', '177', '18001', '18002', '18006', '18007', '18023', '18026', '18027', '182', '184', '185', '188', '189', '190', '19002', '19003', '19004', '19005', '19006', '19008', '191', '194', '195', '196', '197', '20', '200001', '20001', '20003']
+2025-11-12 17:23:08,721 INFO: Funcionarios con QR obtenidos: 3 registros
+2025-11-12 17:23:08,724 INFO: 127.0.0.1 - - [12/Nov/2025 17:23:08] "GET /qr/funcionarios-com-qr HTTP/1.1" 200 -
+2025-11-12 17:23:08,848 INFO: Petición: GET /qr/funcionarios/total-con-qr desde 127.0.0.1 - args: {} - json: None
+2025-11-12 17:23:08,852 INFO: Conexión obtenida del pool. Activas: 15, Inactivas: 185
+2025-11-12 17:23:08,855 INFO: Conexión liberada al pool. Activas: 14, Inactivas: 186
+2025-11-12 17:23:08,855 INFO: 127.0.0.1 - - [12/Nov/2025 17:23:08] "GET /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
+2025-11-12 17:41:49,046 INFO: Orígenes CORS permitidos: ['https://localhost', 'https://localhost:443', 'https://127.0.0.1', 'https://localhost:9000', 'https://127.0.1:9000', 'https://localhost:5137', 'https://localhost:5173']
+2025-11-12 17:41:49,047 INFO: ==================================================
+2025-11-12 17:41:49,049 INFO: DINQR Backend Application Starting
+2025-11-12 17:41:49,050 INFO: ==================================================
+2025-11-12 17:41:49,051 INFO: Environment: production
+2025-11-12 17:41:49,051 INFO: Debug mode: False
+2025-11-12 17:41:49,052 INFO: Database URI: 192.168.253.133:5432/localdb
+2025-11-12 17:41:49,171 INFO: Permissions and roles initialized successfully.
+2025-11-12 17:41:49,173 INFO: Permissions initialized successfully
+2025-11-12 17:41:49,214 INFO: Orígenes CORS permitidos: ['https://localhost', 'https://localhost:443', 'https://127.0.0.1', 'https://localhost:9000', 'https://127.0.1:9000', 'https://localhost:5137', 'https://localhost:5173']
+2025-11-12 17:41:49,216 INFO: ==================================================
+2025-11-12 17:41:49,218 INFO: DINQR Backend Application Starting
+2025-11-12 17:41:49,220 INFO: ==================================================
+2025-11-12 17:41:49,221 INFO: Environment: production
+2025-11-12 17:41:49,222 INFO: Debug mode: False
+2025-11-12 17:41:49,225 INFO: Database URI: 192.168.253.133:5432/localdb
+2025-11-12 17:41:49,324 INFO: Permissions and roles initialized successfully.
+2025-11-12 17:41:49,326 INFO: Permissions initialized successfully
+2025-11-12 17:41:49,339 WARNING: ============================================================
+2025-11-12 17:41:49,340 WARNING: WARNING: Running development server
+2025-11-12 17:41:49,341 WARNING: For production use:
+2025-11-12 17:41:49,343 WARNING:   python waitress_server.py
+2025-11-12 17:41:49,344 WARNING:   python windows_service.py install
+2025-11-12 17:41:49,346 WARNING: ============================================================
+2025-11-12 17:41:49,357 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-11-12 17:41:49,358 INFO: [33mPress CTRL+C to quit[0m
+2025-11-12 17:42:06,071 INFO: Petición: OPTIONS /auth/login desde 127.0.0.1 - args: {} - json: None
+2025-11-12 17:42:06,074 INFO: 127.0.0.1 - - [12/Nov/2025 17:42:06] "OPTIONS /auth/login HTTP/1.1" 200 -
+2025-11-12 17:42:06,379 INFO: Petición: POST /auth/login desde 127.0.0.1 - args: {} - json: {'email': 'maikel@ejemplos.com', 'password': 'PasswordSeguro123!'}
+2025-11-12 17:42:06,554 INFO: 127.0.0.1 - - [12/Nov/2025 17:42:06] "POST /auth/login HTTP/1.1" 200 -
+2025-11-12 17:42:06,762 INFO: Petición: OPTIONS /users/profile desde 127.0.0.1 - args: {} - json: None
+2025-11-12 17:42:06,765 INFO: 127.0.0.1 - - [12/Nov/2025 17:42:06] "OPTIONS /users/profile HTTP/1.1" 200 -
+2025-11-12 17:42:06,769 INFO: Petición: GET /users/profile desde 127.0.0.1 - args: {} - json: None
+2025-11-12 17:42:06,780 INFO: 127.0.0.1 - - [12/Nov/2025 17:42:06] "GET /users/profile HTTP/1.1" 200 -
+2025-11-12 17:42:07,309 INFO: Petición: OPTIONS /qr/funcionarios/total desde 127.0.0.1 - args: {} - json: None
+2025-11-12 17:42:07,315 INFO: 127.0.0.1 - - [12/Nov/2025 17:42:07] "OPTIONS /qr/funcionarios/total HTTP/1.1" 200 -
+2025-11-12 17:42:07,310 INFO: Petición: OPTIONS /qr/funcionarios-com-qr desde 127.0.0.1 - args: {} - json: None
+2025-11-12 17:42:07,311 INFO: Petición: OPTIONS /qr/funcionarios/total desde 127.0.0.1 - args: {} - json: None
+2025-11-12 17:42:07,317 INFO: 127.0.0.1 - - [12/Nov/2025 17:42:07] "OPTIONS /qr/funcionarios-com-qr HTTP/1.1" 200 -
+2025-11-12 17:42:07,313 INFO: Petición: OPTIONS /qr/funcionarios-com-qr desde 127.0.0.1 - args: {} - json: None
+2025-11-12 17:42:07,319 INFO: 127.0.0.1 - - [12/Nov/2025 17:42:07] "OPTIONS /qr/funcionarios/total HTTP/1.1" 200 -
+2025-11-12 17:42:07,320 INFO: 127.0.0.1 - - [12/Nov/2025 17:42:07] "OPTIONS /qr/funcionarios-com-qr HTTP/1.1" 200 -
+2025-11-12 17:42:07,621 INFO: Petición: GET /qr/funcionarios/total desde 127.0.0.1 - args: {} - json: None
+2025-11-12 17:42:07,625 INFO: Conexión obtenida del pool. Activas: 1, Inactivas: 199
+2025-11-12 17:42:07,622 INFO: Petición: GET /qr/funcionarios-com-qr desde 127.0.0.1 - args: {} - json: None
+2025-11-12 17:42:07,645 INFO: 127.0.0.1 - - [12/Nov/2025 17:42:07] "GET /qr/funcionarios/total HTTP/1.1" 200 -
+2025-11-12 17:42:07,651 INFO: Petición: OPTIONS /qr/funcionarios/total-con-qr desde 127.0.0.1 - args: {} - json: None
+2025-11-12 17:42:07,653 INFO: 127.0.0.1 - - [12/Nov/2025 17:42:07] "OPTIONS /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
+2025-11-12 17:42:07,661 INFO: Conexión obtenida del pool. Activas: 2, Inactivas: 198
+2025-11-12 17:42:07,665 INFO: IDs de funcionarios con QR obtenidos: ['102', '118', '122']
+2025-11-12 17:42:07,666 INFO: Conexión liberada al pool. Activas: 1, Inactivas: 199
+2025-11-12 17:42:07,666 INFO: Ejecutando consulta SQL para funcionarios COM QR: 
+                    SELECT sap, nome, funcao, area, nif, telefone, email, unineg
+                    FROM sonacard
+                    WHERE sap IN (?,?,?)
+                    ORDER BY sap
+                
+2025-11-12 17:42:07,668 INFO: Funcionarios con QR obtenidos: 3 registros
+2025-11-12 17:42:07,669 INFO: 127.0.0.1 - - [12/Nov/2025 17:42:07] "GET /qr/funcionarios-com-qr HTTP/1.1" 200 -
+2025-11-12 17:42:07,870 INFO: Petición: GET /qr/funcionarios/total desde 127.0.0.1 - args: {} - json: None
+2025-11-12 17:42:07,872 INFO: Conexión obtenida del pool. Activas: 2, Inactivas: 198
+2025-11-12 17:42:07,881 INFO: 127.0.0.1 - - [12/Nov/2025 17:42:07] "GET /qr/funcionarios/total HTTP/1.1" 200 -
+2025-11-12 17:42:07,950 INFO: Petición: GET /qr/funcionarios/total-con-qr desde 127.0.0.1 - args: {} - json: None
+2025-11-12 17:42:07,956 INFO: Petición: GET /qr/funcionarios-com-qr desde 127.0.0.1 - args: {} - json: None
+2025-11-12 17:42:07,975 INFO: Conexión obtenida del pool. Activas: 3, Inactivas: 197
+2025-11-12 17:42:07,979 INFO: Conexión obtenida del pool. Activas: 4, Inactivas: 196
+2025-11-12 17:42:07,980 INFO: Conexión liberada al pool. Activas: 3, Inactivas: 197
+2025-11-12 17:42:07,981 INFO: 127.0.0.1 - - [12/Nov/2025 17:42:07] "GET /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
+2025-11-12 17:42:07,983 INFO: IDs de funcionarios con QR obtenidos: ['102', '118', '122']
+2025-11-12 17:42:07,986 INFO: Conexión liberada al pool. Activas: 2, Inactivas: 198
+2025-11-12 17:42:07,988 INFO: Ejecutando consulta SQL para funcionarios COM QR: 
+                    SELECT sap, nome, funcao, area, nif, telefone, email, unineg
+                    FROM sonacard
+                    WHERE sap IN (?,?,?)
+                    ORDER BY sap
+                
+2025-11-12 17:42:07,985 INFO: Petición: GET /qr/funcionarios/total-con-qr desde 127.0.0.1 - args: {} - json: None
+2025-11-12 17:42:07,990 INFO: Conexión obtenida del pool. Activas: 3, Inactivas: 197
+2025-11-12 17:42:07,990 INFO: Funcionarios con QR obtenidos: 3 registros
+2025-11-12 17:42:07,991 INFO: 127.0.0.1 - - [12/Nov/2025 17:42:07] "GET /qr/funcionarios-com-qr HTTP/1.1" 200 -

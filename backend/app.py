@@ -1,3 +1,13 @@
+"""
+SIGA - Sistema Integral de Gestión de Accesos
+Backend Principal - Flask Application
+
+Desarrollado por: Ing. Maikel Cuao
+Email: maikel@hotmail.com
+Fecha: 2025
+Descripción: Aplicación Flask principal que gestiona la API REST y autenticación.
+"""
+
 from flask import Flask, jsonify, request, g, make_response
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager

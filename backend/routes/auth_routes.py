@@ -1,3 +1,13 @@
+"""
+SIGA - Sistema Integral de Gestión de Accesos
+Rutas de Autenticación
+
+Desarrollado por: Ing. Maikel Cuao
+Email: maikel@hotmail.com
+Fecha: 2025
+Descripción: Endpoints para login, registro y gestión de tokens JWT.
+"""
+
 from flask import Blueprint, request, jsonify
 from extensions import db
 from models.user import User, Role

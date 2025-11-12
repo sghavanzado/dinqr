@@ -1,3 +1,13 @@
+/**
+ * SIGA - Sistema Integral de Gestión de Accesos
+ * Contexto de Autenticación
+ * 
+ * Desarrollado por: Ing. Maikel Cuao
+ * Email: maikel@hotmail.com
+ * Fecha: 2025
+ * Descripción: Proveedor de contexto global para el manejo de autenticación.
+ */
+
 import { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';

@@ -10,7 +10,7 @@ pg_connection_pool = pg_pool.SimpleConnectionPool(
     dbname=os.environ.get('LOCAL_DB_NAME', 'localdb'),
     user=os.environ.get('LOCAL_DB_USER', 'postgres'),
     password=os.environ.get('LOCAL_DB_PASSWORD', 'postgr3s'),
-    host=os.environ.get('LOCAL_DB_HOST', '192.168.253.133'),
+    host=os.environ.get('LOCAL_DB_HOST', '10.252.0.4'),
     port=os.environ.get('LOCAL_DB_PORT', 5432)
 )
 

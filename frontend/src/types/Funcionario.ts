@@ -5,5 +5,6 @@ export interface Funcionario {
   area?: string;
   nif?: string;
   telefone?: string;
+  email?: string;
   unineg?: string; // Adicionar unidad organizacional
 }

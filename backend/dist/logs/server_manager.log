@@ -1,0 +1,117 @@
+2025-08-12 17:12:09,101 INFO: Orígenes CORS permitidos: ['https://localhost', 'https://localhost:443', 'https://127.0.0.1', 'https://localhost:9000', 'https://127.0.1:9000']
+2025-08-12 17:12:09,102 INFO: ==================================================
+2025-08-12 17:12:09,105 INFO: DINQR Backend Application Starting
+2025-08-12 17:12:09,106 INFO: ==================================================
+2025-08-12 17:12:09,107 INFO: Environment: production
+2025-08-12 17:12:09,108 INFO: Debug mode: False
+2025-08-12 17:12:09,109 INFO: Database URI: 192.168.253.133:5432/localdb
+2025-08-12 17:12:09,235 INFO: Permissions and roles initialized successfully.
+2025-08-12 17:12:09,254 INFO: Permissions initialized successfully
+2025-08-12 17:12:26,165 INFO: Orígenes CORS permitidos: ['https://localhost', 'https://localhost:443', 'https://127.0.0.1', 'https://localhost:9000', 'https://127.0.1:9000']
+2025-08-12 17:12:26,183 INFO: ==================================================
+2025-08-12 17:12:26,184 INFO: DINQR Backend Application Starting
+2025-08-12 17:12:26,185 INFO: ==================================================
+2025-08-12 17:12:26,186 INFO: Environment: production
+2025-08-12 17:12:26,187 INFO: Debug mode: False
+2025-08-12 17:12:26,188 INFO: Database URI: 192.168.253.133:5432/localdb
+2025-08-12 17:12:26,317 INFO: Permissions and roles initialized successfully.
+2025-08-12 17:12:26,319 INFO: Permissions initialized successfully
+2025-08-12 17:12:30,139 INFO: Orígenes CORS permitidos: ['https://localhost', 'https://localhost:443', 'https://127.0.0.1', 'https://localhost:9000', 'https://127.0.1:9000']
+2025-08-12 17:12:30,140 INFO: ==================================================
+2025-08-12 17:12:30,142 INFO: DINQR Backend Application Starting
+2025-08-12 17:12:30,145 INFO: ==================================================
+2025-08-12 17:12:30,146 INFO: Environment: production
+2025-08-12 17:12:30,147 INFO: Debug mode: False
+2025-08-12 17:12:30,149 INFO: Database URI: 192.168.253.133:5432/localdb
+2025-08-12 17:12:30,293 INFO: Permissions and roles initialized successfully.
+2025-08-12 17:12:30,532 INFO: Permissions initialized successfully
+2025-08-12 17:12:33,749 INFO: Orígenes CORS permitidos: ['https://localhost', 'https://localhost:443', 'https://127.0.0.1', 'https://localhost:9000', 'https://127.0.1:9000']
+2025-08-12 17:12:33,749 INFO: ==================================================
+2025-08-12 17:12:33,749 INFO: DINQR Backend Application Starting
+2025-08-12 17:12:33,749 INFO: ==================================================
+2025-08-12 17:12:33,749 INFO: Environment: production
+2025-08-12 17:12:33,749 INFO: Debug mode: False
+2025-08-12 17:12:33,749 INFO: Database URI: 192.168.253.133:5432/localdb
+2025-08-12 17:12:33,970 INFO: Permissions and roles initialized successfully.
+2025-08-12 17:12:33,970 INFO: Permissions initialized successfully
+2025-08-12 17:12:50,938 INFO: Orígenes CORS permitidos: ['https://localhost', 'https://localhost:443', 'https://127.0.0.1', 'https://localhost:9000', 'https://127.0.1:9000']
+2025-08-12 17:12:50,939 INFO: ==================================================
+2025-08-12 17:12:50,940 INFO: DINQR Backend Application Starting
+2025-08-12 17:12:50,957 INFO: ==================================================
+2025-08-12 17:12:50,958 INFO: Environment: production
+2025-08-12 17:12:50,960 INFO: Debug mode: False
+2025-08-12 17:12:50,962 INFO: Database URI: 192.168.253.133:5432/localdb
+2025-08-12 17:12:51,113 INFO: Permissions and roles initialized successfully.
+2025-08-12 17:12:51,119 INFO: Permissions initialized successfully
+2025-08-12 17:37:50,353 INFO: Orígenes CORS permitidos: ['https://localhost', 'https://localhost:443', 'https://127.0.0.1', 'https://localhost:9000', 'https://127.0.1:9000']
+2025-08-12 17:37:50,354 INFO: ==================================================
+2025-08-12 17:37:50,355 INFO: DINQR Backend Application Starting
+2025-08-12 17:37:50,356 INFO: ==================================================
+2025-08-12 17:37:50,357 INFO: Environment: production
+2025-08-12 17:37:50,357 INFO: Debug mode: False
+2025-08-12 17:37:50,358 INFO: Database URI: 192.168.253.133:5432/localdb
+2025-08-12 17:37:50,470 INFO: Permissions and roles initialized successfully.
+2025-08-12 17:37:50,485 INFO: Permissions initialized successfully
+2025-08-12 17:38:34,315 INFO: Orígenes CORS permitidos: ['https://localhost', 'https://localhost:443', 'https://127.0.0.1', 'https://localhost:9000', 'https://127.0.1:9000']
+2025-08-12 17:38:34,317 INFO: ==================================================
+2025-08-12 17:38:34,318 INFO: DINQR Backend Application Starting
+2025-08-12 17:38:34,319 INFO: ==================================================
+2025-08-12 17:38:34,320 INFO: Environment: production
+2025-08-12 17:38:34,320 INFO: Debug mode: False
+2025-08-12 17:38:34,321 INFO: Database URI: 192.168.253.133:5432/localdb
+2025-08-12 17:38:34,435 INFO: Permissions and roles initialized successfully.
+2025-08-12 17:38:34,437 INFO: Permissions initialized successfully
+2025-08-12 17:39:45,936 INFO: Orígenes CORS permitidos: ['https://localhost', 'https://localhost:443', 'https://127.0.0.1', 'https://localhost:9000', 'https://127.0.1:9000']
+2025-08-12 17:39:45,938 INFO: ==================================================
+2025-08-12 17:39:45,939 INFO: DINQR Backend Application Starting
+2025-08-12 17:39:45,940 INFO: ==================================================
+2025-08-12 17:39:45,940 INFO: Environment: production
+2025-08-12 17:39:45,941 INFO: Debug mode: False
+2025-08-12 17:39:45,942 INFO: Database URI: 192.168.253.133:5432/localdb
+2025-08-12 17:39:46,066 INFO: Permissions and roles initialized successfully.
+2025-08-12 17:39:46,068 INFO: Permissions initialized successfully
+2025-08-12 17:41:23,643 INFO: Orígenes CORS permitidos: ['https://localhost', 'https://localhost:443', 'https://127.0.0.1', 'https://localhost:9000', 'https://127.0.1:9000']
+2025-08-12 17:41:23,644 INFO: ==================================================
+2025-08-12 17:41:23,645 INFO: DINQR Backend Application Starting
+2025-08-12 17:41:23,646 INFO: ==================================================
+2025-08-12 17:41:23,647 INFO: Environment: production
+2025-08-12 17:41:23,647 INFO: Debug mode: False
+2025-08-12 17:41:23,647 INFO: Database URI: 192.168.253.133:5432/localdb
+2025-08-12 17:41:23,801 INFO: Permissions and roles initialized successfully.
+2025-08-12 17:41:23,802 INFO: Permissions initialized successfully
+2025-08-12 17:43:54,275 INFO: Orígenes CORS permitidos: ['https://localhost', 'https://localhost:443', 'https://127.0.0.1', 'https://localhost:9000', 'https://127.0.1:9000']
+2025-08-12 17:43:54,276 INFO: ==================================================
+2025-08-12 17:43:54,278 INFO: DINQR Backend Application Starting
+2025-08-12 17:43:54,278 INFO: ==================================================
+2025-08-12 17:43:54,279 INFO: Environment: production
+2025-08-12 17:43:54,280 INFO: Debug mode: False
+2025-08-12 17:43:54,281 INFO: Database URI: 192.168.253.133:5432/localdb
+2025-08-12 17:43:54,406 INFO: Permissions and roles initialized successfully.
+2025-08-12 17:43:54,409 INFO: Permissions initialized successfully
+2025-08-12 17:44:25,198 INFO: Orígenes CORS permitidos: ['https://localhost', 'https://localhost:443', 'https://127.0.0.1', 'https://localhost:9000', 'https://127.0.1:9000']
+2025-08-12 17:44:25,199 INFO: ==================================================
+2025-08-12 17:44:25,200 INFO: DINQR Backend Application Starting
+2025-08-12 17:44:25,200 INFO: ==================================================
+2025-08-12 17:44:25,202 INFO: Environment: production
+2025-08-12 17:44:25,202 INFO: Debug mode: False
+2025-08-12 17:44:25,203 INFO: Database URI: 192.168.253.133:5432/localdb
+2025-08-12 17:44:25,349 INFO: Permissions and roles initialized successfully.
+2025-08-12 17:44:25,350 INFO: Permissions initialized successfully
+2025-08-12 17:45:00,126 INFO: Orígenes CORS permitidos: ['https://localhost', 'https://localhost:443', 'https://127.0.0.1', 'https://localhost:9000', 'https://127.0.1:9000']
+2025-08-12 17:45:00,127 INFO: ==================================================
+2025-08-12 17:45:00,128 INFO: DINQR Backend Application Starting
+2025-08-12 17:45:00,130 INFO: ==================================================
+2025-08-12 17:45:00,130 INFO: Environment: production
+2025-08-12 17:45:00,131 INFO: Debug mode: False
+2025-08-12 17:45:00,131 INFO: Database URI: 192.168.253.133:5432/localdb
+2025-08-12 17:45:00,274 INFO: Permissions and roles initialized successfully.
+2025-08-12 17:45:00,275 INFO: Permissions initialized successfully
+2025-08-13 12:43:32,807 INFO: Orígenes CORS permitidos: ['https://localhost', 'https://localhost:443', 'https://127.0.0.1', 'https://localhost:9000', 'https://127.0.1:9000']
+2025-08-13 12:43:32,807 INFO: ==================================================
+2025-08-13 12:43:32,843 INFO: DINQR Backend Application Starting
+2025-08-13 12:43:32,844 INFO: ==================================================
+2025-08-13 12:43:32,846 INFO: Environment: production
+2025-08-13 12:43:32,847 INFO: Debug mode: False
+2025-08-13 12:43:32,849 INFO: Database URI: 192.168.253.133:5432/localdb
+2025-08-13 12:43:33,069 INFO: Permissions and roles initialized successfully.
+2025-08-13 12:43:33,070 INFO: Permissions initialized successfully

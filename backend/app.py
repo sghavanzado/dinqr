@@ -1,4 +1,4 @@
-"""
+﻿"""
 SIGA - Sistema Integral de Gestión de Accesos
 Backend Principal - Flask Application
 
@@ -22,6 +22,7 @@ from extensions import db, migrate, login_manager
 from config import Config
 from cli import register_commands
 from models.user import initialize_permissions
+from models.cv_code import CVCode  # Importar modelo para Flask-Migrate
 from routes import auth_routes, user_routes, qr_routes
 from routes.settings_routes import settings_bp
 from routes.health_check import health_bp
@@ -91,19 +92,6 @@ def create_app(config_class=None):
             'img-src': "'self' data:",
         }
     )
-    # Configure Security Headers (disable HTTPS enforcement for IIS proxy)
-    talisman = Talisman(
-        app,
-        force_https=False,  # IIS will handle HTTPS termination
-        strict_transport_security=False,
-        content_security_policy={
-            'default-src': "'self'",
-            'script-src': "'self' 'unsafe-inline'",
-            'style-src': "'self' 'unsafe-inline'",
-            'img-src': "'self' data:",
-        }
-    )
-
     # Setup logging
     setup_logging(app)
 
@@ -175,6 +163,9 @@ def create_app(config_class=None):
     app.register_blueprint(user_routes.user_bp, url_prefix='/users')
     app.register_blueprint(qr_routes.qr_bp, url_prefix='/qr')
     app.register_blueprint(settings_bp, url_prefix='/settings')
+    from routes.cv_routes import cv_bp
+    app.register_blueprint(cv_bp, url_prefix='/cv')
+
     app.register_blueprint(health_bp)
 
     # Global error handlers

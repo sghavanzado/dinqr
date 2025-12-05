@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+﻿import { Routes, Route, Navigate } from 'react-router-dom';
 import ProtectedRoute from './ProtectedRoute';
 import Dashboard from '../pages/Dashboard';
 import Unauthorized from '../pages/Unauthorized';
@@ -6,6 +6,7 @@ import AuditLog from '../pages/AuditLog';
 import UserProfile from '../pages/UserProfile';
 import Settings from '../pages/Settings';
 import QRManagement from '../pages/QRManagement';
+import BusinessCardManagement from '../pages/BusinessCardManagement';
 
 const ContentArea = () => {
   return (
@@ -23,6 +24,14 @@ const ContentArea = () => {
         element={
           <ProtectedRoute>
             <QRManagement />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/business-card"
+        element={
+          <ProtectedRoute>
+            <BusinessCardManagement />
           </ProtectedRoute>
         }
       />

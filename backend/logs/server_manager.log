@@ -1,6 +1,50 @@
-2025-11-13 02:59:19,237 INFO: Conexión liberada al pool. Activas: 22, Inactivas: 178
-2025-11-13 02:59:19,239 INFO: Ejecutando consulta SQL: 
+2025-12-05 23:22:48,136 INFO: Conexión obtenida del pool. Activas: 4, Inactivas: 196
+2025-12-05 23:22:48,140 INFO: Ejecutando consulta SQL para funcionarios COM QR: 
                     SELECT sap, nome, funcao, area, nif, telefone, email, unineg
                     FROM sonacard
-                    WHERE sap NOT IN (?,?,?,?,?,?)
+                    WHERE sap IN (?)
+                    ORDER BY sap
                 
+2025-12-05 23:22:48,135 INFO: Petición: GET /qr/funcionarios/total-con-qr desde 127.0.0.1 - args: {} - json: None
+2025-12-05 23:22:48,142 INFO: 127.0.0.1 - - [05/Dec/2025 23:22:48] "GET /cv/funcionarios-con-cv HTTP/1.1" 200 -
+2025-12-05 23:22:48,144 INFO: IDs de funcionarios con QR Normal (solo): ['102']
+2025-12-05 23:22:48,145 INFO: 127.0.0.1 - - [05/Dec/2025 23:22:48] "GET /qr/funcionarios/total HTTP/1.1" 200 -
+2025-12-05 23:22:48,146 INFO: Funcionarios con QR obtenidos: 1 registros
+2025-12-05 23:22:48,147 INFO: Conexión liberada al pool. Activas: 3, Inactivas: 197
+2025-12-05 23:22:48,149 INFO: 127.0.0.1 - - [05/Dec/2025 23:22:48] "GET /qr/solo-qr-normal HTTP/1.1" 200 -
+2025-12-05 23:22:48,151 INFO: 127.0.0.1 - - [05/Dec/2025 23:22:48] "GET /qr/funcionarios-com-qr HTTP/1.1" 200 -
+2025-12-05 23:22:48,161 INFO: Conexión obtenida del pool. Activas: 4, Inactivas: 196
+2025-12-05 23:22:48,161 INFO: Petición: GET /qr/funcionarios/total-con-qr desde 127.0.0.1 - args: {} - json: None
+2025-12-05 23:22:48,163 INFO: Conexión obtenida del pool. Activas: 5, Inactivas: 195
+2025-12-05 23:22:48,164 INFO: Conexión liberada al pool. Activas: 4, Inactivas: 196
+2025-12-05 23:22:48,165 INFO: 127.0.0.1 - - [05/Dec/2025 23:22:48] "GET /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
+2025-12-05 23:22:48,166 INFO: IDs de funcionarios con QR o CV obtenidos: ['102']
+2025-12-05 23:22:48,169 INFO: Conexión liberada al pool. Activas: 3, Inactivas: 197
+2025-12-05 23:22:48,170 INFO: Ejecutando consulta SQL para funcionarios COM QR: 
+                    SELECT sap, nome, funcao, area, nif, telefone, email, unineg
+                    FROM sonacard
+                    WHERE sap IN (?)
+                    ORDER BY sap
+                
+2025-12-05 23:22:48,171 INFO: Funcionarios con QR obtenidos: 1 registros
+2025-12-05 23:22:48,173 INFO: 127.0.0.1 - - [05/Dec/2025 23:22:48] "GET /qr/funcionarios-com-qr HTTP/1.1" 200 -
+2025-12-05 23:22:48,208 INFO: Conexión obtenida del pool. Activas: 4, Inactivas: 196
+2025-12-05 23:22:48,212 INFO: Conexión liberada al pool. Activas: 3, Inactivas: 197
+2025-12-05 23:22:48,213 INFO: 127.0.0.1 - - [05/Dec/2025 23:22:48] "GET /qr/funcionarios/total-con-qr HTTP/1.1" 200 -
+2025-12-05 23:23:08,521 INFO: Petición: GET /contacto desde 127.0.0.1 - args: {'sap': '102', 'hash': 'eb8c62aa2e0e61245f20e3abade62af3e716eee31cd4d95e128852c235670d76'} - json: None
+2025-12-05 23:23:08,523 INFO: Parâmetros recebidos: id_contacto=102, hash_recebido=eb8c62aa2e0e61245f20e3abade62af3e716eee31cd4d95e128852c235670d76
+2025-12-05 23:23:08,524 INFO: Conexión obtenida del pool. Activas: 4, Inactivas: 196
+2025-12-05 23:23:08,527 INFO: Acesso autorizado ao ID 102 de 127.0.0.1
+2025-12-05 23:23:08,531 INFO: 127.0.0.1 - - [05/Dec/2025 23:23:08] "GET /contacto?sap=102&hash=eb8c62aa2e0e61245f20e3abade62af3e716eee31cd4d95e128852c235670d76 HTTP/1.1" 200 -
+2025-12-05 23:23:08,572 INFO: Petición: GET /static/images/sonangol-logo.png desde 127.0.0.1 - args: {} - json: None
+2025-12-05 23:23:08,610 INFO: 127.0.0.1 - - [05/Dec/2025 23:23:08] "GET /static/images/sonangol-logo.png HTTP/1.1" 200 -
+2025-12-05 23:23:08,617 INFO: Petición: GET /favicon.ico desde 127.0.0.1 - args: {} - json: None
+2025-12-05 23:23:08,619 INFO: 127.0.0.1 - - [05/Dec/2025 23:23:08] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-12-05 23:27:13,857 INFO: Petición: GET /cv/cartonv desde 127.0.0.1 - args: {'sap': '102', 'hash': 'eb8c62aa2e0e61245f20e3abade62af3e716eee31cd4d95e128852c235670d76'} - json: None
+2025-12-05 23:27:13,865 INFO: Acceso a cartón de visita - SAP: 102
+2025-12-05 23:27:13,921 INFO: Conexión obtenida del pool. Activas: 5, Inactivas: 195
+2025-12-05 23:27:13,940 INFO: Acceso autorizado al cartón SAP 102 desde 127.0.0.1
+2025-12-05 23:27:13,948 INFO: 127.0.0.1 - - [05/Dec/2025 23:27:13] "GET /cv/cartonv?sap=102&hash=eb8c62aa2e0e61245f20e3abade62af3e716eee31cd4d95e128852c235670d76 HTTP/1.1" 200 -
+2025-12-05 23:32:53,968 INFO: Petición: GET /cv/vcard desde 127.0.0.1 - args: {'sap': '102', 'hash': 'eb8c62aa2e0e61245f20e3abade62af3e716eee31cd4d95e128852c235670d76'} - json: None
+2025-12-05 23:32:54,032 INFO: Conexión obtenida del pool. Activas: 6, Inactivas: 194
+2025-12-05 23:32:54,053 INFO: 127.0.0.1 - - [05/Dec/2025 23:32:54] "GET /cv/vcard?sap=102&hash=eb8c62aa2e0e61245f20e3abade62af3e716eee31cd4d95e128852c235670d76 HTTP/1.1" 200 -

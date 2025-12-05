@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import QRTable from '../components/QRTable';
 import { fetchFuncionarios } from '../api/apiService';
-import type { Funcionario } from '../types/Funcionario'; // Import the shared type
+import type { Funcionario } from '../types/Funcionario';
 
 const QRManagement = () => {
   const [funcionarios, setFuncionarios] = useState<Funcionario[]>([]);
@@ -18,7 +18,6 @@ const QRManagement = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>('success');
-  // Removed unused state 'totalRows'
 
   const fetchData = async () => {
     setLoading(true);
@@ -26,7 +25,6 @@ const QRManagement = () => {
       const data = await fetchFuncionarios(1, 10, '');
       console.log('API Response (Funcionários):', data);
       setFuncionarios(data);
-      // Removed unused state update for 'totalRows'
     } catch (error) {
       console.error('Erro ao carregar os funcionários:', error);
       setSnackbarMessage('Erro ao carregar os funcionários.');
@@ -48,11 +46,13 @@ const QRManagement = () => {
       <Typography variant="h4" gutterBottom>
         Gestão de Códigos QR
       </Typography>
+
       <Grid container spacing={3}>
-        
+        <Grid item xs={12}>
           <QRTable funcionarios={funcionarios} />
         </Grid>
-     
+      </Grid>
+
       {loading && <CircularProgress />}
       <Snackbar
         open={snackbarOpen}

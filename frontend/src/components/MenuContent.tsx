@@ -1,4 +1,4 @@
-import * as React from 'react';
+﻿import * as React from 'react';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -62,6 +62,12 @@ const ITEMS: TreeViewBaseItem<ExtendedTreeItemProps>[] = [
         label: 'Gerar Code',
         icon: ReceiptLongOutlinedIcon,
         to: '/qrcode',
+      },
+      {
+        id: '2.2',
+        label: 'Gerar CV',
+        icon: ReceiptLongOutlinedIcon,
+        to: '/business-card',
       },
     ],
   },

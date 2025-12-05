@@ -44,9 +44,14 @@ def listar_funcionarios():
         try:
             conn_local = obtener_conexion_local()
             cursor = conn_local.cursor()
-            cursor.execute("SELECT contact_id FROM qr_codes")
+            # UNION de ambas tablas: qr_codes (QR Normal) y cv_codes (CV)
+            cursor.execute("""
+                SELECT contact_id FROM qr_codes
+                UNION
+                SELECT contact_id FROM cv_codes
+            """)
             qr_generated_ids = [row[0] for row in cursor.fetchall()]
-            logging.info(f"IDs de funcionarios con QR obtenidos: {qr_generated_ids}")
+            logging.info(f"IDs de funcionarios con QR o CV obtenidos: {qr_generated_ids}")
         except Exception as e:
             logging.error(f"Error al consultar IDs de funcionarios con QR en la base de datos local: {str(e)}")
             return jsonify({"error": "Error interno del servidor"}), 500
@@ -269,9 +274,14 @@ def listar_funcionarios_com_qr():
         try:
             conn_local = obtener_conexion_local()
             cursor = conn_local.cursor()
-            cursor.execute("SELECT contact_id FROM qr_codes")
+            # UNION de ambas tablas: qr_codes (QR Normal) y cv_codes (CV)
+            cursor.execute("""
+                SELECT contact_id FROM qr_codes
+                UNION
+                SELECT contact_id FROM cv_codes
+            """)
             qr_generated_ids = [row[0] for row in cursor.fetchall()]
-            logging.info(f"IDs de funcionarios con QR obtenidos: {qr_generated_ids}")
+            logging.info(f"IDs de funcionarios con QR o CV obtenidos: {qr_generated_ids}")
         except Exception as e:
             logging.error(f"Error al consultar IDs de funcionarios con QR en la base de datos local: {str(e)}")
             return jsonify({"error": "Error interno del servidor"}), 500
@@ -328,3 +338,26 @@ def listar_funcionarios_com_qr():
     except Exception as e:
         logging.error(f"Error inesperado al listar funcionarios com QR: {str(e)}")
         return jsonify({"error": "Error interno del servidor"}), 500
+@qr_bp.route('/solo-qr-normal', methods=['GET'])
+def listar_solo_qr_normal():
+    """Devuelve solo los IDs de funcionarios con QR Normal (no CV)."""
+    try:
+        conn_local = None
+        try:
+            conn_local = obtener_conexion_local()
+            cursor = conn_local.cursor()
+            # Solo qr_codes, NO cv_codes
+            cursor.execute("SELECT contact_id FROM qr_codes")
+            qr_normal_ids = [row[0] for row in cursor.fetchall()]
+            logging.info(f"IDs de funcionarios con QR Normal (solo): {qr_normal_ids}")
+            return jsonify(qr_normal_ids)
+        except Exception as e:
+            logging.error(f"Error al consultar IDs de QR Normal: {str(e)}")
+            return jsonify({"error": "Error interno del servidor"}), 500
+        finally:
+            if conn_local:
+                liberar_conexion_local(conn_local)
+    except Exception as e:
+        logging.error(f"Error inesperado en solo-qr-normal: {str(e)}")
+        return jsonify({"error": "Error interno del servidor"}), 500
+
